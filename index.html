@@ -1,54 +1,38 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Tic tac toe</title>
 
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <head>
+    <title>BACKBONE Marionette Tutorial: Collections</title>
 
-</head>
-<body>
-    <div id="title" class="main">
-        <h1>Hello Tic Tak Toe</h1>
-    </div>
-    <div>
-        <table>
-            <tr>
-                <td>
-                    <button id = "Button1" >_</button>
-                </td>
-                <td>
-                    <button id = "Button2" >_</button>
-                </td>
-                <td>
-                    <button id = "Button3" >_</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button id = "Button4" >_</button>
-                </td>
-                <td>
-                    <button id = "Button5" >_</button>
-                </td>
-                <td>
-                    <button id = "Button6" >_</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button id = "Button7" >_</button>
-                </td>
-                <td>
-                    <button id = "Button8" >_</button>
-                </td>
-                <td>
-                    <button id = "Button9" >_</button>
-                </td>
-            </tr>
-        </table>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+    <script src="./assets/javascripts/vendor/underscore.js"></script>
+    <script src="./assets/javascripts/vendor/backbone.js"></script>
+    <script src="./assets/javascripts/vendor/backbone.marionette.js"></script>
 
+    <link href="./assets/css/bootstrap.css" rel="stylesheet">
+    <link href="./assets/css/custom.css" rel="stylesheet">
+
+    <script src="./assets/javascripts/application.js"></script>
+  </head>
+  <body>
+    <div id="content">
     </div>
 
-    <script type="text/javascript" src="javascript/ttt.js"></script>
-</body>
+    <script type="text/template" id="cells-template">
+      <thead>
+        <tr class='header'>
+         
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </script>
+
+    <script type="text/template" id="cell-template">
+      <td><%= name %></td>
+	  <td><%= name %></td>
+	  <td><%= name %></td>
+    </script>
+  </body>
 </html>
