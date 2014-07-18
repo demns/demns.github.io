@@ -1,10 +1,10 @@
 (function () {
     "use strict";
-    var myApp = new window.Backbone.Marionette.Application();
-    myApp.globalVars = {};
-    myApp.globalVars.currMove = 0;
-    myApp.globalVars.currArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    myApp.globalVars.winningCombinations = [
+    var mainModule = new window.Backbone.Marionette.Application();
+    mainModule.globalVars = {};
+    mainModule.globalVars.currMove = 0;
+    mainModule.globalVars.currArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    mainModule.globalVars.winningCombinations = [
         [0, 1, 2],
         [3, 4, 5],
         [6, 7, 8],
@@ -14,14 +14,14 @@
         [0, 4, 8],
         [2, 4, 6]
     ];
-    myApp.globalVars.appendIndex = 0;
-    myApp.globalVars.theWinnerIs = false;
-    myApp.globalVars.checkForWin = function () {
-        var arr = myApp.globalVars.currArray,
+    mainModule.globalVars.appendIndex = 0;
+    mainModule.globalVars.theWinnerIs = false;
+    mainModule.globalVars.checkForWin = function () {
+        var arr = mainModule.globalVars.currArray,
             i = 0,
 
             isWinningCombination = function () {
-                var winnComb = myApp.globalVars.winningCombinations,
+                var winnComb = mainModule.globalVars.winningCombinations,
                     length = winnComb.length;
 
                 for (i = 0; i < length; i++) {
@@ -37,7 +37,7 @@
             isWin = isWinningCombination();
 
         if (isWin !== false) {
-            myApp.globalVars.theWinnerIs = isWin;
+            mainModule.globalVars.theWinnerIs = isWin;
             return true;
         }
 
@@ -47,19 +47,19 @@
             }
         }
 
-        myApp.globalVars.theWinnerIs = "Draw";
+        mainModule.globalVars.theWinnerIs = "Draw";
         return true;
     };
 
-    myApp.addRegions({
+    mainModule.addRegions({
         mainRegion: "#content"
     });
 
-    myApp.addInitializer(function (options) {
+    mainModule.addInitializer(function (options) {
         var cellsView = new CellsView({
             collection: options.cells
         });
-        myApp.mainRegion.show(cellsView);
+        mainModule.mainRegion.show(cellsView);
     });
 
 
@@ -80,17 +80,17 @@
 
             changeState: function () {
                 var elem = this.el.firstElementChild,
-                    ch = myApp.globalVars.currMove % 2 === 0 ? 'X' : 'Y',
+                    ch = mainModule.globalVars.currMove % 2 === 0 ? 'X' : 'Y',
                     winnerField = $("#winner");
-                if (myApp.globalVars.theWinnerIs === false &&
+                if (mainModule.globalVars.theWinnerIs === false &&
                     elem.innerHTML !== 'X' &&
                     elem.innerHTML !== 'Y') {
 
                     elem.innerHTML = ch;
-                    myApp.globalVars.currArray[parseInt(elem.id[2], 10) - 1] = ch;
-                    myApp.globalVars.currMove++;
-                    if (myApp.globalVars.checkForWin()) {
-                        winnerField.text("The winner is: " + myApp.globalVars.theWinnerIs);
+                    mainModule.globalVars.currArray[parseInt(elem.id[2], 10) - 1] = ch;
+                    mainModule.globalVars.currMove++;
+                    if (mainModule.globalVars.checkForWin()) {
+                        winnerField.text("The winner is: " + mainModule.globalVars.theWinnerIs);
                     }
                 }
             }
@@ -105,7 +105,7 @@
             itemView: CellView,
 
             appendHtml: function (collectionView, itemView) {
-                if (myApp.globalVars.appendIndex++ % 3 === 0) {
+                if (mainModule.globalVars.appendIndex++ % 3 === 0) {
                     collectionView.$("tbody").append("<tr></tr>");
                 }
                 collectionView.$("tbody").append(itemView.el);
@@ -120,6 +120,6 @@
             cells.push(new Cell({ name: i }));
         }
 
-        myApp.start({ cells: cells });
+        mainModule.start({ cells: cells });
     });
 }());
