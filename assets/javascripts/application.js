@@ -2,40 +2,28 @@ var MyApp = new Backbone.Marionette.Application();
 MyApp.globalVars = {};
 MyApp.globalVars.currMove = 0;
 MyApp.globalVars.currArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+MyApp.globalVars.winningCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
 MyApp.globalVars.appendIndex = 0;
+MyApp.globalVars.theWinnerIs = false;
 MyApp.globalVars.checkForWin = function () {
     var arr = MyApp.globalVars.currArray;
 
-    if (arr[0] === arr[1] && arr[1] === arr[2]) {
-        MyApp.globalVars.theWinnerIs = arr[2];
-        return true;
-    }
-    if (arr[3] === arr[4] && arr[4] === arr[5]) {
-        MyApp.globalVars.theWinnerIs = arr[5];
-        return true;
-    }
-    if (arr[6] === arr[7] && arr[7] === arr[8]) {
-        MyApp.globalVars.theWinnerIs = arr[8];
-        return true;
-    }
-    if (arr[0] === arr[3] && arr[3] === arr[6]) {
-        MyApp.globalVars.theWinnerIs = arr[6];
-        return true;
-    }
-    if (arr[1] === arr[4] && arr[4] === arr[7]) {
-        MyApp.globalVars.theWinnerIs = arr[7];
-        return true;
-    }
-    if (arr[2] === arr[5] && arr[5] === arr[8]) {
-        MyApp.globalVars.theWinnerIs = arr[8];
-        return true;
-    }
-    if (arr[0] === arr[4] && arr[4] === arr[8]) {
-        MyApp.globalVars.theWinnerIs = arr[8];
-        return true;
-    }
-    if (arr[2] === arr[4] && arr[4] === arr[6]) {
-        MyApp.globalVars.theWinnerIs = arr[6];
+    var isWinningCombination = function () {
+        var winningCombinations = MyApp.globalVars.winningCombinations,
+            length = winningCombinations.length;
+
+        for (var j = 0; j < length; j++) {
+            if (arr[winningCombinations[j][0]] === 
+                arr[winningCombinations[j][1]] && arr[winningCombinations[j][1]] ===
+                arr[winningCombinations[j][2]])
+                return arr[winningCombinations[j][2]];
+        }
+        return false;
+    };
+
+    var isWin = isWinningCombination();
+    if (isWin !== false) {
+        MyApp.globalVars.theWinnerIs = isWin;
         return true;
     }
 
@@ -49,7 +37,6 @@ MyApp.globalVars.checkForWin = function () {
     return true;
 };
 
-MyApp.globalVars.theWinnerIs = false;
 
 MyApp.addRegions({
     mainRegion: "#content"
