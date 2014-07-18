@@ -40,7 +40,7 @@ MyApp.globalVars.checkForWin = function () {
     }
 
     for (var i = 0; i < 9; i++) {
-        if (arr[i] === 'X' || arr[i] === 'O') {
+        if (arr[i] !== 'X' && arr[i] !== 'Y') {
             return false;
         }
     }
@@ -71,7 +71,7 @@ var CellView = Backbone.Marionette.ItemView.extend({
     },
 
     changeState: function() {
-        if (MyApp.globalVars.theWinnerIs === false) {
+        if (MyApp.globalVars.theWinnerIs === false && this.el.firstElementChild.innerHTML !== 'X' && this.el.firstElementChild.innerHTML !== 'Y') {
             var ch = MyApp.globalVars.currMove++ % 2 === 0 ? 'X' : 'Y';
             this.el.firstElementChild.innerHTML = ch;
             MyApp.globalVars.currArray[parseInt(this.el.firstElementChild.id[2], 10) - 1] = ch;
