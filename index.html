@@ -3,6 +3,25 @@
 
     <head>
         <title>BACKBONE Marionette Tutorial: Collections</title>
+    </head>
+    <body>
+        <table  id="content">
+            <script type="text/template" id="cells-template">
+                <thead>
+                    <tr class='header'></tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </script>
+        </table>
+
+        <script type="text/template" id="cell-template">
+            <td id ="td<%= name %>"><%= name %></td>
+        </script>
+        
+        <div id ="winner"></div>
+        
 
         <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
@@ -14,25 +33,5 @@
         <link href="./assets/css/custom.css" rel="stylesheet">
 
         <script src="./assets/javascripts/application.js"></script>
-    </head>
-    <body>
-        <table  id="content">
-            <script type="text/template" id="cells-template">
-      <thead>
-        <tr class='header'>
-         
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </script>
-        </table>
-
-        <script type="text/template" id="cell-template">
-          <td id ="td<%= name %>"><%= name %></td>
-    </script>
-        
-        
-    <div id ="winner"></div>
-        </body>
+    </body>
 </html>
