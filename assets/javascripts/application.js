@@ -1,10 +1,7 @@
 (function () {
     "use strict";
-    var mainModule = new window.Backbone.Marionette.Application();
-    mainModule.globalVars = {};
-    mainModule.globalVars.currMove = 0;
-    mainModule.globalVars.currArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    mainModule.globalVars.winningCombinations = [
+    var gameLogicModule = {};
+    gameLogicModule.winningCombinations = [
         [0, 1, 2],
         [3, 4, 5],
         [6, 7, 8],
@@ -14,14 +11,13 @@
         [0, 4, 8],
         [2, 4, 6]
     ];
-    mainModule.globalVars.appendIndex = 0;
-    mainModule.globalVars.theWinnerIs = false;
-    mainModule.globalVars.checkForWin = function () {
+
+    gameLogicModule.checkForWin = function () {
         var arr = mainModule.globalVars.currArray,
             i = 0,
 
             isWinningCombination = function () {
-                var winnComb = mainModule.globalVars.winningCombinations,
+                var winnComb = gameLogicModule.winningCombinations,
                     length = winnComb.length;
 
                 for (i = 0; i < length; i++) {
@@ -50,6 +46,18 @@
         mainModule.globalVars.theWinnerIs = "Draw";
         return true;
     };
+
+
+
+
+    var mainModule = new window.Backbone.Marionette.Application();
+    mainModule.globalVars = {};
+    mainModule.globalVars.currMove = 0;
+    mainModule.globalVars.currArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    
+    mainModule.globalVars.appendIndex = 0;
+    mainModule.globalVars.theWinnerIs = false;
+    
 
     mainModule.addRegions({
         mainRegion: "#content"
@@ -89,7 +97,7 @@
                     elem.innerHTML = ch;
                     mainModule.globalVars.currArray[parseInt(elem.id[2], 10) - 1] = ch;
                     mainModule.globalVars.currMove++;
-                    if (mainModule.globalVars.checkForWin()) {
+                    if (gameLogicModule.checkForWin()) {
                         winnerField.text("The winner is: " + mainModule.globalVars.theWinnerIs);
                     }
                 }
