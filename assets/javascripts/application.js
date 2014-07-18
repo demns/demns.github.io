@@ -19,6 +19,7 @@
     myApp.globalVars.checkForWin = function () {
         var arr = myApp.globalVars.currArray,
             i = 0,
+
             isWinningCombination = function () {
                 var winnComb = myApp.globalVars.winningCombinations,
                     length = winnComb.length;
@@ -34,7 +35,6 @@
                 return false;
             },
             isWin = isWinningCombination();
-
 
         if (isWin !== false) {
             myApp.globalVars.theWinnerIs = isWin;
@@ -80,7 +80,7 @@
 
             changeState: function () {
                 var elem = this.el.firstElementChild,
-                    ch = myApp.globalVars.currMove++ % 2 === 0 ? 'X' : 'Y',
+                    ch = myApp.globalVars.currMove % 2 === 0 ? 'X' : 'Y',
                     winnerField = $("#winner");
                 if (myApp.globalVars.theWinnerIs === false &&
                     elem.innerHTML !== 'X' &&
@@ -88,7 +88,7 @@
 
                     elem.innerHTML = ch;
                     myApp.globalVars.currArray[parseInt(elem.id[2], 10) - 1] = ch;
-
+                    myApp.globalVars.currMove++;
                     if (myApp.globalVars.checkForWin()) {
                         winnerField.text("The winner is: " + myApp.globalVars.theWinnerIs);
                     }
