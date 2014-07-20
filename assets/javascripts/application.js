@@ -92,11 +92,12 @@
                 var elem = this.el,
                     ch = mainModule.globalVars.currMove % 2 === 0 ? 'X' : 'Y',
                     winnerField = $("#winner"),
-                    path = ((ch === 'X') ? "cross" : "nought") + Math.round(Math.random() * 2 + 1) + ".png";
+                    path = ((ch === 'X') ? "cross" : "nought") + Math.round(Math.random() * 2 + 1) + ".png",
+                    gameArr = mainModule.globalVars.currArray;
 
                 if (mainModule.globalVars.theWinnerIs === false &&
-                    mainModule.globalVars.currArray[parseInt(elem.id[0], 10) - 1] !== 'X' &&
-                    mainModule.globalVars.currArray[parseInt(elem.id[0], 10) - 1] !== 'Y') {
+                    gameArr[parseInt(elem.id[0], 10) - 1] !== 'X' &&
+                    gameArr[parseInt(elem.id[0], 10) - 1] !== 'Y') {
 
 
                     elem.innerHTML = '';
@@ -104,7 +105,7 @@
                     img.src = "./assets/images/" + path;
                     elem.appendChild(img);
 
-                    mainModule.globalVars.currArray[parseInt(elem.id[0], 10) - 1] = ch;
+                    gameArr[parseInt(elem.id[0], 10) - 1] = ch;
                     mainModule.globalVars.currMove++;
 
                     if (gameLogicModule.checkForWin()) {
@@ -112,12 +113,30 @@
                     }
 
                     if (ch === 'X' && mainModule.globalVars.theWinnerIs === false) {
-                        var currRand = Math.round(Math.random() * 8 + 1);
-                        while (mainModule.globalVars.currArray[currRand - 1] === 'X' ||
-                            mainModule.globalVars.currArray[currRand - 1] === 'Y') {
-                            currRand = Math.round(Math.random() * 8 + 1);
+                        var currStrike = 1,
+                            currMove = mainModule.globalVars.currMove;
+                        if (currMove === 1) {
+                            if (gameArr[0] === 'X' || gameArr[2] === 'X' || gameArr[6] === 'X' || gameArr[8] === 'X') {
+                                currStrike = 4;
+                            }
+                            if (gameArr[4] === 'X') {
+                                currStrike = 0;
+                            }
+                            if (gameArr[1] === 'X' || gameArr[3] === 'X' || gameArr[5] === 'X' || gameArr[7] === 'X') {
+                                currStrike = 4;
+                            }
                         }
-                        $("#" + currRand).click();
+                        
+                        if (currMove !== 1) { 
+                            currStrike = Math.round(Math.random() * 8);
+                            while (mainModule.globalVars.currArray[currStrike] === 'X' ||
+                                mainModule.globalVars.currArray[currStrike] === 'Y') {
+                                currStrike = Math.round(Math.random() * 8);
+                            }
+
+                        }
+                        currStrike++;
+                        $("#" + currStrike).click();
                     }
                 }
             }
