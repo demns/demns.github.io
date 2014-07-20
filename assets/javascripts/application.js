@@ -54,10 +54,10 @@
     mainModule.globalVars = {};
     mainModule.globalVars.currMove = 0;
     mainModule.globalVars.currArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    
+
     mainModule.globalVars.appendIndex = 0;
     mainModule.globalVars.theWinnerIs = false;
-    
+
 
     mainModule.addRegions({
         mainRegion: "#content"
@@ -82,6 +82,7 @@
             template: "#cell-template",
             tagName: 'td',
             className: 'cell',
+            style: "width='33%'",
             events: {
                 'click': 'changeState'
             },
@@ -89,12 +90,19 @@
             changeState: function () {
                 var elem = this.el.firstElementChild,
                     ch = mainModule.globalVars.currMove % 2 === 0 ? 'X' : 'Y',
-                    winnerField = $("#winner");
+                    winnerField = $("#winner"),
+                    path = ((ch === 'X') ? "cross" : "nought") + Math.round(Math.random() * 2 + 1) + ".png";
+
                 if (mainModule.globalVars.theWinnerIs === false &&
                     elem.innerHTML !== 'X' &&
                     elem.innerHTML !== 'Y') {
 
-                    elem.innerHTML = ch;
+
+                    elem.innerHTML = '';
+                    var img = document.createElement("img");
+                    img.src = "./assets/images/" + path;
+                    elem.appendChild(img);
+
                     mainModule.globalVars.currArray[parseInt(elem.id[2], 10) - 1] = ch;
                     mainModule.globalVars.currMove++;
                     if (gameLogicModule.checkForWin()) {
