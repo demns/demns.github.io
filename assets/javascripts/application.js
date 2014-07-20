@@ -106,8 +106,18 @@
 
                     mainModule.globalVars.currArray[parseInt(elem.id[0], 10) - 1] = ch;
                     mainModule.globalVars.currMove++;
+
                     if (gameLogicModule.checkForWin()) {
                         winnerField.text("The winner is: " + mainModule.globalVars.theWinnerIs);
+                    }
+
+                    if (ch === 'X' && mainModule.globalVars.theWinnerIs === false) {
+                        var currRand = Math.round(Math.random() * 8 + 1);
+                        while (mainModule.globalVars.currArray[currRand - 1] === 'X' ||
+                            mainModule.globalVars.currArray[currRand - 1] === 'Y') {
+                            currRand = Math.round(Math.random() * 8 + 1);
+                        }
+                        $("#" + currRand).click();
                     }
                 }
             }
