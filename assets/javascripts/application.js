@@ -82,20 +82,21 @@
             template: "#cell-template",
             tagName: 'td',
             className: 'cell',
-            style: "width='33%'",
+
+
             events: {
                 'click': 'changeState'
             },
 
             changeState: function () {
-                var elem = this.el.firstElementChild,
+                var elem = this.el,
                     ch = mainModule.globalVars.currMove % 2 === 0 ? 'X' : 'Y',
                     winnerField = $("#winner"),
                     path = ((ch === 'X') ? "cross" : "nought") + Math.round(Math.random() * 2 + 1) + ".png";
 
                 if (mainModule.globalVars.theWinnerIs === false &&
-                    elem.innerHTML !== 'X' &&
-                    elem.innerHTML !== 'Y') {
+                    mainModule.globalVars.currArray[parseInt(elem.id[0], 10) - 1] !== 'X' &&
+                    mainModule.globalVars.currArray[parseInt(elem.id[0], 10) - 1] !== 'Y') {
 
 
                     elem.innerHTML = '';
@@ -103,7 +104,7 @@
                     img.src = "./assets/images/" + path;
                     elem.appendChild(img);
 
-                    mainModule.globalVars.currArray[parseInt(elem.id[2], 10) - 1] = ch;
+                    mainModule.globalVars.currArray[parseInt(elem.id[0], 10) - 1] = ch;
                     mainModule.globalVars.currMove++;
                     if (gameLogicModule.checkForWin()) {
                         winnerField.text("The winner is: " + mainModule.globalVars.theWinnerIs);
@@ -124,6 +125,7 @@
                 if (mainModule.globalVars.appendIndex++ % 3 === 0) {
                     collectionView.$("tbody").append("<tr></tr>");
                 }
+                itemView.el.id = itemView.el.innerHTML.trim();
                 collectionView.$("tbody").append(itemView.el);
             }
         });
