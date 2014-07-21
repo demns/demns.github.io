@@ -99,6 +99,7 @@
                     mainModule.globalVars.currMove++;
                     if (gameLogicModule.checkForWin()) {
                         winnerField.text("The winner is: " + mainModule.globalVars.theWinnerIs);
+                        $('tr').css('cursor', 'default');
                     }
                 }
             }
