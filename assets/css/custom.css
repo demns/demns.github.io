@@ -28,7 +28,7 @@ body {
 
 table {
     background-color: #87ceeb;
-
+    cursor: pointer;
 }
 
     table tr td:first-child,
@@ -39,9 +39,6 @@ table {
         border-right: 0;
         width: 100px;
         height: 33px;
-        cursor: pointer;
-        height: 33px;
-        width: 33px;
     }
 
 .table-bordered th, .table-bordered td {
