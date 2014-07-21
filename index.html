@@ -1,39 +1,38 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <title>BACKBONE Marionette Tutorial: Collections</title>
-    </head>
-    <body>
-        <div id ="gamePanel">
-            <table id="content">
-                <script type="text/template" id="cells-template">
-                    <thead>
-                        <tr class='header'></tr>
-                    </thead>
+<head>
+    <title>BACKBONE Marionette Tutorial: Collections</title>
+</head>
+<body>
+    <div id="gamePanel">
+        <table id="content">
+            <script type="text/template" id="cells-template">
+                <thead>
+                    <tr class='header'></tr>
+                </thead>
 
-                    <tbody>
-                    </tbody>
-                </script>
-            </table>
-        </div>
+                <tbody></tbody>
+            </script>
+        </table>
+    </div>
 
-        <script type="text/template" id="cell-template">
-            <td id ="td<%= name %>"><%= name %></td>
-        </script>
-        
-        <div id ="winner"></div>
-        
+    <script type="text/template" id="cell-template">
+        <%= name %>
+    </script>
 
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-        <script src="./assets/javascripts/vendor/underscore.js"></script>
-        <script src="./assets/javascripts/vendor/backbone.js"></script>
-        <script src="./assets/javascripts/vendor/backbone.marionette.js"></script>
+    <div id="winner"></div>
 
-        <link href="./assets/css/bootstrap.css" rel="stylesheet">
-        <link href="./assets/css/custom.css" rel="stylesheet">
 
-        <script src="./assets/javascripts/application.js"></script>
-    </body>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+    <script src="./assets/javascripts/vendor/underscore.js"></script>
+    <script src="./assets/javascripts/vendor/backbone.js"></script>
+    <script src="./assets/javascripts/vendor/backbone.marionette.js"></script>
+
+    <link href="./assets/css/bootstrap.css" rel="stylesheet">
+    <link href="./assets/css/custom.css" rel="stylesheet">
+
+    <script src="./assets/javascripts/application.js"></script>
+</body>
 </html>

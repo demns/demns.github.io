@@ -54,10 +54,10 @@
     mainModule.globalVars = {};
     mainModule.globalVars.currMove = 0;
     mainModule.globalVars.currArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    
+
     mainModule.globalVars.appendIndex = 0;
     mainModule.globalVars.theWinnerIs = false;
-    
+
 
     mainModule.addRegions({
         mainRegion: "#content"
@@ -82,24 +82,62 @@
             template: "#cell-template",
             tagName: 'td',
             className: 'cell',
+
+
             events: {
                 'click': 'changeState'
             },
 
             changeState: function () {
-                var elem = this.el.firstElementChild,
+                var elem = this.el,
                     ch = mainModule.globalVars.currMove % 2 === 0 ? 'X' : 'Y',
-                    winnerField = $("#winner");
-                if (mainModule.globalVars.theWinnerIs === false &&
-                    elem.innerHTML !== 'X' &&
-                    elem.innerHTML !== 'Y') {
+                    winnerField = $("#winner"),
+                    path = ((ch === 'X') ? "cross" : "nought") + Math.round(Math.random() * 2 + 1) + ".png",
+                    gameArr = mainModule.globalVars.currArray;
 
-                    elem.innerHTML = ch;
-                    mainModule.globalVars.currArray[parseInt(elem.id[2], 10) - 1] = ch;
+                if (mainModule.globalVars.theWinnerIs === false &&
+                    gameArr[parseInt(elem.id[0], 10) - 1] !== 'X' &&
+                    gameArr[parseInt(elem.id[0], 10) - 1] !== 'Y') {
+
+
+                    elem.innerHTML = '';
+                    var img = document.createElement("img");
+                    img.src = "./assets/images/" + path;
+                    elem.appendChild(img);
+
+                    gameArr[parseInt(elem.id[0], 10) - 1] = ch;
                     mainModule.globalVars.currMove++;
+
                     if (gameLogicModule.checkForWin()) {
                         winnerField.text("The winner is: " + mainModule.globalVars.theWinnerIs);
                         $('tr').css('cursor', 'default');
+                    }
+
+                    if (ch === 'X' && mainModule.globalVars.theWinnerIs === false) {
+                        var currStrike = 1,
+                            currMove = mainModule.globalVars.currMove;
+                        if (currMove === 1) {
+                            if (gameArr[0] === 'X' || gameArr[2] === 'X' || gameArr[6] === 'X' || gameArr[8] === 'X') {
+                                currStrike = 4;
+                            }
+                            if (gameArr[4] === 'X') {
+                                currStrike = 0;
+                            }
+                            if (gameArr[1] === 'X' || gameArr[3] === 'X' || gameArr[5] === 'X' || gameArr[7] === 'X') {
+                                currStrike = 4;
+                            }
+                        }
+                        
+                        if (currMove !== 1) { 
+                            currStrike = Math.round(Math.random() * 8);
+                            while (mainModule.globalVars.currArray[currStrike] === 'X' ||
+                                mainModule.globalVars.currArray[currStrike] === 'Y') {
+                                currStrike = Math.round(Math.random() * 8);
+                            }
+
+                        }
+                        currStrike++;
+                        $("#" + currStrike).click();
                     }
                 }
             }
@@ -117,6 +155,7 @@
                 if (mainModule.globalVars.appendIndex++ % 3 === 0) {
                     collectionView.$("tbody").append("<tr></tr>");
                 }
+                itemView.el.id = itemView.el.innerHTML.trim();
                 collectionView.$("tbody").append(itemView.el);
             }
         });
