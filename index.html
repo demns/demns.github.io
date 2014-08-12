@@ -1,38 +1,50 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
-    <title>BACKBONE Marionette Tutorial: Collections</title>
+  <link rel="icon" type="image/png" href="./assets/images/favicon.png">
+  <title>Ideal tic tac toe</title>
 </head>
+
 <body>
-    <div id="gamePanel">
-        <table id="content">
-            <script type="text/template" id="cells-template">
-                <thead>
-                    <tr class='header'></tr>
-                </thead>
+  <img class="computer" src="./assets/images/computer.png" height="50" width="50">
 
-                <tbody></tbody>
-            </script>
-        </table>
-    </div>
+  <img class="human" src="./assets/images/human.png" height="50" width="50">
 
-    <script type="text/template" id="cell-template">
-        <%= name %>
-    </script>
+  <div class="currentTimeOfDay"></div>
 
-    <div id="winner"></div>
+  <div class="about">
+    <a href="about.html">About</a>
+  </div>
 
+  <div class="main">
+    <table>
+      <tr>
+        <td></td>
+        <td></td>
+        <td>
+          <!-- <svg width="100%" viewBox="0 0 10 10">
+            <circle cx="5" cy="5" r="5" stroke="black" stroke-width="0" fill="red" />
+          </svg> -->
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
 
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-    <script src="./assets/javascripts/vendor/underscore.js"></script>
-    <script src="./assets/javascripts/vendor/backbone.js"></script>
-    <script src="./assets/javascripts/vendor/backbone.marionette.js"></script>
-
-    <link href="./assets/css/bootstrap.css" rel="stylesheet">
-    <link href="./assets/css/custom.css" rel="stylesheet">
-
-    <script src="./assets/javascripts/application.js"></script>
+  <link rel="stylesheet" type="text/css" href="./assets/style/elements.css">
+  <link rel="stylesheet" type="text/css" href="./assets/style/style.css">
+  <script src=./assets/javascript/view.js></script>
 </body>
-</html>
+
+<html>
