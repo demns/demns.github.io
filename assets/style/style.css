@@ -1,0 +1,63 @@
+body {
+  font-family: Minion, Sabon, Garamond;
+}
+div.main {
+  margin-left: 22.5%;
+  margin-right: 12.5%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  width: 50vw;
+  height: 75vh;
+}
+div.main table {
+  border-collapse: collapse;
+  height: 100%;
+  width: 100%;
+}
+div.main table td {
+  border: 2px solid gray;
+}
+div.main table tr:first-child td {
+  border-top: 0;
+}
+div.main table tr:last-child td {
+  border-bottom: 0;
+}
+div.main table tr td:first-child {
+  border-left: 0;
+}
+div.main table tr td:last-child {
+  border-right: 0;
+}
+div.currentTimeOfDay {
+  position: absolute;
+  bottom: 5%;
+  left: 5%;
+}
+div.about {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+}
+img.computer {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+}
+img.human {
+  position: absolute;
+  top: 5%;
+  right: 5%;
+}
+.evening {
+  background-color: #301860;
+}
+.afternoon {
+  background-color: #FFD700;
+}
+.morning {
+  background-color: #FF7E00;
+}
+.midnight {
+  background-color: #000000;
+}
