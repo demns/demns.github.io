@@ -31,69 +31,81 @@
     <a href="about.html">About</a>
   </div>
 
-  <div class="main">
+    <div id="contents" class="main">
+    <table id='cells'>
+      <tr></tr>
+    </table>
+    <script type="text/template" id="cell-template">
+      <%= name %>
+    </script>
+    </div>
+
+  <!-- <div class="main">
     <table>
       <tr>
         <td>
           <svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">
-            <circle cx="5" cy="5" r="4" stroke="black" stroke-width="2" fill-opacity="0" />
+            
           </svg>
         </td>
         <td>
           <svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">
-            <circle cx="5" cy="5" r="4" stroke="black" stroke-width="2" fill-opacity="0" />
+            
           </svg>
         </td>
         <td>
           <svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">
-            <line x1="0" y1="0" x2="10" y2="10" style="stroke:purple;stroke-width:2" />
-            <line x1="0" y1="10" x2="10" y2="0" style="stroke:purple;stroke-width:2" />
-          </svg>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">
-            <line x1="0" y1="0" x2="10" y2="10" style="stroke:purple;stroke-width:2" />
-            <line x1="0" y1="10" x2="10" y2="0" style="stroke:purple;stroke-width:2" />
-          </svg>
-        </td>
-        <td>
-          <svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">
-            <line x1="0" y1="0" x2="10" y2="10" style="stroke:purple;stroke-width:2" />
-            <line x1="0" y1="10" x2="10" y2="0" style="stroke:purple;stroke-width:2" />
-          </svg>
-        </td>
-        <td>
-          <svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">
-            <circle cx="5" cy="5" r="4" stroke="black" stroke-width="2" fill-opacity="0" />
+         
           </svg>
         </td>
       </tr>
       <tr>
         <td>
           <svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">
-            <circle cx="5" cy="5" r="4" stroke="black" stroke-width="2" fill-opacity="0" />
+
           </svg>
         </td>
         <td>
           <svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">
-            <circle cx="5" cy="5" r="4" stroke="black" stroke-width="2" fill-opacity="0" />
+
           </svg>
         </td>
         <td>
           <svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">
-            <line x1="0" y1="0" x2="10" y2="10" style="stroke:purple;stroke-width:2" />
-            <line x1="0" y1="10" x2="10" y2="0" style="stroke:purple;stroke-width:2" />
+
+          </svg>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">
+
+          </svg>
+        </td>
+        <td>
+          <svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">
+ 
+          </svg>
+        </td>
+        <td>
+          <svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">
+
           </svg>
         </td>
       </tr>
     </table>
-  </div>
+  </div> -->
 
-  <link rel="stylesheet" type="text/css" href="./assets/style/elements.css">
   <link rel="stylesheet" type="text/css" href="./assets/style/style.css">
   <script src=./assets/javascript/view.js></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/json2/20130526/json2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.0.3/backbone.marionette.min.js"></script>
+
+  <script src=./assets/javascript/logic.js></script>
 </body>
 
 <html>
