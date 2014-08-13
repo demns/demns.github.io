@@ -39,15 +39,21 @@ div.about {
   bottom: 5%;
   right: 5%;
 }
-img.computer {
+svg.computer {
   position: absolute;
   top: 5%;
   left: 5%;
 }
-img.human {
+svg.computer:hover {
+  opacity: 0.5;
+}
+svg.human {
   position: absolute;
   top: 5%;
   right: 5%;
+}
+svg.human:hover {
+  opacity: 0.5;
 }
 .evening {
   background-color: #301860;

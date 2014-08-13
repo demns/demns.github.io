@@ -1,10 +1,21 @@
 (function() {
   var body = document.body,
     timeOfDayDiv = document.getElementsByClassName('currentTimeOfDay')[0],
-    currentTimeOfDay = getCurrentPeriod();
+    currentTimeOfDay = getCurrentPeriod(),
+    humanImageDiv = document.getElementById('humanImage'),
+    computerImageDiv = document.getElementById('computerImage');
+
+  humanImageDiv.onclick = function() {
+    console.log('human first');
+  };
+  computerImageDiv.onclick = function() {
+    console.log('computer first');
+  };
 
   body.className += ' ' + currentTimeOfDay;
   timeOfDayDiv.innerHTML = currentTimeOfDay + ' mode';
+
+
 
 }())
 
