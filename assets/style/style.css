@@ -17,16 +17,16 @@ div.main table {
 div.main table td {
   border: 2px solid gray;
 }
-div.main table tr:first-child td {
+div.main table tbody td:nth-child(-n+4) {
   border-top: 0;
 }
-div.main table tr:last-child td {
+div.main table tbody td:nth-child(n+3)  {
   border-bottom: 0;
 }
-div.main table tr td:first-child {
+div.main table tbody td:nth-child(2n+2) {
   border-left: 0;
 }
-div.main table tr td:last-child {
+div.main table tbody td:nth-child(2n-2) {
   border-right: 0;
 }
 div.currentTimeOfDay {
@@ -39,15 +39,21 @@ div.about {
   bottom: 5%;
   right: 5%;
 }
-img.computer {
+svg.computer {
   position: absolute;
   top: 5%;
   left: 5%;
 }
-img.human {
+svg.computer:hover {
+  opacity: 0.5;
+}
+svg.human {
   position: absolute;
   top: 5%;
   right: 5%;
+}
+svg.human:hover {
+  opacity: 0.5;
 }
 .evening {
   background-color: #301860;
@@ -60,4 +66,7 @@ img.human {
 }
 .midnight {
   background-color: #000000;
+}
+.cell:hover{
+  background-color: #d3d3d3;
 }
