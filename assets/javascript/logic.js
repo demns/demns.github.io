@@ -37,37 +37,48 @@ var TTTApplication = {
   },
 
   computerMove: function() {
-    var success = false,
-      randNumber;
-    do {
-      randNumber = Math.floor((Math.random() * 9));
-      success = this.makeMove($('.' + this.cellClassName)[randNumber], true);
-    }
-    while (!success);
+    var cellNumber = II.calculateComputerMove(this.getPositionsArray(), this.count);
+    this.makeMove($('.' + this.cellClassName)[cellNumber], true);
+  },
+
+  getPositionsArray: function() {
+    var positionsArray = ['', '', '', '', '', '', '', '', ''],
+      X = 'X',
+      O = 'O';
+
+    for (var i = 0; i < 9; i++) {
+      if ($('.' + this.cellClassName)[i].innerHTML.indexOf('circle') > 0) {
+        positionsArray[i] = O;
+      }
+      if ($('.' + this.cellClassName)[i].innerHTML.indexOf('line') > 0) {
+        positionsArray[i] = X;
+      }
+    };
+
+    console.log(positionsArray);
+    return positionsArray;
   },
 
   makeMove: function(el, computerMove) {
-    if (TTTApplication.count === 9) {
-      return true;
-    }
-    if (el.innerHTML.indexOf('circle') > 0 ||
+    if (TTTApplication.count === 9 ||
+      el.innerHTML.indexOf('circle') > 0 ||
       el.innerHTML.indexOf('line') > 0) {
-      if (computerMove) {
-        return false;
-      }
+      return;
     }
+
     if (TTTApplication.count++ % 2 === 0) {
       el.innerHTML = TTTApplication.svgOpenTag + TTTApplication.svgCross + TTTApplication.svgCloseTag;
     } else {
       el.innerHTML = TTTApplication.svgOpenTag + TTTApplication.svgCircle + TTTApplication.svgCloseTag;
     }
-    if (TTTApplication.firstMoveComputer && TTTApplication.count % 2 === 0) {
-      TTTApplication.computerMove();
-    }
-    if (!TTTApplication.firstMoveComputer && !(TTTApplication.count % 2 === 0)) {
-      TTTApplication.computerMove();
+
+    if (TTTApplication.count === 9) {
+      return true;
     }
 
-    return true;
+    if (TTTApplication.firstMoveComputer && TTTApplication.count % 2 === 0 ||
+      (!TTTApplication.firstMoveComputer && !(TTTApplication.count % 2 === 0))) {
+      TTTApplication.computerMove();
+    }
   }
 };
