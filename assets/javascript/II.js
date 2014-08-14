@@ -57,6 +57,10 @@ var II = {
   O: 'O',
   positions: [],
 
+  currentPlayerX: function(currMove) {
+    return currMove % 2 == 0;
+  },
+
   haveTwoInARowCrosses: function() {
     var X = this.X,
       O = this.O;
@@ -79,34 +83,6 @@ var II = {
         return true;
     }
     return false;
-  },
-
-  haveForkForCrosses: function() {
-    var X = this.X,
-      O = this.O;
-    return this.isFork(X, O);
-  },
-
-  haveForkForNoughts: function() {
-    var X = this.X,
-      O = this.O;
-    return this.isFork(O, X);
-  },
-
-  isFork: function(ch, oppositeCh) {
-    var fork = this.fork,
-      positions = this.positions;
-    for (var i = 0; i < fork.length; i++) {
-      if (positions[fork[i][0]] == ch &&
-        positions[fork[i][1]] == ch &&
-        positions[fork[i][2]] != oppositeCh)
-        return true;
-    }
-    return false;
-  },
-
-  currentPlayerX: function(currMove) {
-    return currMove % 2 == 0;
   },
 
   winForNoughts: function() {
@@ -143,7 +119,65 @@ var II = {
     return this.winForNoughts();
   },
 
-  setCorner: function(ch) {
+  haveForkCrosses: function() {
+    var X = this.X,
+      O = this.O;
+    return this.isFork(X, O);
+  },
+
+  haveForkNoughts: function() {
+    var X = this.X,
+      O = this.O;
+    return this.isFork(O, X);
+  },
+
+  isFork: function(ch, oppositeCh) {
+    var fork = this.fork,
+      positions = this.positions;
+    for (var i = 0; i < fork.length; i++) {
+      if (positions[fork[i][0]] == ch &&
+        positions[fork[i][1]] == ch &&
+        positions[fork[i][2]] != oppositeCh)
+        return true;
+    }
+    return false;
+  },
+
+  setForkNoughts: function() {
+    var fork = this.fork,
+      positions = this.positions,
+      X = this.X,
+      O = this.O;
+    for (var i = 0; i < fork.length; i++) {
+      if (positions[fork[i][0]] == O &&
+        positions[fork[i][1]] == O &&
+        positions[fork[i][2]] != X)
+        return fork[i][2];
+    }
+  },
+
+  setForkCrosses: function() {
+    var fork = this.fork,
+      positions = this.positions,
+      X = this.X,
+      O = this.O;
+    for (var i = 0; i < fork.length; i++) {
+      if (positions[fork[i][0]] == X &&
+        positions[fork[i][1]] == X &&
+        positions[fork[i][2]] != O)
+        return fork[i][2];
+    }
+  },
+
+  blockForkFromNoughts: function() {
+    return this.setForkCrosses();
+  },
+
+  blockForkFromCrosses: function() {
+    return this.setForkNoughts();
+  },
+
+  getCorner: function(ch) {
     var positions = this.positions;
     if (positions[0] === ch && positions[8] === '') {
       return 8;
@@ -160,7 +194,7 @@ var II = {
     return -1;
   },
 
-  setCornerIfNot: function() {
+  getCornerOrNot: function() {
     var positions = this.positions;
     if (positions[0] === '') return 0;
     if (positions[2] === '') return 2;
@@ -169,7 +203,7 @@ var II = {
     return -1;
   },
 
-  setSideIfNot: function() {
+  getSideOrNot: function() {
     var positions = this.positions;
     if (positions[1] === '') return 1;
     if (positions[3] === '') return 3;
@@ -202,6 +236,28 @@ var II = {
       }
     }
 
+    //3
+    if (this.currentPlayerX(currMove)) {
+      if (this.haveForkCrosses()) {
+        return this.setForkCrosses();
+      }
+    } else {
+      if (this.haveForkNoughts()) {
+        return this.setForkNoughts();
+      }
+    }
+
+    //2
+    if (this.currentPlayerX(currMove)) {
+      if (this.haveForkNoughts()) {
+        return this.blockForkFromCrosses();
+      }
+    } else {
+      if (this.haveForkCrosses()) {
+        return this.blockForkFromNoughts();
+      }
+    }
+
     //5
     if (positions[4] === '') {
       return 4;
@@ -209,19 +265,19 @@ var II = {
 
     //6
     if (this.currentPlayerX(currMove)) {
-      if (this.setCorner(this.O) !== -1)
-        return this.setCorner(this.O);
+      if (this.getCorner(this.O) !== -1)
+        return this.getCorner(this.O);
     } else {
-      if (this.setCorner(this.X) !== -1)
-        return this.setCorner(this.X);
+      if (this.getCorner(this.X) !== -1)
+        return this.getCorner(this.X);
     }
 
     //7
-    if (this.setCornerIfNot() !== -1)
-      return this.setCornerIfNot();
+    if (this.getCornerOrNot() !== -1)
+      return this.getCornerOrNot();
 
     //8
-    if (this.setSideIfNot() !== -1)
-      return this.setSideIfNot();
+    if (this.getSideOrNot() !== -1)
+      return this.getSideOrNot();
   }
 }
