@@ -135,6 +135,14 @@ var II = {
     }
   },
 
+  blockFromNoughts: function() {
+    return this.winForCrosses();
+  },
+
+  blockFromCrosses: function() {
+    return this.winForNoughts();
+  },
+
   calculateComputerMove: function(positions, currMove) {
     this.positions = positions;
     //1
@@ -148,7 +156,16 @@ var II = {
       }
     }
 
-
+    //2
+    if (this.currentPlayerX(currMove)) {
+      if (this.haveTwoInARowNoughts()) {
+        return this.blockFromCrosses();
+      }
+    } else {
+      if (this.haveTwoInARowCrosses()) {
+        return this.blockFromNoughts();
+      }
+    }
 
     var success = false,
       randNumber;
