@@ -20,7 +20,7 @@ div.main table td {
 div.main table tbody td:nth-child(-n+4) {
   border-top: 0;
 }
-div.main table tbody td:nth-child(n+3)  {
+div.main table tbody td:nth-child(n+3) {
   border-bottom: 0;
 }
 div.main table tbody td:nth-child(2n+2) {
@@ -43,6 +43,7 @@ svg.computer {
   position: absolute;
   top: 5%;
   left: 5%;
+  cursor: pointer;
 }
 svg.computer:hover {
   opacity: 0.5;
@@ -51,6 +52,7 @@ svg.human {
   position: absolute;
   top: 5%;
   right: 5%;
+  cursor: pointer;
 }
 svg.human:hover {
   opacity: 0.5;
@@ -67,6 +69,7 @@ svg.human:hover {
 .midnight {
   background-color: #000000;
 }
-.cell:hover{
+.cell:hover {
+  cursor: pointer;
   background-color: #d3d3d3;
 }

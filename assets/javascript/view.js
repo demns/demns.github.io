@@ -6,18 +6,17 @@
     computerImageDiv = document.getElementById('computerImage');
 
   humanImageDiv.onclick = function() {
-    console.log('human first');
+    TTTApplication.setup(false);
   };
+
   computerImageDiv.onclick = function() {
-    console.log('computer first');
+    TTTApplication.setup(true);
   };
 
   body.className += ' ' + currentTimeOfDay;
   timeOfDayDiv.innerHTML = currentTimeOfDay + ' mode';
 
-
-
-}())
+}());
 
 function getCurrentPeriod() {
   var time = new Date(),
