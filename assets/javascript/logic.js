@@ -55,11 +55,14 @@ var TTTApplication = {
       }
     };
 
-    console.log(positionsArray);
     return positionsArray;
   },
 
   makeMove: function(el, computerMove) {
+    if (this.isFinished(this.getPositionsArray())) {
+      return;
+    }
+
     if (TTTApplication.count === 9 ||
       el.innerHTML.indexOf('circle') > 0 ||
       el.innerHTML.indexOf('line') > 0) {
@@ -80,5 +83,25 @@ var TTTApplication = {
       (!TTTApplication.firstMoveComputer && !(TTTApplication.count % 2 === 0))) {
       TTTApplication.computerMove();
     }
+  },
+
+  isFinished: function(positions) {
+    var X = 'X',
+      O = 'O';
+    return (this.isFinishedFor(positions, X) || this.isFinishedFor(positions, O));
+  },
+
+  isFinishedFor: function(positions, X) {
+    if ((positions[0] === X && positions[1] === X && positions[2] === X) ||
+      (positions[3] === X && positions[4] === X && positions[5] === X) ||
+      (positions[6] === X && positions[7] === X && positions[8] === X) ||
+      (positions[0] === X && positions[3] === X && positions[6] === X) ||
+      (positions[1] === X && positions[4] === X && positions[7] === X) ||
+      (positions[2] === X && positions[5] === X && positions[8] === X) ||
+      (positions[0] === X && positions[4] === X && positions[8] === X) ||
+      (positions[2] === X && positions[4] === X && positions[6] === X)) {
+      return true;
+    }
+    return false;
   }
 };
