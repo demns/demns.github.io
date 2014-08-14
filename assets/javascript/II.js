@@ -143,6 +143,41 @@ var II = {
     return this.winForNoughts();
   },
 
+  setCorner: function(ch) {
+    var positions = this.positions;
+    if (positions[0] === ch && positions[8] === '') {
+      return 8;
+    }
+    if (positions[2] === ch && positions[6] === '') {
+      return 6;
+    }
+    if (positions[6] === ch && positions[2] === '') {
+      return 2;
+    }
+    if (positions[8] === ch && positions[0] === '') {
+      return 0;
+    }
+    return -1;
+  },
+
+  setCornerIfNot: function() {
+    var positions = this.positions;
+    if (positions[0] === '') return 0;
+    if (positions[2] === '') return 2;
+    if (positions[6] === '') return 6;
+    if (positions[8] === '') return 8;
+    return -1;
+  },
+
+  setSideIfNot: function() {
+    var positions = this.positions;
+    if (positions[1] === '') return 1;
+    if (positions[3] === '') return 3;
+    if (positions[5] === '') return 5;
+    if (positions[7] === '') return 7;
+    return -1;
+  },
+
   calculateComputerMove: function(positions, currMove) {
     this.positions = positions;
     //1
@@ -167,13 +202,26 @@ var II = {
       }
     }
 
-    var success = false,
-      randNumber;
-    do {
-      randNumber = Math.floor((Math.random() * 9));
-      success = (positions[randNumber] === '');
+    //5
+    if (positions[4] === '') {
+      return 4;
     }
-    while (!success);
-    return randNumber;
+
+    //6
+    if (this.currentPlayerX(currMove)) {
+      if (this.setCorner(this.O) !== -1)
+        return this.setCorner(this.O);
+    } else {
+      if (this.setCorner(this.X) !== -1)
+        return this.setCorner(this.X);
+    }
+
+    //7
+    if (this.setCornerIfNot() !== -1)
+      return this.setCornerIfNot();
+
+    //8
+    if (this.setSideIfNot() !== -1)
+      return this.setSideIfNot();
   }
 }
