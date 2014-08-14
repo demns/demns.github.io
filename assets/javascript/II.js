@@ -79,7 +79,7 @@ var II = {
     for (var i = 0; i < twoInARow.length; i++) {
       if (positions[twoInARow[i][0]] == ch &&
         positions[twoInARow[i][1]] == ch &&
-        positions[twoInARow[i][2]] != oppositeCh)
+        positions[twoInARow[i][2]] === '')
         return true;
     }
     return false;
@@ -93,7 +93,7 @@ var II = {
     for (var i = 0; i < twoInARow.length; i++) {
       if (positions[twoInARow[i][0]] == O &&
         positions[twoInARow[i][1]] == O &&
-        positions[twoInARow[i][2]] != X)
+        positions[twoInARow[i][2]] === '')
         return twoInARow[i][2];
     }
   },
@@ -106,7 +106,7 @@ var II = {
     for (var i = 0; i < twoInARow.length; i++) {
       if (positions[twoInARow[i][0]] == X &&
         positions[twoInARow[i][1]] == X &&
-        positions[twoInARow[i][2]] != O)
+        positions[twoInARow[i][2]] === '')
         return twoInARow[i][2];
     }
   },
@@ -137,7 +137,7 @@ var II = {
     for (var i = 0; i < fork.length; i++) {
       if (positions[fork[i][0]] == ch &&
         positions[fork[i][1]] == ch &&
-        positions[fork[i][2]] != oppositeCh)
+        positions[fork[i][2]] === '')
         return true;
     }
     return false;
@@ -151,7 +151,7 @@ var II = {
     for (var i = 0; i < fork.length; i++) {
       if (positions[fork[i][0]] == O &&
         positions[fork[i][1]] == O &&
-        positions[fork[i][2]] != X)
+        positions[fork[i][2]] === '')
         return fork[i][2];
     }
   },
@@ -164,7 +164,7 @@ var II = {
     for (var i = 0; i < fork.length; i++) {
       if (positions[fork[i][0]] == X &&
         positions[fork[i][1]] == X &&
-        positions[fork[i][2]] != O)
+        positions[fork[i][2]] === '')
         return fork[i][2];
     }
   },
@@ -247,7 +247,7 @@ var II = {
       }
     }
 
-    //2
+    //4
     if (this.currentPlayerX(currMove)) {
       if (this.haveForkNoughts()) {
         return this.blockForkFromCrosses();
