@@ -8,7 +8,7 @@
 //6 Opposite corner: If the opponent is in the corner, the player plays the opposite corner.
 //7 Empty corner: The player plays in a corner square.
 //8 Empty side: The player plays in a middle square on any of the 4 sides.
-var II = {
+var AI = {
   twoInARow: [
     [0, 1, 2],
     [0, 2, 1],

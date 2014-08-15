@@ -5,7 +5,7 @@ var TTTApplication = {
     '<line x1="0" y1="10" x2="10" y2="0" style="stroke:purple;stroke-width:2" />',
   svgOpenTag: '<svg width="50%" height="50%" viewBox="0 0 10 10" style="display: block; margin: 0 auto;">',
   svgCloseTag: '</svg>',
-  newRow: '<tr></tr>',
+  newRow: '<tr style="height:0"></tr>',
   cellsTable: $("table#cells"),
   lastBodyItemQuery: 'table#cells > tbody:last',
   mainDivItemQuery: "div#contents",
@@ -37,7 +37,7 @@ var TTTApplication = {
   },
 
   computerMove: function() {
-    var cellNumber = II.calculateComputerMove(this.getPositionsArray(), this.count);
+    var cellNumber = AI.calculateComputerMove(this.getPositionsArray(), this.count);
     this.makeMove($('.' + this.cellClassName)[cellNumber], true);
   },
 
