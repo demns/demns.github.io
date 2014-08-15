@@ -12,6 +12,8 @@ var TTTApplication = {
   cellClassName: 'cell',
   cellTemplateQuery: '#cell-template',
   firstMoveComputer: false,
+  X: 'X',
+  O: 'O',
 
   clearTable: function() {
     this.cellsTable.html(this.newRow);
@@ -38,13 +40,13 @@ var TTTApplication = {
 
   computerMove: function() {
     var cellNumber = AI.calculateComputerMove(this.getPositionsArray(), this.count);
-    this.makeMove($('.' + this.cellClassName)[cellNumber], true);
+    this.makeMove($('.' + this.cellClassName)[cellNumber]);
   },
 
   getPositionsArray: function() {
     var positionsArray = ['', '', '', '', '', '', '', '', ''],
-      X = 'X',
-      O = 'O';
+      X = this.X,
+      O = this.O;
 
     for (var i = 0; i < 9; i++) {
       if ($('.' + this.cellClassName)[i].innerHTML.indexOf('circle') > 0) {
@@ -58,8 +60,8 @@ var TTTApplication = {
     return positionsArray;
   },
 
-  makeMove: function(el, computerMove) {
-    if (this.isFinished(this.getPositionsArray())) {
+  makeMove: function(el) {
+    if (AI.isFinished(this.getPositionsArray())) {
       return;
     }
 
@@ -83,25 +85,5 @@ var TTTApplication = {
       (!TTTApplication.firstMoveComputer && !(TTTApplication.count % 2 === 0))) {
       TTTApplication.computerMove();
     }
-  },
-
-  isFinished: function(positions) {
-    var X = 'X',
-      O = 'O';
-    return (this.isFinishedFor(positions, X) || this.isFinishedFor(positions, O));
-  },
-
-  isFinishedFor: function(positions, X) {
-    if ((positions[0] === X && positions[1] === X && positions[2] === X) ||
-      (positions[3] === X && positions[4] === X && positions[5] === X) ||
-      (positions[6] === X && positions[7] === X && positions[8] === X) ||
-      (positions[0] === X && positions[3] === X && positions[6] === X) ||
-      (positions[1] === X && positions[4] === X && positions[7] === X) ||
-      (positions[2] === X && positions[5] === X && positions[8] === X) ||
-      (positions[0] === X && positions[4] === X && positions[8] === X) ||
-      (positions[2] === X && positions[4] === X && positions[6] === X)) {
-      return true;
-    }
-    return false;
   }
 };

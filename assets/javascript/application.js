@@ -16,7 +16,7 @@
     },
 
     changeState: function() {
-      TTTApplication.makeMove(this.el, false);
+      TTTApplication.makeMove(this.el);
     },
 
     render: function() {
@@ -30,15 +30,20 @@
 
     render: function() {
       this.collection.each(function(cell) {
+
         var currCellNumber = cell.attributes.name,
+          lastBodyItemQuery = 'table#cells > tbody:last',
           cellView = new CellView({
             model: cell
           }),
-          tableLast = $(TTTApplication.lastBodyItemQuery);
+          tableLast = $(lastBodyItemQuery);
+
         tableLast.append(cellView.render().el);
+
         if (currCellNumber % 3 === 0) {
           tableLast.append(TTTApplication.newRow);
         }
+
       });
     }
   });

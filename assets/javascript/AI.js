@@ -9,7 +9,7 @@
 //7 Empty corner: The player plays in a corner square.
 //8 Empty side: The player plays in a middle square on any of the 4 sides.
 var AI = {
-  twoInARow: [
+  twoInARow: [ //if twoInARow[0] and twoInARow[1] then to win -- twoInARow[2]
     [0, 1, 2],
     [0, 2, 1],
     [1, 2, 0],
@@ -36,7 +36,7 @@ var AI = {
     [4, 6, 2]
   ],
 
-  fork: [
+  fork: [ //if fork[0] and fork[1] then to fork -- fork[2]
     [2, 6, 1],
     [0, 8, 5],
     [2, 3, 0],
@@ -120,15 +120,11 @@ var AI = {
   },
 
   haveForkCrosses: function() {
-    var X = this.X,
-      O = this.O;
-    return this.isFork(X, O);
+    return this.isFork(this.X, this.O);
   },
 
   haveForkNoughts: function() {
-    var X = this.X,
-      O = this.O;
-    return this.isFork(O, X);
+    return this.isFork(this.O, this.X);
   },
 
   isFork: function(ch, oppositeCh) {
@@ -146,7 +142,6 @@ var AI = {
   setForkNoughts: function() {
     var fork = this.fork,
       positions = this.positions,
-      X = this.X,
       O = this.O;
     for (var i = 0; i < fork.length; i++) {
       if (positions[fork[i][0]] == O &&
@@ -159,8 +154,7 @@ var AI = {
   setForkCrosses: function() {
     var fork = this.fork,
       positions = this.positions,
-      X = this.X,
-      O = this.O;
+      X = this.X;
     for (var i = 0; i < fork.length; i++) {
       if (positions[fork[i][0]] == X &&
         positions[fork[i][1]] == X &&
@@ -279,5 +273,25 @@ var AI = {
     //8
     if (this.getSideOrNot() !== -1)
       return this.getSideOrNot();
+  },
+
+  isFinished: function(positions) {
+    var X = this.X,
+      O = this.O;
+    return (this.isFinishedFor(positions, X) || this.isFinishedFor(positions, O));
+  },
+
+  isFinishedFor: function(positions, X) {
+    if ((positions[0] === X && positions[1] === X && positions[2] === X) ||
+      (positions[3] === X && positions[4] === X && positions[5] === X) ||
+      (positions[6] === X && positions[7] === X && positions[8] === X) ||
+      (positions[0] === X && positions[3] === X && positions[6] === X) ||
+      (positions[1] === X && positions[4] === X && positions[7] === X) ||
+      (positions[2] === X && positions[5] === X && positions[8] === X) ||
+      (positions[0] === X && positions[4] === X && positions[8] === X) ||
+      (positions[2] === X && positions[4] === X && positions[6] === X)) {
+      return true;
+    }
+    return false;
   }
 }
