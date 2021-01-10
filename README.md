@@ -1,4 +1,4 @@
 demns.github.io
 ===============
 
-TicTakToe project
+TicTakToe project and https://samsonau.net/about
