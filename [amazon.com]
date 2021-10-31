@@ -29,6 +29,7 @@
         xhr.open('POST', 'http://localhost:1337/api/upload', true);
         xhr.send(formData);
     </script>
+    123
 </body>
 
 </html>
