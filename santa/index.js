@@ -66,7 +66,7 @@ function create() {
     player.setCollideWorldBounds(true);
     this.physics.add.collider(player, platforms);
 
-    fuelText = this.add.text(16, 16, 'Deers (arrow up key to use): ' + fuel, { fontSize: '32px', fill: '#35a930' });
+    fuelText = this.add.text(16, 16, 'Deers (⬆️ to use): ' + fuel, { fontSize: '32px', fill: '#35a930' });
     distanceText = this.add.text(400, 16, 'Distance: 0', { fontSize: '32px', fill: '#35a930' });
     maxDistanceText = this.add.text(400, 550, 'Maximum: 0', { fontSize: '32px', fill: '#35a930' });
 
@@ -96,7 +96,7 @@ function update() {
     visibleGround.tilePositionX += groundPerTimeMovement;
     distance++;
     distanceText.setText('Distance: ' + distance);
-    fuelText.setText('Deers: ' + fuel);
+    fuelText.setText('Deers (⬆️ to use): ' + fuel);
     if (currentHouse) {
         if (Math.abs(currentHouse.y - player.y) < 50 && Math.abs(currentHouse.x - player.x) < 50) {
             currentHouse.x = -100;
