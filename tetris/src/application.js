@@ -54,7 +54,7 @@ scene.add(plane);
 camera.position.z = 15; // to avoid camera being into the cube at 0 0 0
 camera.position.y = 20;
 
-const enterVR = new webvrui.EnterVRButton(renderer.domElement, {});
+const enterVR = new webvrui.EnterVRButton(renderer.domElement, {textEnterVRTitle: 'ENTER VR (use mobile Chrome)'});
 document.body.appendChild(enterVR.domElement);
 
 const Controls = OrbitControls(Three);
