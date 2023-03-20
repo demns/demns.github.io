@@ -20,12 +20,20 @@
       font-size: 18px;
     }
 
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #bcd;
+        color: #334;
+        outline: 5px dotted #000;
+      }
+    }
+
     div.card {
       border-radius: 6px;
       padding: 1em;
       margin: 2em;
       display: block;
-      background: #fff;
       transition: all 300ms;
       display: flex;
       align-items: center;
@@ -39,7 +47,7 @@
 <body>
   <main>
     <div class="card">
-      <div>Hi, I am currently in Berlin and working with <a href="https://www.sennder.com/">sennder</a>.</div>
+      <div>Hi, I am currently in Berlin working with <a href="https://www.sennder.com/">sennder</a> ❤️</div>
       <div>You can find me at:</div>
 
       <ul>
@@ -57,7 +65,13 @@
       <ul>
         <li>Currently in development is whopays. Alpha should be available <a href="https://whopays.net/">here</a> in
           2023
-          ❤️</li>
+        </li>
+        <li>
+          <a href="https://twodo.it/">twodo.it</a>, to do list the way you always wanted it to be
+        </li>
+        <li>
+          <a href="https://github.com/demns/react-js-presentations-2016">React JS presentations / talks</a>
+        </li>
         <li>
           A lot of presentations about various topics, some available here:
           <a href="https://github.com/demns/react-js-presentations-2016">React JS presentations</a>
