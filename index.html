@@ -20,9 +20,18 @@
   <style>
     body {
       font-family: Minion, Sabon, Garamond;
-      font-size: 18px;
+      font-size: 1.4rem;
+      line-height: 2rem;
     }
 
+    ul li::marker {
+      content: "🧡 ";
+      font-size: 1rem;
+    }
+
+    ul li ul li::marker {
+      font-size: 0.6rem;
+    }
 
     @media (prefers-color-scheme: dark) {
       body {
@@ -30,6 +39,8 @@
         color: #334;
         outline: 5px dotted #000;
       }
+
+
     }
 
     div.card {
@@ -50,7 +61,7 @@
 <body>
   <main>
     <div class="card">
-      <div>Hi, I am currently in Berlin working with <a href="https://www.sennder.com/">sennder</a> ❤️</div>
+      <div>Hi, I am currently in Berlin working with <a href="https://www.sennder.com/">sennder</a></div>
       <div>You can find me at:</div>
 
       <ul>
@@ -106,7 +117,7 @@
           <a href="./santa">Santa</a>
         </li>
         <li>
-          <a href="./tetris/www">Webgl tetris</a>, and yes, item should go through 😊
+          <a href="./tetris/www">Webgl tetris</a>, and yes, item should go through
         </li>
       </ul>
 
