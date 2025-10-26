@@ -7,103 +7,728 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
   <link rel="manifest" href="assets/site.webmanifest">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="theme-color" content="white" />
-  <meta name="description" content="This is Dzmitry Samsonau's website" />
-  <meta name="keywords" content="Dzmitry Samsonau" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="description"
+    content="Frontend & Design Chapter Lead at Deutsche Bank. Engineering Manager empowering engineers and designers in Berlin." />
+  <meta name="keywords" content="Dzmitry Samsonau, Frontend Engineering Manager, Engineering Leadership, Berlin" />
   <meta name="robots" content="index, follow" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="language" content="English" />
-  <meta name="title" content="Dzmitry Samsonau" />
-
+  <meta name="title" content="Dzmitry Samsonau - Frontend & Design Chapter Lead" />
   <title>Dzmitry Samsonau</title>
 
   <style>
-    body {
-      font-family: Minion, Sabon, Garamond;
-      font-size: 1.4rem;
-      line-height: 2rem;
-      cursor: url('assets/heart.svg') 10 10, auto;
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    ul li::marker {
-      content: "🧡 ";
-      font-size: 1rem;
+    :root {
+      --bg: #0a0a0a;
+      --card: #161616;
+      --text: #e5e5e5;
+      --muted: #a3a3a3;
+      --accent: #ff6b35;
+      --hover: #ff8c61;
+      --border: #262626;
     }
 
-    ul li ul li::marker {
-      font-size: 0.6rem;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      body {
-        background: #bcd;
-        color: #334;
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8f9fa;
+        --card: #ffffff;
+        --text: #1a1a1a;
+        --muted: #6b7280;
+        --border: #e5e7eb;
       }
     }
 
-    div.card {
-      padding: 1rem;
-      margin: 1rem;
-      display: block;
-      transition: all 300ms;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      cursor: url('assets/heart.svg') 10 10, auto;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+      transition: transform 0.3s, color 0.3s;
+      display: inline-block;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    h1:hover {
+      transform: scale(1.05) rotate(-2deg);
+      color: var(--accent);
+    }
+
+    .role {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .role:hover {
+      color: var(--accent);
+    }
+
+    .location {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .hint {
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin-top: 1rem;
+      opacity: 0.7;
+      font-style: italic;
+    }
+
+    nav {
       display: flex;
-      align-items: center;
+      gap: 1.5rem;
       justify-content: center;
-      flex-direction: column;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      position: relative;
+      opacity: 0.8;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0.25rem;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: all 0.3s;
+      transform: translateX(-50%);
+    }
+
+    nav a:hover {
+      color: var(--accent);
+      opacity: 1;
+    }
+
+    nav a:hover::after {
+      width: calc(100% - 2rem);
+    }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      transition: all 0.3s;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    section:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(255, 107, 53, 0.15);
+      border-color: var(--accent);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      user-select: none;
+      transition: color 0.3s;
+    }
+
+    section:hover h2 {
+      color: var(--accent);
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    li {
+      margin-bottom: 1.25rem;
+      padding-left: 1.8rem;
+      position: relative;
+      transition: transform 0.2s;
+    }
+
+    li:hover {
+      transform: translateX(8px);
+    }
+
+    li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      top: 0.1rem;
+      transition: transform 0.3s;
+      color: var(--accent);
+    }
+
+    li:hover::before {
+      transform: translateX(4px);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    a:hover {
+      color: var(--hover);
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255, 107, 53, 0.1);
+      color: var(--accent);
+      padding: 0.2rem 0.6rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-left: 0.5rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.6;
+      }
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s;
+    }
+
+    footer:active {
+      transform: scale(0.95);
+    }
+
+    .shake {
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      10%,
+      30%,
+      50%,
+      70%,
+      90% {
+        transform: translateX(-10px);
+      }
+
+      20%,
+      40%,
+      60%,
+      80% {
+        transform: translateX(10px);
+      }
+    }
+
+    .easter-egg {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      font-size: 3rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      z-index: 1000;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .easter-egg:hover,
+    .easter-egg:active {
+      transform: scale(1.2) rotate(15deg);
+    }
+
+    .falling-item {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999;
+      animation: fall 3s linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .secret-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: var(--card);
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      z-index: 2000;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s;
+      max-width: 400px;
+    }
+
+    .secret-message.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .secret-message h3 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .close-btn {
+      margin-top: 1rem;
+      padding: 0.5rem 1.5rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .close-btn:hover {
+      background: var(--hover);
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      section {
+        padding: 1.5rem;
+      }
+
+      nav {
+        gap: 1rem;
+      }
+
+      .easter-egg {
+        bottom: 1rem;
+        right: 1rem;
+        font-size: 2.5rem;
+      }
     }
   </style>
 </head>
 
 <body>
-  <main>
-    <div class="card">
-      <ul>
-        <li><a href="https://www.linkedin.com/in/dzmitrysamsonau">linkedin.com/in/dzmitrysamsonau</a></li>
-        <li><a href="mailto:dzmitrysamsonau@gmail.com">dzmitrysamsonau@gmail.com</a></li>
-        <li><a href="https://github.com/demns">github.com/demns</a></li>
-        <li><a href="https://bitbucket.org/demns/">bitbucket.org/demns</a></li>
-        <li><a href="https://www.facebook.com/dsamsonau">facebook.com/dsamsonau</a></li>
-        <li><a href="https://www.instagram.com/samsdemon">instagram.com/samsdemon</a></li>
-      </ul>
-    </div>
+  <canvas id="particles"></canvas>
 
-    <div class="card">
-      <b>Projects:</b>
-      <ul>
-        <li>Currently in development is <a href="https://whopays.net/">whopays</a>. Alpha should be available in 2025
-        </li>
-        <li>
-          <a href="https://twodo.it/">twodo.it</a> (<a href="https://play.google.com/store/apps/details?id=it.twodo.twa">Google Play<a/>), to do list the way you always wanted it to be
-        </li>
-        <li>
-          <a href="https://github.com/demns/react-js-presentations-2016">React JS presentations / talks</a>
-        </li>
-        <li>
-          <a href="https://play.google.com/store/apps/details?id=com.watchfacestudio.batterysaver">Theme for Samsung Galaxy Watch</a>
-        </li>
-        <li>
-          <a href="https://play.google.com/store/apps/details?id=com.watchfacestudio.batterysaverclassicpro">Even better theme for Samsung Galaxy Watch</a>
-        </li>
-      </ul>
-    </div>
+  <div class="container">
+    <header>
+      <h1 id="name">Dzmitry Samsonau</h1>
+      <div class="role">Frontend & Design Chapter Lead @ Deutsche Bank</div>
+      <div class="location">Engineering Manager · Berlin</div>
+      <nav>
+        <a href="https://www.linkedin.com/in/dzmitrysamsonau">LinkedIn</a>
+        <a href="https://github.com/demns">GitHub</a>
+        <a href="https://bitbucket.org/demns/">Bitbucket</a>
+      </nav>
+    </header>
 
-    <div class="card">
-      <b>Games:</b>
+    <main>
+      <section>
+        <h2>Projects</h2>
+        <ul>
+          <li>
+            <a href="https://twodo.it/">twodo.it</a> · <a
+              href="https://play.google.com/store/apps/details?id=it.twodo.twa">Google Play</a>
+            <div class="meta">Minimalist to-do list</div>
+          </li>
+          <li>
+            <a href="https://github.com/demns/react-presentations">React JS Talks</a>
+            <div class="meta">Training materials and presentations</div>
+          </li>
+          <li>
+            <a href="https://play.google.com/store/apps/details?id=com.watchfacestudio.batterysaver">Battery Saver</a> ·
+            <a href="https://play.google.com/store/apps/details?id=com.watchfacestudio.batterysaverclassicpro">Classic
+              Pro</a>
+            <div class="meta">WearOS watch faces</div>
+          </li>
+          <li>
+            <a href="https://whopays.net/">whopays</a><span class="badge">Alpha</span>
+            <div class="meta">Bill splitting app · Work in progress</div>
+          </li>
+        </ul>
+      </section>
 
-      <ul>
-        <li>
-          <a href="./ttt">Tic Tac Toe</a>, which you can't beat
-        </li>
-        <li>
-          <a href="./santa">Santa</a>
-        </li>
-        <li>
-          <a href="./tetris/www">Webgl tetris</a>, and yes, item should go through
-        </li>
-      </ul>
+      <section>
+        <h2>Experiments</h2>
+        <ul>
+          <li>
+            <a href="./ttt">Tic Tac Toe</a>
+            <div class="meta">Optimal strategy implementation</div>
+          </li>
+          <li>
+            <a href="./santa">Santa</a>
+            <div class="meta">Holiday game</div>
+          </li>
+          <li>
+            <a href="./tetris/www">WebGL Tetris</a>
+            <div class="meta">3D physics playground</div>
+          </li>
+        </ul>
+      </section>
+    </main>
 
-    </div>
-  </main>
+    <footer id="footer">Made with 🧡 in Berlin · 🎮 Find all 5 easter eggs</footer>
+  </div>
+
+  <div class="easter-egg" id="controller">🎮</div>
+
+  <div class="secret-message" id="secret">
+    <h3>Konami Code Activated! 🎉</h3>
+    <p>You found the secret! As a true gamer and engineer, you know the classics.</p>
+    <p style="margin-top: 1rem; color: var(--muted); font-size: 0.9rem;">
+      ↑ ↑ ↓ ↓ ← → ← → B A
+    </p>
+    <button class="close-btn" id="closeBtn">Awesome!</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+        this.opacity = Math.random() * 0.3 + 0.1;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+
+      draw() {
+        ctx.fillStyle = `rgba(255, 107, 53, ${this.opacity})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const particles = Array.from({ length: 50 }, () => new Particle());
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 100) {
+            ctx.strokeStyle = `rgba(255, 107, 53, ${0.1 * (1 - dist / 100)})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    function createFallingItems(items, count = 50, options = {}) {
+      const {
+        size = items.length > 10 ? '2rem' : '10px',
+        colors = ['#ff6b35', '#ff8c61', '#ffa07a', '#ffb347'],
+        delay = items.length > 10 ? 30 : 20,
+        rotation = true
+      } = options;
+
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const el = document.createElement('div');
+          el.className = 'falling-item';
+          el.textContent = items[Math.floor(Math.random() * items.length)];
+          el.style.fontSize = size;
+          el.style.left = Math.random() * window.innerWidth + 'px';
+          el.style.top = '-50px';
+
+          if (items.length > 10 || items[0] === '') {
+            el.style.background = 'transparent';
+            el.style.width = 'auto';
+            el.style.height = 'auto';
+            el.style.borderRadius = '0';
+          } else {
+            el.style.background = colors[Math.floor(Math.random() * colors.length)];
+            el.style.width = '10px';
+            el.style.height = '10px';
+            el.style.borderRadius = '50%';
+          }
+
+          if (!rotation) {
+            el.style.animation = 'fall 3s linear forwards';
+          }
+
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 3000);
+        }, i * delay);
+      }
+    }
+
+    let nameClicks = 0;
+    const nameEl = document.getElementById('name');
+
+    const handleNameClick = () => {
+      nameClicks++;
+      if (nameClicks === 3) {
+        createFallingItems(['🎉', '✨', '⭐', '💫', '🌟'], 60, {
+          size: '1.5rem',
+          delay: 15
+        });
+        nameClicks = 0;
+      }
+    };
+
+    nameEl.addEventListener('click', handleNameClick);
+    nameEl.addEventListener('touchend', e => {
+      e.preventDefault();
+      handleNameClick();
+    });
+
+    const controller = document.getElementById('controller');
+
+    const handleControllerClick = () => {
+      createFallingItems(['🎮', '🕹️', '👾', '🎯', '🏆'], 50, {
+        size: '2rem',
+        delay: 25
+      });
+      controller.style.transform = 'scale(1.5) rotate(360deg)';
+      setTimeout(() => controller.style.transform = '', 300);
+    };
+
+    controller.addEventListener('click', handleControllerClick);
+    controller.addEventListener('touchend', e => {
+      e.preventDefault();
+      handleControllerClick();
+    });
+
+    const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let konamiIdx = 0;
+
+    document.addEventListener('keydown', e => {
+      if (e.key.toLowerCase() === konami[konamiIdx].toLowerCase()) {
+        konamiIdx++;
+        if (konamiIdx === konami.length) {
+          document.getElementById('secret').classList.add('show');
+          createFallingItems(['💥', '⚡', '🔥', '💯', '🚀'], 70, {
+            size: '2.5rem',
+            delay: 20
+          });
+          konamiIdx = 0;
+        }
+      } else {
+        konamiIdx = 0;
+      }
+    });
+
+    document.getElementById('closeBtn').addEventListener('click', () => {
+      document.getElementById('secret').classList.remove('show');
+    });
+
+    const footer = document.getElementById('footer');
+    let shakes = 0;
+    let shakeTimer;
+
+    function handleShake() {
+      shakes++;
+      footer.classList.add('shake');
+      setTimeout(() => footer.classList.remove('shake'), 500);
+
+      clearTimeout(shakeTimer);
+      shakeTimer = setTimeout(() => shakes = 0, 2000);
+
+      if (shakes >= 5) {
+        createFallingItems(['🏙️', '🎭', '🎨', '🎪', '🌃', '🎡', '🏛️', '🗼'], 30);
+        footer.textContent = '🎉 Berlin loves you back! 🧡';
+        setTimeout(() => footer.textContent = 'Made with 🧡 in Berlin · 🎮 Find all 5 easter eggs', 3000);
+        shakes = 0;
+      }
+    }
+
+    footer.addEventListener('click', handleShake);
+    footer.addEventListener('touchend', e => {
+      e.preventDefault();
+      handleShake();
+    });
+
+    if (window.DeviceMotionEvent) {
+      let motion = { x: 0, y: 0, z: 0 };
+      let lastShake = 0;
+
+      window.addEventListener('devicemotion', e => {
+        const acc = e.accelerationIncludingGravity;
+        if (!acc) return;
+
+        const now = Date.now();
+        if (now - lastShake < 200) return;
+
+        const delta = Math.abs(acc.x - motion.x) + Math.abs(acc.y - motion.y) + Math.abs(acc.z - motion.z);
+
+        if (delta > 30) {
+          lastShake = now;
+          handleShake();
+        }
+
+        motion = { x: acc.x, y: acc.y, z: acc.z };
+      });
+    }
+
+    let roleClicks = 0;
+    const role = document.querySelector('.role');
+
+    const handleRoleClick = () => {
+      roleClicks++;
+      if (roleClicks === 5) {
+        createFallingItems(['👨‍💼', '💼', '👔', '📊', '🎯', '💪', '🚀', '⭐'], 40, {
+          size: '2rem',
+          delay: 35
+        });
+        role.style.color = 'var(--accent)';
+        setTimeout(() => role.style.color = '', 2000);
+        roleClicks = 0;
+      }
+    };
+
+    role.addEventListener('click', handleRoleClick);
+    role.addEventListener('touchend', e => {
+      e.preventDefault();
+      handleRoleClick();
+    });
+  </script>
 </body>
 
 </html>
