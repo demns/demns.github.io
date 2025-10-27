@@ -1,297 +1,198 @@
-//1 Win: If the player has two in a row, they can place a third to get three in a row.
-//2 Block: If the opponent has two in a row, the player must play the third themself to block the opponent.
-//3 Fork: Create an opportunity where the player has two threats to win (two non-blocked lines of 2).
-//4 Blocking an opponent's fork:
-//    Option 1: The player should create two in a row to force the opponent into defending, as long as it doesn't result in them creating a fork. For example, if "X" has a corner, "O" has the center, and "X" has the opposite corner as well, "O" must not play a corner in order to win. (Playing a corner in this scenario creates a fork for "X" to win.)
-//    Option 2: If there is a configuration where the opponent can fork, the player should block that fork.
-//5 Center: A player marks the center. (If it is the first move of the game, playing on a corner gives "O" more opportunities to make a mistake and may therefore be the better choice; however, it makes no difference between perfect players.)
-//6 Opposite corner: If the opponent is in the corner, the player plays the opposite corner.
-//7 Empty corner: The player plays in a corner square.
-//8 Empty side: The player plays in a middle square on any of the 4 sides.
-var AI = {
-  twoInARow: [ //if twoInARow[0] and twoInARow[1] then to win -- twoInARow[2]
-    [0, 1, 2],
-    [0, 2, 1],
-    [1, 2, 0],
-    [3, 4, 5],
-    [3, 5, 4],
-    [4, 5, 3],
-    [6, 7, 8],
-    [6, 8, 7],
-    [7, 8, 6],
-    [0, 3, 6],
-    [0, 6, 3],
-    [3, 6, 0],
-    [1, 4, 7],
-    [1, 7, 4],
-    [4, 7, 1],
-    [2, 5, 8],
-    [2, 8, 5],
-    [5, 8, 2],
-    [0, 4, 8],
-    [4, 8, 0],
-    [0, 8, 4],
-    [2, 4, 6],
-    [2, 6, 4],
-    [4, 6, 2]
-  ],
-
-  fork: [ //if fork[0] and fork[1] then to fork -- fork[2]
-    [2, 6, 1],
-    [0, 8, 5],
-    [2, 3, 0],
-    [3, 8, 6],
-    [0, 7, 6],
-    [2, 7, 8],
-    [5, 6, 8],
-    [0, 5, 2],
-    [1, 6, 0],
-    [1, 8, 2],
-    [1, 3, 6],
-    [3, 7, 0],
-    [1, 5, 2],
-    [5, 7, 8]
-  ],
-
+/**
+ * An AI for Tic-Tac-Toe that implements the perfect strategy outlined
+ * by Newell and Simon in 1972, commonly found on Wikipedia.
+ *
+ * The strategy is a hierarchy of rules, executed in order:
+ * 1. Win: If you have two in a row, play the third to win.
+ * 2. Block: If the opponent has two in a row, play the third to block them.
+ * 3. Fork: Create an opportunity where you have two ways to win.
+ * 4. Block Fork: Block an opponent's fork.
+ * 5. Center: Play the center.
+ * 6. Opposite Corner: If the opponent is in a corner, play the opposite corner.
+ * 7. Empty Corner: Play an empty corner.
+ * 8. Empty Side: Play an empty side.
+ */
+const AI = {
   X: 'X',
   O: 'O',
-  positions: [],
 
-  currentPlayerX: function(currMove) {
-    return currMove % 2 == 0;
-  },
+  // --- Core Data & Helpers ---
 
-  haveTwoInARowCrosses: function() {
-    var X = this.X,
-      O = this.O;
-    return this.isTwoInARow(X, O);
-  },
+  winningLines: [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+    [0, 4, 8], [2, 4, 6]             // Diagonals
+  ],
 
-  haveTwoInARowNoughts: function() {
-    var X = this.X,
-      O = this.O;
-    return this.isTwoInARow(O, X);
-  },
-
-  isTwoInARow: function(ch, oppositeCh) {
-    var twoInARow = this.twoInARow,
-      positions = this.positions;
-    for (var i = 0; i < twoInARow.length; i++) {
-      if (positions[twoInARow[i][0]] == ch &&
-        positions[twoInARow[i][1]] == ch &&
-        positions[twoInARow[i][2]] === '')
-        return true;
+  /**
+   * Finds a move that completes a line for a given player.
+   * @param {string[]} positions - The current board state.
+   * @param {string} player - The player to check for ('X' or 'O').
+   * @returns {number|null} The index of the winning move, or null.
+   */
+  _findWinningMove: function(positions, player) {
+    for (const line of this.winningLines) {
+      const [a, b, c] = line;
+      if (positions[a] === player && positions[b] === player && positions[c] === '') return c;
+      if (positions[a] === player && positions[c] === player && positions[b] === '') return b;
+      if (positions[b] === player && positions[c] === player && positions[a] === '') return a;
     }
-    return false;
+    return null;
   },
 
-  winForNoughts: function() {
-    var twoInARow = this.twoInARow,
-      positions = this.positions,
-      X = this.X,
-      O = this.O;
-    for (var i = 0; i < twoInARow.length; i++) {
-      if (positions[twoInARow[i][0]] == O &&
-        positions[twoInARow[i][1]] == O &&
-        positions[twoInARow[i][2]] === '')
-        return twoInARow[i][2];
+  /**
+   * Counts how many "two-in-a-row" threats a player has.
+   * @param {string[]} board - The current board state.
+   * @param {string} player - The player to check for ('X' or 'O').
+   * @returns {number} The number of threats.
+   */
+  _countThreats: function(board, player) {
+    let threats = 0;
+    for (const line of this.winningLines) {
+      const lineValues = [board[line[0]], board[line[1]], board[line[2]]];
+      const playerCount = lineValues.filter(v => v === player).length;
+      const emptyCount = lineValues.filter(v => v === '').length;
+      if (playerCount === 2 && emptyCount === 1) {
+        threats++;
+      }
     }
+    return threats;
   },
 
-  winForCrosses: function() {
-    var twoInARow = this.twoInARow,
-      positions = this.positions,
-      X = this.X,
-      O = this.O;
-    for (var i = 0; i < twoInARow.length; i++) {
-      if (positions[twoInARow[i][0]] == X &&
-        positions[twoInARow[i][1]] == X &&
-        positions[twoInARow[i][2]] === '')
-        return twoInARow[i][2];
+  /**
+   * Finds a move that creates a fork (two or more threats).
+   * @param {string[]} positions - The current board state.
+   * @param {string} player - The player to create the fork for.
+   * @returns {number|null} The index of the forking move, or null.
+   */
+  _findForkMove: function(positions, player) {
+    const emptySquares = positions.map((p, i) => p === '' ? i : null).filter(i => i !== null);
+    for (const square of emptySquares) {
+      const tempPositions = [...positions];
+      tempPositions[square] = player;
+      if (this._countThreats(tempPositions, player) >= 2) {
+        return square;
+      }
     }
+    return null;
   },
 
-  blockFromNoughts: function() {
-    return this.winForCrosses();
-  },
+  // --- AI Strategy Rules (in order of priority) ---
 
-  blockFromCrosses: function() {
-    return this.winForNoughts();
-  },
+  // Rule 1: Win
+  _rule1_Win: (positions, player) => AI._findWinningMove(positions, player),
 
-  haveForkCrosses: function() {
-    return this.isFork(this.X, this.O);
-  },
+  // Rule 2: Block
+  _rule2_Block: (positions, opponent) => AI._findWinningMove(positions, opponent),
 
-  haveForkNoughts: function() {
-    return this.isFork(this.O, this.X);
-  },
+  // Rule 3: Fork
+  _rule3_Fork: (positions, player) => AI._findForkMove(positions, player),
 
-  isFork: function(ch, oppositeCh) {
-    var fork = this.fork,
-      positions = this.positions;
-    for (var i = 0; i < fork.length; i++) {
-      if (positions[fork[i][0]] == ch &&
-        positions[fork[i][1]] == ch &&
-        positions[fork[i][2]] === '')
-        return true;
+  // Rule 4: Block Opponent's Fork
+  _rule4_BlockFork: function(positions, player, opponent) {
+    const opponentForkMove = this._findForkMove(positions, opponent);
+    if (opponentForkMove === null) return null;
+
+    // The primary strategy to block a fork is to create a two-in-a-row threat
+    // to force the opponent into defending. This is more effective than just
+    // occupying the fork square.
+    const emptySquares = positions.map((p, i) => p === '' ? i : null).filter(i => i !== null);
+    for (const move of emptySquares) {
+      const tempPositions = [...positions];
+      tempPositions[move] = player;
+
+      // Check if this move creates a threat for us
+      const ourThreats = this._countThreats(tempPositions, player);
+      if (ourThreats > 0) {
+        // Now, check if the opponent can still create a fork after they are forced to block our threat.
+        const opponentBlockMove = this._findWinningMove(tempPositions, player);
+        if (opponentBlockMove !== null) {
+          tempPositions[opponentBlockMove] = opponent; // Simulate opponent blocking
+          // If the opponent can no longer fork, this is a safe and effective blocking move.
+          if (this._findForkMove(tempPositions, opponent) === null) {
+            return move;
+          }
+        }
+      }
     }
-    return false;
+
+    // If no forcing move is found, fall back to playing in the opponent's fork square.
+    return opponentForkMove;
   },
 
-  setForkNoughts: function() {
-    var fork = this.fork,
-      positions = this.positions,
-      O = this.O;
-    for (var i = 0; i < fork.length; i++) {
-      if (positions[fork[i][0]] == O &&
-        positions[fork[i][1]] == O &&
-        positions[fork[i][2]] === '')
-        return fork[i][2];
+  // Rule 5: Center
+  _rule5_Center: (positions) => (positions[4] === '' ? 4 : null),
+
+  // Rule 6: Opposite Corner
+  _rule6_OppositeCorner: function(positions, opponent) {
+    const corners = [0, 2, 6, 8];
+    const oppositeCorners = {0: 8, 2: 6, 6: 2, 8: 0};
+    for (const corner of corners) {
+      if (positions[corner] === opponent && positions[oppositeCorners[corner]] === '') {
+        return oppositeCorners[corner];
+      }
     }
+    return null;
   },
 
-  setForkCrosses: function() {
-    var fork = this.fork,
-      positions = this.positions,
-      X = this.X;
-    for (var i = 0; i < fork.length; i++) {
-      if (positions[fork[i][0]] == X &&
-        positions[fork[i][1]] == X &&
-        positions[fork[i][2]] === '')
-        return fork[i][2];
+  // Rule 7: Empty Corner
+  _rule7_EmptyCorner: function(positions) {
+    const corners = [0, 2, 6, 8];
+    for (const corner of corners) {
+      if (positions[corner] === '') {
+        return corner;
+      }
     }
+    return null;
   },
 
-  blockForkFromNoughts: function() {
-    return this.setForkCrosses();
+  // Rule 8: Empty Side
+  _rule8_EmptySide: function(positions) {
+    const sides = [1, 3, 5, 7];
+    for (const side of sides) {
+      if (positions[side] === '') {
+        return side;
+      }
+    }
+    return null;
   },
 
-  blockForkFromCrosses: function() {
-    return this.setForkNoughts();
-  },
+  // --- Main Public Method ---
 
-  getCorner: function(ch) {
-    var positions = this.positions;
-    if (positions[0] === ch && positions[8] === '') {
-      return 8;
-    }
-    if (positions[2] === ch && positions[6] === '') {
-      return 6;
-    }
-    if (positions[6] === ch && positions[2] === '') {
-      return 2;
-    }
-    if (positions[8] === ch && positions[0] === '') {
+  calculateComputerMove: function(positions, computerSymbol) {
+    const player = computerSymbol;
+    const opponent = (player === this.X) ? this.O : this.X;
+
+    // Opening move: prefer a corner for more strategic options.
+    const isBoardEmpty = positions.every(p => p === '');
+    if (isBoardEmpty) {
       return 0;
     }
-    return -1;
-  },
 
-  getCornerOrNot: function() {
-    var positions = this.positions;
-    if (positions[0] === '') return 0;
-    if (positions[2] === '') return 2;
-    if (positions[6] === '') return 6;
-    if (positions[8] === '') return 8;
-    return -1;
-  },
-
-  getSideOrNot: function() {
-    var positions = this.positions;
-    if (positions[1] === '') return 1;
-    if (positions[3] === '') return 3;
-    if (positions[5] === '') return 5;
-    if (positions[7] === '') return 7;
-    return -1;
-  },
-
-  calculateComputerMove: function(positions, currMove) {
-    this.positions = positions;
-    //1
-    if (this.currentPlayerX(currMove)) {
-      if (this.haveTwoInARowCrosses()) {
-        return this.winForCrosses();
-      }
-    } else {
-      if (this.haveTwoInARowNoughts()) {
-        return this.winForNoughts();
-      }
-    }
-
-    //2
-    if (this.currentPlayerX(currMove)) {
-      if (this.haveTwoInARowNoughts()) {
-        return this.blockFromCrosses();
-      }
-    } else {
-      if (this.haveTwoInARowCrosses()) {
-        return this.blockFromNoughts();
-      }
-    }
-
-    //3
-    if (this.currentPlayerX(currMove)) {
-      if (this.haveForkCrosses()) {
-        return this.setForkCrosses();
-      }
-    } else {
-      if (this.haveForkNoughts()) {
-        return this.setForkNoughts();
-      }
-    }
-
-    //4
-    if (this.currentPlayerX(currMove)) {
-      if (this.haveForkNoughts()) {
-        return this.blockForkFromCrosses();
-      }
-    } else {
-      if (this.haveForkCrosses()) {
-        return this.blockForkFromNoughts();
-      }
-    }
-
-    //5
-    if (positions[4] === '') {
-      return 4;
-    }
-
-    //6
-    if (this.currentPlayerX(currMove)) {
-      if (this.getCorner(this.O) !== -1)
-        return this.getCorner(this.O);
-    } else {
-      if (this.getCorner(this.X) !== -1)
-        return this.getCorner(this.X);
-    }
-
-    //7
-    if (this.getCornerOrNot() !== -1)
-      return this.getCornerOrNot();
-
-    //8
-    if (this.getSideOrNot() !== -1)
-      return this.getSideOrNot();
+    // Execute strategy in order of priority
+    return this._rule1_Win(positions, player) ??
+           this._rule2_Block(positions, opponent) ??
+           this._rule3_Fork(positions, player) ??
+           this._rule4_BlockFork(positions, player, opponent) ??
+           this._rule5_Center(positions) ??
+           this._rule6_OppositeCorner(positions, opponent) ??
+           this._rule7_EmptyCorner(positions) ??
+           this._rule8_EmptySide(positions) ??
+           -1; // Fallback, should not be reached
   },
 
   isFinished: function(positions) {
-    var X = this.X,
-      O = this.O;
-    return (this.isFinishedFor(positions, X) || this.isFinishedFor(positions, O));
+    return this.isFinishedFor(positions, this.X) || this.isFinishedFor(positions, this.O);
   },
 
-  isFinishedFor: function(positions, X) {
-    if ((positions[0] === X && positions[1] === X && positions[2] === X) ||
-      (positions[3] === X && positions[4] === X && positions[5] === X) ||
-      (positions[6] === X && positions[7] === X && positions[8] === X) ||
-      (positions[0] === X && positions[3] === X && positions[6] === X) ||
-      (positions[1] === X && positions[4] === X && positions[7] === X) ||
-      (positions[2] === X && positions[5] === X && positions[8] === X) ||
-      (positions[0] === X && positions[4] === X && positions[8] === X) ||
-      (positions[2] === X && positions[4] === X && positions[6] === X)) {
-      return true;
+  isFinishedFor: function(positions, player) {
+    for (const combo of this.winningLines) {
+      const [a, b, c] = combo;
+      if (positions[a] === player && positions[b] === player && positions[c] === player) {
+        return combo;
+      }
     }
     return false;
   }
-}
+};
+

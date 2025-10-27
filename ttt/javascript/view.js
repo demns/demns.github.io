@@ -1,26 +1,41 @@
-(function() {
-  var body = document.body,
-    timeOfDayDiv = document.getElementsByClassName('currentTimeOfDay')[0],
-    currentTimeOfDay = getCurrentPeriod(),
-    humanImageDiv = document.getElementById('humanImage'),
-    computerImageDiv = document.getElementById('computerImage');
+document.addEventListener('DOMContentLoaded', () => {
+  const body = document.body;
+  const themeSwitcher = document.querySelector('.theme-switcher'); // This now correctly finds the button
+  const humanImageDiv = document.getElementById('humanImage');
+  const computerImageDiv = document.getElementById('computerImage');
 
-  humanImageDiv.onclick = function() {
+  const themes = ['morning', 'afternoon', 'evening', 'midnight'];
+  let currentThemeIndex = 0;
+  humanImageDiv.addEventListener('click', () => {
     TTTApplication.setup(false);
-  };
+  });
 
-  computerImageDiv.onclick = function() {
+  computerImageDiv.addEventListener('click', () => {
     TTTApplication.setup(true);
-  };
+  });
 
-  body.className += ' ' + currentTimeOfDay;
-  timeOfDayDiv.innerHTML = currentTimeOfDay + ' mode';
+  function applyTheme(themeName) {
+    body.classList.remove(...themes);
+    body.classList.add(themeName);
+    currentThemeIndex = themes.indexOf(themeName);
+  }
 
-}());
+  if (themeSwitcher) {
+    themeSwitcher.addEventListener('click', () => {
+      currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+      const nextTheme = themes[currentThemeIndex];
+      applyTheme(nextTheme);
+    });
+  }
+
+  // Set initial theme based on time of day
+  const initialTheme = getCurrentPeriod();
+  applyTheme(initialTheme);
+});
 
 function getCurrentPeriod() {
-  var time = new Date(),
-    hour = time.getHours();
+  const time = new Date();
+  const hour = time.getHours();
 
   if (hour >= 17) {
     return 'evening';
@@ -31,5 +46,4 @@ function getCurrentPeriod() {
   } else if (hour >= 0) {
     return 'midnight';
   }
-  return 'morning';
 }
