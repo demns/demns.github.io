@@ -2,25 +2,26 @@
 <html lang="en">
 
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Frontend & Design Chapter Lead at Deutsche Bank. Engineering Manager empowering engineers and designers in Berlin.">
+  <meta name="keywords" content="Dzmitry Samsonau, Frontend Engineering Manager, Engineering Leadership, Berlin">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f8f9fa" media="(prefers-color-scheme: light)">
+  
+  <title>Dzmitry Samsonau - Frontend & Design Chapter Lead</title>
+  
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/android-chrome-512x512.png">
   <link rel="manifest" href="assets/site.webmanifest">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="theme-color" content="#0a0a0a" />
-  <meta name="description"
-    content="Frontend & Design Chapter Lead at Deutsche Bank. Engineering Manager empowering engineers and designers in Berlin." />
-  <meta name="keywords" content="Dzmitry Samsonau, Frontend Engineering Manager, Engineering Leadership, Berlin" />
-  <meta name="robots" content="index, follow" />
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="language" content="English" />
-  <meta name="title" content="Dzmitry Samsonau - Frontend & Design Chapter Lead" />
-  <title>Dzmitry Samsonau</title>
 
   <style>
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -46,7 +47,7 @@
       }
     }
 
-    body {
+    .page {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
@@ -56,7 +57,7 @@
       overflow-x: hidden;
     }
 
-    canvas {
+    .canvas {
       position: fixed;
       inset: 0;
       pointer-events: none;
@@ -64,19 +65,19 @@
     }
 
     .container {
-      max-width: 800px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 3rem 1.5rem;
       position: relative;
       z-index: 1;
     }
 
-    header {
+    .header {
       text-align: center;
       margin-bottom: 4rem;
     }
 
-    h1 {
+    .title {
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 0.75rem;
@@ -88,7 +89,7 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    h1:hover {
+    .title:hover {
       transform: scale(1.05) rotate(-2deg);
       color: var(--accent);
     }
@@ -112,15 +113,7 @@
       color: var(--muted);
     }
 
-    .hint {
-      font-size: 0.85rem;
-      color: var(--accent);
-      margin-top: 1rem;
-      opacity: 0.7;
-      font-style: italic;
-    }
-
-    nav {
+    .nav {
       display: flex;
       gap: 1.5rem;
       justify-content: center;
@@ -128,18 +121,18 @@
       margin-top: 2rem;
     }
 
-    nav a {
-      color: var(--text);
+    .nav-link {
+      color: var(--accent);
       text-decoration: none;
       font-size: 0.95rem;
       transition: all 0.3s;
       padding: 0.5rem 1rem;
       border-radius: 8px;
       position: relative;
-      opacity: 0.8;
+      opacity: 0.75;
     }
 
-    nav a::after {
+    .nav-link::after {
       content: '';
       position: absolute;
       bottom: 0.25rem;
@@ -151,33 +144,43 @@
       transform: translateX(-50%);
     }
 
-    nav a:hover {
-      color: var(--accent);
+    .nav-link:hover {
       opacity: 1;
     }
 
-    nav a:hover::after {
+    .nav-link:hover::after {
       width: calc(100% - 2rem);
     }
 
-    section {
+    .main {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .main {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .section {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 2rem;
-      margin-bottom: 2rem;
       transition: all 0.3s;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
 
-    section:hover {
+    .section:hover {
       transform: translateY(-4px);
       box-shadow: 0 8px 24px rgba(255, 107, 53, 0.15);
       border-color: var(--accent);
     }
 
-    h2 {
+    .section-title {
       font-size: 1.5rem;
       margin-bottom: 1.5rem;
       font-weight: 600;
@@ -185,52 +188,72 @@
       transition: color 0.3s;
     }
 
-    section:hover h2 {
+    .section:hover .section-title {
       color: var(--accent);
     }
 
-    ul {
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .list {
       list-style: none;
     }
 
-    li {
+    .list-item {
       margin-bottom: 1.25rem;
       padding-left: 1.8rem;
       position: relative;
       transition: transform 0.2s;
     }
 
-    li:hover {
+    .list-item:hover {
       transform: translateX(8px);
     }
 
-    li::before {
+    .list-item::before {
       content: "→";
       position: absolute;
       left: 0;
       top: 0.1rem;
       transition: transform 0.3s;
       color: var(--accent);
+      font-weight: bold;
     }
 
-    li:hover::before {
+    .list-item:hover::before {
       transform: translateX(4px);
     }
 
-    a {
+    .link {
       color: var(--accent);
       text-decoration: none;
       transition: color 0.2s;
     }
 
-    a:hover {
+    .link:hover {
       color: var(--hover);
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
 
     .meta {
       color: var(--muted);
       font-size: 0.9rem;
       margin-top: 0.25rem;
+    }
+
+    .meta-link {
+      text-decoration: none;
+      display: block;
     }
 
     .badge {
@@ -246,18 +269,11 @@
     }
 
     @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.6;
-      }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
     }
 
-    footer {
+    .footer {
       text-align: center;
       margin-top: 3rem;
       padding-top: 2rem;
@@ -269,7 +285,7 @@
       transition: all 0.3s;
     }
 
-    footer:active {
+    .footer:active {
       transform: scale(0.95);
     }
 
@@ -278,26 +294,9 @@
     }
 
     @keyframes shake {
-
-      0%,
-      100% {
-        transform: translateX(0);
-      }
-
-      10%,
-      30%,
-      50%,
-      70%,
-      90% {
-        transform: translateX(-10px);
-      }
-
-      20%,
-      40%,
-      60%,
-      80% {
-        transform: translateX(10px);
-      }
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+      20%, 40%, 60%, 80% { transform: translateX(10px); }
     }
 
     .easter-egg {
@@ -309,25 +308,26 @@
       transition: all 0.3s;
       z-index: 1000;
       animation: float 3s ease-in-out infinite;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    .easter-egg:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 8px;
+      border-radius: 50%;
     }
 
     @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-10px);
-      }
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
 
-    .easter-egg:hover,
-    .easter-egg:active {
+    .easter-egg:hover, .easter-egg:active {
       transform: scale(1.2) rotate(15deg);
     }
 
@@ -345,7 +345,7 @@
       }
     }
 
-    .secret-message {
+    .modal {
       position: fixed;
       top: 50%;
       left: 50%;
@@ -361,17 +361,23 @@
       max-width: 400px;
     }
 
-    .secret-message.show {
+    .modal.show {
       transform: translate(-50%, -50%) scale(1);
     }
 
-    .secret-message h3 {
+    .modal-title {
       color: var(--accent);
       margin-bottom: 1rem;
       font-size: 1.5rem;
     }
 
-    .close-btn {
+    .modal-text {
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .btn {
       margin-top: 1rem;
       padding: 0.5rem 1.5rem;
       background: var(--accent);
@@ -385,8 +391,19 @@
       touch-action: manipulation;
     }
 
-    .close-btn:hover {
+    .btn:hover {
       background: var(--hover);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    *:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 4px;
     }
 
     @media (max-width: 640px) {
@@ -394,16 +411,21 @@
         padding: 2rem 1rem;
       }
 
-      h1 {
+      .title {
         font-size: 2rem;
       }
 
-      section {
+      .section {
         padding: 1.5rem;
       }
 
-      nav {
+      .nav {
         gap: 1rem;
+      }
+
+      .nav-link {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
       }
 
       .easter-egg {
@@ -412,97 +434,153 @@
         font-size: 2.5rem;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 
-<body>
-  <canvas id="particles"></canvas>
+<body class="page">
+  <canvas id="particleCanvas" class="canvas" aria-hidden="true"></canvas>
 
   <div class="container">
-    <header>
-      <h1 id="name">Dzmitry Samsonau</h1>
-      <div class="role">Frontend & Design Chapter Lead @ Deutsche Bank</div>
-      <div class="location">Engineering Manager · Berlin</div>
-      <nav>
-        <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/dzmitrysamsonau">LinkedIn</a>
-        <a target="_blank" rel="noopener noreferrer" href="https://github.com/demns">GitHub</a>
-        <a target="_blank" rel="noopener noreferrer" href="https://bitbucket.org/demns/">Bitbucket</a>
+    <header class="header">
+      <h1 class="title" id="nameTitle" tabindex="0" role="button" aria-label="Click 3 times to celebrate">Dzmitry Samsonau</h1>
+      <p class="role" id="roleText" tabindex="0" role="button" aria-label="Click 5 times to celebrate my role">Frontend & Design Chapter Lead @ Deutsche Bank</p>
+      <p class="location">Engineering Manager · Berlin</p>
+      <nav class="nav" aria-label="Social links">
+        <a href="https://www.linkedin.com/in/dzmitrysamsonau" target="_blank" rel="noopener noreferrer" class="nav-link">LinkedIn</a>
+        <a href="https://github.com/demns" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
+        <a href="https://bitbucket.org/demns/" target="_blank" rel="noopener noreferrer" class="nav-link">Bitbucket</a>
       </nav>
     </header>
 
-    <main>
-      <section>
-        <h2>Projects</h2>
-        <ul>
-          <li>
-            <a target="_blank" rel="noopener noreferrer" href="https://twodo.it/">twodo.it</a> · <a target="_blank"
-              rel="noopener noreferrer" href="https://play.google.com/store/apps/details?id=it.twodo.twa">Google
-              Play</a>
-            <div class="meta">Minimalist to-do list</div>
+    <main class="main">
+      <section class="section" aria-labelledby="projects-title">
+        <h2 class="section-title" id="projects-title">Projects</h2>
+        <ul class="list">
+          <li class="list-item">
+            <a href="https://twodo.it/" target="_blank" rel="noopener noreferrer" class="link">twodo.it</a> · 
+            <a href="https://play.google.com/store/apps/details?id=it.twodo.twa" target="_blank" rel="noopener noreferrer" class="link">Google Play</a>
+            <a href="https://twodo.it/" target="_blank" rel="noopener noreferrer" class="meta-link" aria-label="twodo.it - Minimalist to-do list">
+              <span class="meta">Minimalist to-do list</span>
+            </a>
           </li>
-          <li>
-            <a target="_blank" rel="noopener noreferrer" href="https://github.com/demns/react-presentations">React JS
-              Talks</a>
-            <div class="meta">Training materials and presentations</div>
+          <li class="list-item">
+            <a href="https://github.com/demns/react-presentations" target="_blank" rel="noopener noreferrer" class="link">React JS Talks</a>
+            <a href="https://github.com/demns/react-presentations" target="_blank" rel="noopener noreferrer" class="meta-link" aria-label="React JS Talks - Training materials and presentations">
+              <span class="meta">Training materials and presentations</span>
+            </a>
           </li>
-          <li>
-            <a target="_blank" rel="noopener noreferrer"
-              href="https://play.google.com/store/apps/details?id=com.watchfacestudio.batterysaver">Battery Saver</a> ·
-            <a target="_blank" rel="noopener noreferrer"
-              href="https://play.google.com/store/apps/details?id=com.watchfacestudio.batterysaverclassicpro">Classic
-              Pro</a>
-            <div class="meta">WearOS watch faces</div>
+          <li class="list-item">
+            <a href="https://play.google.com/store/apps/details?id=com.watchfacestudio.batterysaver" target="_blank" rel="noopener noreferrer" class="link">Battery Saver</a> · 
+            <a href="https://play.google.com/store/apps/details?id=com.watchfacestudio.batterysaverclassicpro" target="_blank" rel="noopener noreferrer" class="link">Classic Pro</a>
+            <a href="https://play.google.com/store/apps/details?id=com.watchfacestudio.batterysaver" target="_blank" rel="noopener noreferrer" class="meta-link" aria-label="Battery Saver - WearOS watch faces">
+              <span class="meta">WearOS watch faces</span>
+            </a>
           </li>
-          <li>
-            <a target="_blank" rel="noopener noreferrer" href="https://whopays.net/">whopays</a><span
-              class="badge">Alpha</span>
-            <div class="meta">Bill splitting app · Work in progress</div>
+          <li class="list-item">
+            <a href="https://whopays.net/" target="_blank" rel="noopener noreferrer" class="link">whopays</a><span class="badge" aria-label="Alpha version">Alpha</span>
+            <a href="https://whopays.net/" target="_blank" rel="noopener noreferrer" class="meta-link" aria-label="whopays - Bill splitting app, work in progress">
+              <span class="meta">Bill splitting app · Work in progress</span>
+            </a>
           </li>
         </ul>
       </section>
 
-      <section>
-        <h2>Experiments</h2>
-        <ul>
-          <li>
-            <a target="_blank" rel="noopener noreferrer" href="./ttt">Tic Tac Toe</a>
-            <div class="meta">Optimal strategy implementation</div>
+      <section class="section" aria-labelledby="games-title">
+        <h2 class="section-title" id="games-title">Games</h2>
+        <ul class="list">
+          <li class="list-item">
+            <a href="./ttt" target="_blank" class="link">Tic Tac Toe</a>
+            <a href="./ttt" target="_blank" class="meta-link" aria-label="Tic Tac Toe - Optimal strategy implementation">
+              <span class="meta">Optimal strategy implementation</span>
+            </a>
           </li>
-          <li>
-            <a target="_blank" rel="noopener noreferrer" href="./santa">Santa</a>
-            <div class="meta">Holiday game</div>
+          <li class="list-item">
+            <a href="./santa" target="_blank" class="link">Santa</a>
+            <a href="./santa" target="_blank" class="meta-link" aria-label="Santa - Holiday game">
+              <span class="meta">Holiday game</span>
+            </a>
           </li>
-          <li>
-            <a target="_blank" rel="noopener noreferrer" href="./tetris/www">WebGL Tetris</a>
-            <div class="meta">3D physics playground</div>
+          <li class="list-item">
+            <a href="./tetris/www" target="_blank" class="link">WebGL Tetris</a>
+            <a href="./tetris/www" target="_blank" class="meta-link" aria-label="WebGL Tetris - 3D physics playground">
+              <span class="meta">3D physics playground</span>
+            </a>
           </li>
         </ul>
       </section>
     </main>
 
-    <footer id="footer">Made with 🧡 in Berlin · 🎮 Find all 5 easter eggs</footer>
+    <footer class="footer" id="footerText" tabindex="0" role="button" aria-label="Click 5 times or shake device to celebrate Berlin">
+      Made with 🧡 in Berlin · 🎮 Find all 5 easter eggs
+    </footer>
   </div>
 
-  <div class="easter-egg" id="controller">🎮</div>
+  <button class="easter-egg" id="controllerBtn" aria-label="Game controller - click to celebrate gaming">🎮</button>
 
-  <div class="secret-message" id="secret">
-    <h3>Konami Code Activated! 🎉</h3>
+  <div class="modal" id="secretModal" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+    <h3 class="modal-title" id="modal-title">Konami Code Activated! 🎉</h3>
     <p>You found the secret! As a true gamer and engineer, you know the classics.</p>
-    <p style="margin-top: 1rem; color: var(--muted); font-size: 0.9rem;">
-      ↑ ↑ ↓ ↓ ← → ← → B A
-    </p>
-    <button class="close-btn" id="closeBtn">Awesome!</button>
+    <p class="modal-text">↑ ↑ ↓ ↓ ← → ← → B A</p>
+    <button class="btn" id="closeModalBtn">Awesome!</button>
   </div>
 
   <script>
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    const CONFIG = {
+      PARTICLE_COUNT: 50,
+      PARTICLE_CONNECTION_DIST: 100,
+      NAME_CLICK_COUNT: 3,
+      ROLE_CLICK_COUNT: 5,
+      FOOTER_SHAKE_COUNT: 5,
+      SHAKE_TIMEOUT: 2000,
+      SHAKE_THRESHOLD: 30,
+      SHAKE_COOLDOWN: 200,
+      KONAMI_CODE: ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
     };
-    resize();
-    window.addEventListener('resize', resize);
+
+    const CELEBRATIONS = {
+      name: { items: ['🎉', '✨', '⭐', '💫', '🌟'], count: 60, size: '1.5rem', delay: 15 },
+      controller: { items: ['🎮', '🕹️', '👾', '🎯', '🏆'], count: 50, size: '2rem', delay: 25 },
+      konami: { items: ['💥', '⚡', '🔥', '💯', '🚀'], count: 70, size: '2.5rem', delay: 20 },
+      berlin: { items: ['🏙️', '🎭', '🎨', '🎪', '🌃', '🎡', '🏛️', '🗼'], count: 30, size: '2rem', delay: 30 },
+      role: { items: ['👨‍💼', '💼', '👔', '📊', '🎯', '💪', '🚀', '⭐'], count: 40, size: '2rem', delay: 35 }
+    };
+
+    const els = {
+      canvas: document.getElementById('particleCanvas'),
+      name: document.getElementById('nameTitle'),
+      role: document.getElementById('roleText'),
+      footer: document.getElementById('footerText'),
+      controller: document.getElementById('controllerBtn'),
+      modal: document.getElementById('secretModal'),
+      closeModal: document.getElementById('closeModalBtn')
+    };
+
+    const ctx = els.canvas.getContext('2d');
+
+    const state = {
+      nameClicks: 0,
+      roleClicks: 0,
+      shakes: 0,
+      konamiIdx: 0,
+      shakeTimer: null,
+      motion: { x: 0, y: 0, z: 0 },
+      lastShake: 0
+    };
+
+    function resizeCanvas() {
+      els.canvas.width = window.innerWidth;
+      els.canvas.height = window.innerHeight;
+    }
 
     class Particle {
       constructor() {
@@ -510,8 +588,8 @@
       }
 
       reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
+        this.x = Math.random() * els.canvas.width;
+        this.y = Math.random() * els.canvas.height;
         this.size = Math.random() * 2 + 1;
         this.speedX = Math.random() * 0.5 - 0.25;
         this.speedY = Math.random() * 0.5 - 0.25;
@@ -521,8 +599,8 @@
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+        if (this.x < 0 || this.x > els.canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > els.canvas.height) this.speedY *= -1;
       }
 
       draw() {
@@ -533,11 +611,11 @@
       }
     }
 
-    const particles = Array.from({ length: 50 }, () => new Particle());
+    const particles = Array.from({ length: CONFIG.PARTICLE_COUNT }, () => new Particle());
 
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+      ctx.clearRect(0, 0, els.canvas.width, els.canvas.height);
+      
       particles.forEach(p => {
         p.update();
         p.draw();
@@ -549,8 +627,8 @@
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 100) {
-            ctx.strokeStyle = `rgba(255, 107, 53, ${0.1 * (1 - dist / 100)})`;
+          if (dist < CONFIG.PARTICLE_CONNECTION_DIST) {
+            ctx.strokeStyle = `rgba(255, 107, 53, ${0.1 * (1 - dist / CONFIG.PARTICLE_CONNECTION_DIST)})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
@@ -563,15 +641,9 @@
       requestAnimationFrame(animate);
     }
 
-    animate();
-
-    function createFallingItems(items, count = 50, options = {}) {
-      const {
-        size = items.length > 10 ? '2rem' : '10px',
-        colors = ['#ff6b35', '#ff8c61', '#ffa07a', '#ffb347'],
-        delay = items.length > 10 ? 30 : 20,
-        rotation = true
-      } = options;
+    function createCelebration(type) {
+      const { items, count, size, delay } = CELEBRATIONS[type];
+      const colors = ['#ff6b35', '#ff8c61', '#ffa07a', '#ffb347'];
 
       for (let i = 0; i < count; i++) {
         setTimeout(() => {
@@ -581,158 +653,137 @@
           el.style.fontSize = size;
           el.style.left = Math.random() * window.innerWidth + 'px';
           el.style.top = '-50px';
-
-          if (items.length > 10 || items[0] === '') {
-            el.style.background = 'transparent';
-            el.style.width = 'auto';
-            el.style.height = 'auto';
-            el.style.borderRadius = '0';
-          } else {
-            el.style.background = colors[Math.floor(Math.random() * colors.length)];
-            el.style.width = '10px';
-            el.style.height = '10px';
-            el.style.borderRadius = '50%';
-          }
-
-          if (!rotation) {
-            el.style.animation = 'fall 3s linear forwards';
-          }
-
           document.body.appendChild(el);
           setTimeout(() => el.remove(), 3000);
         }, i * delay);
       }
     }
 
-    let nameClicks = 0;
-    const nameEl = document.getElementById('name');
-
-    const handleNameClick = () => {
-      nameClicks++;
-      if (nameClicks === 3) {
-        createFallingItems(['🎉', '✨', '⭐', '💫', '🌟'], 60, {
-          size: '1.5rem',
-          delay: 15
-        });
-        nameClicks = 0;
+    function handleNameClick() {
+      state.nameClicks++;
+      if (state.nameClicks === CONFIG.NAME_CLICK_COUNT) {
+        createCelebration('name');
+        state.nameClicks = 0;
       }
-    };
+    }
 
-    nameEl.addEventListener('click', handleNameClick);
-    nameEl.addEventListener('touchend', e => {
+    function handleRoleClick() {
+      state.roleClicks++;
+      if (state.roleClicks === CONFIG.ROLE_CLICK_COUNT) {
+        createCelebration('role');
+        els.role.style.color = 'var(--accent)';
+        setTimeout(() => els.role.style.color = '', 2000);
+        state.roleClicks = 0;
+      }
+    }
+
+    function handleControllerClick() {
+      createCelebration('controller');
+      els.controller.style.transform = 'scale(1.5) rotate(360deg)';
+      setTimeout(() => els.controller.style.transform = '', 300);
+    }
+
+    function handleFooterShake() {
+      state.shakes++;
+      els.footer.classList.add('shake');
+      setTimeout(() => els.footer.classList.remove('shake'), 500);
+
+      clearTimeout(state.shakeTimer);
+      state.shakeTimer = setTimeout(() => state.shakes = 0, CONFIG.SHAKE_TIMEOUT);
+
+      if (state.shakes >= CONFIG.FOOTER_SHAKE_COUNT) {
+        createCelebration('berlin');
+        els.footer.textContent = '🎉 Berlin loves you back! 🧡';
+        setTimeout(() => els.footer.textContent = 'Made with 🧡 in Berlin · 🎮 Find all 5 easter eggs', 3000);
+        state.shakes = 0;
+      }
+    }
+
+    function handleKonami(e) {
+      if (e.key.toLowerCase() === CONFIG.KONAMI_CODE[state.konamiIdx].toLowerCase()) {
+        state.konamiIdx++;
+        if (state.konamiIdx === CONFIG.KONAMI_CODE.length) {
+          els.modal.classList.add('show');
+          createCelebration('konami');
+          state.konamiIdx = 0;
+        }
+      } else {
+        state.konamiIdx = 0;
+      }
+    }
+
+    function closeModal() {
+      els.modal.classList.remove('show');
+    }
+
+    els.name.addEventListener('click', handleNameClick);
+    els.name.addEventListener('touchend', e => {
       e.preventDefault();
       handleNameClick();
     });
+    els.name.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleNameClick();
+      }
+    });
 
-    const controller = document.getElementById('controller');
+    els.role.addEventListener('click', handleRoleClick);
+    els.role.addEventListener('touchend', e => {
+      e.preventDefault();
+      handleRoleClick();
+    });
+    els.role.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleRoleClick();
+      }
+    });
 
-    const handleControllerClick = () => {
-      createFallingItems(['🎮', '🕹️', '👾', '🎯', '🏆'], 50, {
-        size: '2rem',
-        delay: 25
-      });
-      controller.style.transform = 'scale(1.5) rotate(360deg)';
-      setTimeout(() => controller.style.transform = '', 300);
-    };
-
-    controller.addEventListener('click', handleControllerClick);
-    controller.addEventListener('touchend', e => {
+    els.controller.addEventListener('click', handleControllerClick);
+    els.controller.addEventListener('touchend', e => {
       e.preventDefault();
       handleControllerClick();
     });
 
-    const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-    let konamiIdx = 0;
-
-    document.addEventListener('keydown', e => {
-      if (e.key.toLowerCase() === konami[konamiIdx].toLowerCase()) {
-        konamiIdx++;
-        if (konamiIdx === konami.length) {
-          document.getElementById('secret').classList.add('show');
-          createFallingItems(['💥', '⚡', '🔥', '💯', '🚀'], 70, {
-            size: '2.5rem',
-            delay: 20
-          });
-          konamiIdx = 0;
-        }
-      } else {
-        konamiIdx = 0;
-      }
-    });
-
-    document.getElementById('closeBtn').addEventListener('click', () => {
-      document.getElementById('secret').classList.remove('show');
-    });
-
-    const footer = document.getElementById('footer');
-    let shakes = 0;
-    let shakeTimer;
-
-    function handleShake() {
-      shakes++;
-      footer.classList.add('shake');
-      setTimeout(() => footer.classList.remove('shake'), 500);
-
-      clearTimeout(shakeTimer);
-      shakeTimer = setTimeout(() => shakes = 0, 2000);
-
-      if (shakes >= 5) {
-        createFallingItems(['🏙️', '🎭', '🎨', '🎪', '🌃', '🎡', '🏛️', '🗼'], 30);
-        footer.textContent = '🎉 Berlin loves you back! 🧡';
-        setTimeout(() => footer.textContent = 'Made with 🧡 in Berlin · 🎮 Find all 5 easter eggs', 3000);
-        shakes = 0;
-      }
-    }
-
-    footer.addEventListener('click', handleShake);
-    footer.addEventListener('touchend', e => {
+    els.footer.addEventListener('click', handleFooterShake);
+    els.footer.addEventListener('touchend', e => {
       e.preventDefault();
-      handleShake();
+      handleFooterShake();
     });
+    els.footer.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleFooterShake();
+      }
+    });
+
+    els.closeModal.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', handleKonami);
 
     if (window.DeviceMotionEvent) {
-      let motion = { x: 0, y: 0, z: 0 };
-      let lastShake = 0;
-
       window.addEventListener('devicemotion', e => {
         const acc = e.accelerationIncludingGravity;
         if (!acc) return;
 
         const now = Date.now();
-        if (now - lastShake < 200) return;
+        if (now - state.lastShake < CONFIG.SHAKE_COOLDOWN) return;
 
-        const delta = Math.abs(acc.x - motion.x) + Math.abs(acc.y - motion.y) + Math.abs(acc.z - motion.z);
+        const delta = Math.abs(acc.x - state.motion.x) + Math.abs(acc.y - state.motion.y) + Math.abs(acc.z - state.motion.z);
 
-        if (delta > 30) {
-          lastShake = now;
-          handleShake();
+        if (delta > CONFIG.SHAKE_THRESHOLD) {
+          state.lastShake = now;
+          handleFooterShake();
         }
 
-        motion = { x: acc.x, y: acc.y, z: acc.z };
+        state.motion = { x: acc.x, y: acc.y, z: acc.z };
       });
     }
 
-    let roleClicks = 0;
-    const role = document.querySelector('.role');
-
-    const handleRoleClick = () => {
-      roleClicks++;
-      if (roleClicks === 5) {
-        createFallingItems(['👨‍💼', '💼', '👔', '📊', '🎯', '💪', '🚀', '⭐'], 40, {
-          size: '2rem',
-          delay: 35
-        });
-        role.style.color = 'var(--accent)';
-        setTimeout(() => role.style.color = '', 2000);
-        roleClicks = 0;
-      }
-    };
-
-    role.addEventListener('click', handleRoleClick);
-    role.addEventListener('touchend', e => {
-      e.preventDefault();
-      handleRoleClick();
-    });
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    animate();
   </script>
 </body>
 
