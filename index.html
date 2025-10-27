@@ -579,7 +579,8 @@
       konamiIdx: 0,
       shakeTimer: null,
       motion: { x: 0, y: 0, z: 0 },
-      lastShake: 0
+      lastShake: 0,
+      foundEggs: new Set()
     };
 
     function resizeCanvas() {
@@ -664,10 +665,23 @@
       }
     }
 
+    function updateEasterEggCounter(eggName) {
+      state.foundEggs.add(eggName);
+      const count = state.foundEggs.size;
+      const total = 5;
+      
+      if (count === total) {
+        els.footer.textContent = `Made with 🧡 in Berlin · 🎉 All easter eggs found!`;
+      } else {
+        els.footer.textContent = `Made with 🧡 in Berlin · 🎮 ${count}/${total} easter eggs found`;
+      }
+    }
+
     function handleNameClick() {
       state.nameClicks++;
       if (state.nameClicks === CONFIG.NAME_CLICK_COUNT) {
         createCelebration('name');
+        updateEasterEggCounter('name');
         state.nameClicks = 0;
       }
     }
@@ -676,6 +690,7 @@
       state.roleClicks++;
       if (state.roleClicks === CONFIG.ROLE_CLICK_COUNT) {
         createCelebration('role');
+        updateEasterEggCounter('role');
         els.role.style.color = 'var(--accent)';
         setTimeout(() => els.role.style.color = '', 2000);
         state.roleClicks = 0;
@@ -684,6 +699,7 @@
 
     function handleControllerClick() {
       createCelebration('controller');
+      updateEasterEggCounter('controller');
       els.controller.style.transform = 'scale(1.5) rotate(360deg)';
       setTimeout(() => els.controller.style.transform = '', 300);
     }
@@ -698,8 +714,17 @@
 
       if (state.shakes >= CONFIG.FOOTER_SHAKE_COUNT) {
         createCelebration('berlin');
+        updateEasterEggCounter('berlin');
+        const currentCount = state.foundEggs.size;
+        const total = 5;
         els.footer.textContent = '🎉 Berlin loves you back! 🧡';
-        setTimeout(() => els.footer.textContent = 'Made with 🧡 in Berlin · 🎮 Find all 5 easter eggs', 3000);
+        setTimeout(() => {
+          if (currentCount === total) {
+            els.footer.textContent = `Made with 🧡 in Berlin · 🎉 All easter eggs found!`;
+          } else {
+            els.footer.textContent = `Made with 🧡 in Berlin · 🎮 ${currentCount}/${total} easter eggs found`;
+          }
+        }, 3000);
         state.shakes = 0;
       }
     }
@@ -710,6 +735,7 @@
         if (state.konamiIdx === CONFIG.KONAMI_CODE.length) {
           els.modal.classList.add('show');
           createCelebration('konami');
+          updateEasterEggCounter('konami');
           state.konamiIdx = 0;
         }
       } else {
