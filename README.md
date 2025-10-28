@@ -9,7 +9,7 @@ This repository hosts my personal website - a clean, interactive portfolio with 
 ## What's Inside
 
 - **Interactive portfolio** - Modern design with animated backgrounds and hover effects
-- **Tic Tac Toe** (`/ttt`) - Unbeatable minimax algorithm implementation
+- **Tic Tac Toe** (`/ttt`) - Unbeatable implementation
 - **Santa game** (`/santa`) - Holiday-themed interactive game
 - **WebGL Tetris** (`/tetris/www`) - 3D Tetris with physics simulation
 
