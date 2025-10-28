@@ -1,23 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
   const body = document.body;
   const themeSwitcher = document.querySelector('.theme-switcher'); // This now correctly finds the button
-  const humanImageDiv = document.getElementById('humanImage');
-  const computerImageDiv = document.getElementById('computerImage');
 
   const themes = ['morning', 'afternoon', 'evening', 'midnight'];
+  const themeIcons = ['☀️', '🌇', '🌆', '🌙']; // Sun, Sunset, Cityscape, Moon
   let currentThemeIndex = 0;
-  humanImageDiv.addEventListener('click', () => {
-    TTTApplication.setup(false);
-  });
-
-  computerImageDiv.addEventListener('click', () => {
-    TTTApplication.setup(true);
-  });
 
   function applyTheme(themeName) {
     body.classList.remove(...themes);
     body.classList.add(themeName);
     currentThemeIndex = themes.indexOf(themeName);
+    if (themeSwitcher) themeSwitcher.textContent = themeIcons[currentThemeIndex];
   }
 
   if (themeSwitcher) {
@@ -25,6 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
       currentThemeIndex = (currentThemeIndex + 1) % themes.length;
       const nextTheme = themes[currentThemeIndex];
       applyTheme(nextTheme);
+
+      // Add a class for animation and remove it after the animation completes
+      themeSwitcher.classList.add('rotating');
+      setTimeout(() => themeSwitcher.classList.remove('rotating'), 300);
     });
   }
 

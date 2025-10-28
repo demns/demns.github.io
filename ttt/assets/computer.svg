@@ -1,5 +1,0 @@
-<svg class="computer" width="50" height="50" viewBox="0 0 301 401" xmlns="http://www.w3.org/2000/svg">
-  <polygon points="0,0 300,0 300,200 0,200" style="fill:aqua; stroke:currentColor; stroke-width:10; " />
-  <line x1="150" y1="200" x2="150" y2="250" style="stroke:currentColor;stroke-width:75" />
-  <line x1="80" y1="250" x2="220" y2="250" style="stroke:currentColor;stroke-width:10" />
-</svg>

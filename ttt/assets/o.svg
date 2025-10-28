@@ -1,0 +1,3 @@
+<svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" style="color: var(--circle-color)">
+  <circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1.5" fill="none" />
+</svg>

@@ -10,6 +10,8 @@
     gameBoard: document.getElementById('contents'),
     turnIndicator: document.getElementById('turn-indicator'),
     newGameButton: document.getElementById('new-game-button'),
+    playAsXButton: document.getElementById('play-as-x'),
+    playAsOButton: document.getElementById('play-as-o'),
     X: 'X',
     O: 'O',
 
@@ -27,6 +29,7 @@
       const whoStarts = this.firstMoveComputer ? 'Computer' : 'Your';
       this.newGameButton.classList.remove('show');
       this.turnIndicator.textContent = `${whoStarts} turn`;
+      this.gameBoard.classList.remove('game-over');
 
       for (let i = 0; i < 9; i++) {
         const cell = document.createElement('div');
@@ -34,6 +37,7 @@
         cell.dataset.index = i;
         cell.setAttribute('aria-label', `Cell ${i + 1}, empty`);
         cell.addEventListener('click', () => this.handleCellClick(i));
+        cell.setAttribute('role', 'gridcell');
         this.gameBoard.appendChild(cell);
       }
 
@@ -91,12 +95,16 @@
       if (winningLine) {
         this.turnIndicator.textContent = 'Game Over!';
         console.log('[APP] Game Over! Winning line:', winningLine);
+        this.gameBoard.classList.add('game-over');
         this.drawWinningLine(winningLine);
         this.newGameButton.classList.add('show');
+        this.newGameButton.focus(); // Set focus for accessibility
       } else if (moveCount === 9) {
         this.turnIndicator.textContent = 'It\'s a draw!';
         console.log('[APP] Game is a draw.');
+        this.gameBoard.classList.add('game-over');
         this.newGameButton.classList.add('show');
+        this.newGameButton.focus(); // Set focus for accessibility
       } else {
         const nextSymbol = this.getCurrentTurn();
         const isNextTurnComputer = nextSymbol === (this.firstMoveComputer ? this.X : this.O);
@@ -113,6 +121,9 @@
       const cells = this.gameBoard.querySelectorAll('.cell');
       const startCell = cells[line[0]];
       const endCell = cells[line[2]];
+
+      // Highlight the winning cells
+      line.forEach(index => cells[index].classList.add('winning-cell'));
 
       const startRect = startCell.getBoundingClientRect();
       const endRect = endCell.getBoundingClientRect();
@@ -131,8 +142,12 @@
   };
 
   // --- Initializer ---
-  TTTApplication.setup(false); // Initial setup on page load
-  TTTApplication.newGameButton.addEventListener('click', () => TTTApplication.setup());
+  // Player starts as X by default on first load.
+  TTTApplication.setup(false); 
+
+  TTTApplication.newGameButton.addEventListener('click', () => TTTApplication.setup(TTTApplication.firstMoveComputer));
+  TTTApplication.playAsXButton.addEventListener('click', () => TTTApplication.setup(false)); // Player is X, computer is O, player starts.
+  TTTApplication.playAsOButton.addEventListener('click', () => TTTApplication.setup(true)); // Player is O, computer is X, computer starts.
 
   // Make TTTApplication globally available for view.js
   window.TTTApplication = TTTApplication;

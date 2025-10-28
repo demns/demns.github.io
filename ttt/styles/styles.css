@@ -10,8 +10,8 @@
   /* Shadow colors */
   --shadow-light: rgba(255, 255, 255, 0.5);
   --shadow-dark: rgba(0, 0, 0, 0.3);
-  --accent: #ff6b35; /* From parent index.html */
-  --hover: #ff8c61;  /* From parent index.html */
+  --accent: #ff6b35;
+  --hover: #ff8c61;
 }
 
 body {
@@ -31,13 +31,62 @@ body {
   background-color: var(--bg-color);
 }
 
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.game-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  flex-wrap: wrap;
+  position: relative;
+  min-height: 80px; /* Give header some space */
+}
+
+.player-choice-button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 2px solid transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.player-choice-button:hover, .player-choice-button:focus-visible {
+  background-color: var(--cell-hover-bg);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.player-choice-button img {
+  width: 48px;
+  height: 48px;
+}
+
 .main {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   width: min(75vh, 90vw);
   height: min(75vh, 90vw);
-  margin: 5vh auto;
+  margin: 2vh auto; /* Reduced margin as header/footer add space */
   position: relative; /* Needed for positioning the winning line SVG */
 }
 
@@ -46,23 +95,17 @@ body {
 }
 
 .theme-switcher { /* Now styled as a button */
-  position: absolute;
-  bottom: 5%;
-  left: 5%;
   cursor: pointer;
   background: none;
   border: none;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
+  padding: 0.25rem; /* Add padding for a better click area */
+  -webkit-tap-highlight-color: transparent; /* This is a good property */
   transition: transform 0.2s;
   font-size: 1.8rem; /* Make icon larger */
   color: var(--icon-color);
 }
 
 div.about {
-  position: absolute;
-  bottom: 5%;
-  right: 5%;
 }
 
 div.about a {
@@ -78,11 +121,19 @@ div.about a:hover {
   background-color: var(--cell-hover-bg);
 }
 
+.player-choice-button:hover, .player-choice-button:focus-visible {
+  background-color: var(--cell-hover-bg);
+  border-color: var(--accent);
+}
+
+.turn-info {
+  display: flex;
+  flex-direction: column-reverse; /* Stack items vertically, with button on top */
+  align-items: center;
+  gap: 0.5rem; /* Add some space between the button and the text */
+}
+
 #turn-indicator {
-  position: absolute;
-  bottom: 4%; /* Moved to bottom */
-  left: 50%;
-  transform: translateX(-50%);
   color: var(--text-color); /* Use CSS variable */
   text-shadow: 1px 1px 3px var(--shadow-color); /* Use CSS variable */
   margin: 0; /* Remove default margin from h2 */
@@ -90,12 +141,8 @@ div.about a:hover {
   font-weight: 600; /* Make it bold */
 }
 
-#new-game-button {
-  position: absolute;
-  bottom: 8%; /* Position above the turn indicator */
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0.8rem 1.5rem;
+.new-game-button {
+  padding: 0.7rem 1.4rem;
   background: var(--accent);
   color: var(--color-light);
   border: none;
@@ -109,7 +156,7 @@ div.about a:hover {
   visibility: hidden;
 }
 
-#new-game-button.show {
+.new-game-button.show {
   opacity: 1;
   visibility: visible;
 }
@@ -137,19 +184,6 @@ div.about a:hover {
   outline-offset: 4px;
 }
 
-#computerImage, #humanImage {
-  position: absolute;
-  top: 5%;
-}
-
-#computerImage {
-  left: 5%;
-}
-
-#humanImage {
-  right: 5%;
-}
-
 .computer,
 .human {
   filter: drop-shadow(0 1px 2px var(--shadow-color));
@@ -168,8 +202,8 @@ div.about a:hover {
   --circle-color: #f7b801; /* Yellow */
 }
 
-.evening .player-button img,
-.midnight .player-button img {
+.evening .player-choice-button img,
+.midnight .player-choice-button img {
   filter: invert(1) drop-shadow(0 1px 2px var(--shadow-color));
 }
 
@@ -228,14 +262,43 @@ div.about a:hover {
   stroke: var(--color-red);
   stroke-width: 10;
   stroke-linecap: round;
+  animation: drawLine 0.5s ease-out forwards;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
 }
 
 /* --- Animations --- */
+.theme-switcher:active {
+  transform: scale(0.9) rotate(15deg);
+}
+
 .cell svg {
   animation: fadeIn 0.3s ease-in-out;
 }
 
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.game-over .cell {
+  opacity: 0.5;
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* When game is over, don't dim the winning cells */
+.game-over .cell.winning-cell {
+  opacity: 1;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.5); }
-  to { opacity: 1; transform: scale(1); }
+  50%  { transform: scale(1.1); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.theme-switcher.rotating {
+  transition: transform 0.3s ease-in-out;
+  transform: rotate(360deg);
 }
