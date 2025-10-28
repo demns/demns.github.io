@@ -26,7 +26,7 @@ Pure vanilla HTML, CSS, and JavaScript. No frameworks, no build tools - just cle
 
 ## Easter Eggs
 
-There are 4 hidden interactions on the site. Can you find them all? 🎮
+There are 5 hidden interactions on the site. Can you find them all? 🎮
 
 ---
 
