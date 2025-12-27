@@ -1,5 +1,11 @@
-var express = require('express');
-var app = express();
-app.use(express.static(__dirname + '/www'));
+const express = require('express');
+const path = require('path');
 
-app.listen(process.env.PORT || 3000);
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.static(path.join(__dirname, 'www')));
+
+app.listen(PORT, () => {
+	console.log(`Tetris server running on http://localhost:${PORT}`);
+});
