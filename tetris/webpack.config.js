@@ -1,74 +1,69 @@
 /* eslint-env node */
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = ({debug = false} = {}) => {
-	const plugins = [
-		new webpack.DefinePlugin({
-			'process.env.NODE_ENV': JSON.stringify(debug ? 'development' : 'production')
-		}),
-		new ExtractTextPlugin("[name].css"),
-		new HtmlWebpackPlugin({
-			title: 'Example',
-			filename: 'index.html'
-		}),
-	];
-	if (!debug) {
-		plugins.push(
-			new webpack.optimize.UglifyJsPlugin({
-				sourceMap: 'source-map',
-				compress: {
-					warnings: false
-				},
-				output: {
-					comments: false
-				}
-			})
-		);
-	}
+module.exports = (env, argv) => {
+	const isProduction = argv.mode === 'production';
 
 	return {
 		target: 'web',
+		mode: isProduction ? 'production' : 'development',
 		devtool: 'source-map',
 		entry: './src/application.js',
 		output: {
 			path: path.resolve(__dirname, 'www'),
-			filename: debug ? 'bundle.js' : 'bundle.min.js',
-			publicPath: ''
+			filename: isProduction ? 'bundle.min.js' : 'bundle.js',
+			publicPath: '',
+			clean: true
 		},
-		plugins,
+		plugins: [
+			new MiniCssExtractPlugin({
+				filename: '[name].css'
+			}),
+			new HtmlWebpackPlugin({
+				title: 'WebGL Tetris',
+				filename: 'index.html'
+			})
+		],
 		module: {
 			rules: [
 				{
 					test: /\.js$/,
 					include: [
-						path.resolve(__dirname, 'src'),
-						path.resolve(__dirname, './node_modules/webvr-ui'),
+						path.resolve(__dirname, 'src')
 					],
-					loader: 'babel-loader',
-					query: {
-						compact: true,
-						plugins: [
-							'transform-es2015-shorthand-properties'
-						],
-						presets: [
-							['es2015', { modules: false }]
-						]
+					use: {
+						loader: 'babel-loader',
+						options: {
+							presets: [
+								['@babel/preset-env', {
+									targets: {
+										browsers: ['last 2 versions', 'not dead']
+									}
+								}]
+							]
+						}
 					}
 				},
 				{
 					test: /\.css$/,
-					use: ExtractTextPlugin.extract({
-						fallback: "style-loader",
-						use: "css-loader"
-					})
+					use: [
+						MiniCssExtractPlugin.loader,
+						'css-loader'
+					]
 				}
 			]
 		},
 		performance: {
 			hints: false
+		},
+		devServer: {
+			static: {
+				directory: path.join(__dirname, 'www')
+			},
+			compress: true,
+			port: 8000
 		}
 	};
 };

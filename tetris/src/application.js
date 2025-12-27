@@ -1,17 +1,9 @@
 require("./styles/app.css");
 
-import * as OrbitControls from 'three-orbit-controls';
-import { Object3D } from 'three';
-import * as Three from 'three';
-import * as VRControls from 'three-vrcontrols';
-import VREffect from 'three-vreffects';
-
-import * as webvrui from 'webvr-ui';
-import * as webvrPolyfill from 'webvr-polyfill';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import camera from './camera';
 import collision from './collision';
-import { controlCamera, controlMesh, removeControl } from './controls';
-import Cube from './cube';
+import { controlMesh, removeControl } from './controls';
 import getIModel from './meshes/I';
 import getLMesh from './meshes/L';
 import getTMesh from './meshes/T';
@@ -21,10 +13,6 @@ import ObjectsCount from './objectsCount';
 import renderer from './renderer';
 import scene from './scene';
 import stats from './stats';
-import { height, width } from './config';
-import { WebVRConfig } from './webVRConfig';
-
-window.WebVRConfig = WebVRConfig;
 
 document.body.appendChild(stats.domElement);
 
@@ -54,34 +42,12 @@ scene.add(plane);
 camera.position.z = 15; // to avoid camera being into the cube at 0 0 0
 camera.position.y = 20;
 
-const enterVR = new webvrui.EnterVRButton(renderer.domElement, {textEnterVRTitle: 'ENTER VR (use mobile Chrome)'});
-document.body.appendChild(enterVR.domElement);
-
-const Controls = OrbitControls(Three);
-var orbitControls =  new Controls(camera);
-
-// Store the position of the VR HMD in a dummy camera.
-var fakeCamera = new Object3D();
-var VrControls = new VRControls(Three);
-var vrControls = new VrControls(fakeCamera);
-var vrEffect = new VREffect(Three, renderer, function () {});
+const orbitControls = new OrbitControls(camera, renderer.domElement);
+orbitControls.enableDamping = true;
+orbitControls.dampingFactor = 0.05;
 
 (function render() {
 	orbitControls.update();
-	vrControls.update();
-
-	// Temporarily save the orbited camera position
-	var orbitPos = camera.position.clone();
-	var rotatedPosition = fakeCamera.position.applyQuaternion(
-		camera.quaternion);
-	camera.position.add(rotatedPosition);
-	camera.quaternion.multiply(fakeCamera.quaternion);
-
-	vrEffect.render(scene, camera);
-
-	// Restore the orbit position, so that the OrbitControls can
-	// pickup where it left off.
-	camera.position.copy(orbitPos);
 
 	stats.begin();
 	renderer.render(scene, camera);
