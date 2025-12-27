@@ -1,4 +1,5 @@
 import { AI } from './AI.js';
+import { GAME_CONFIG } from './config.js';
 
 // --- Main Application Logic ---
 export const TTTApplication = {
@@ -26,7 +27,7 @@ export const TTTApplication = {
 
     clearBoard: function () {
       this.gameBoard.innerHTML = '';
-      this.boardState = Array(9).fill('');
+      this.boardState = Array(GAME_CONFIG.BOARD_SIZE).fill('');
       const winningLine = document.getElementById('winning-line');
       if (winningLine) winningLine.remove();
     },

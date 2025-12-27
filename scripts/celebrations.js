@@ -1,4 +1,4 @@
-import { CELEBRATIONS } from './config.js';
+import { CONFIG, CELEBRATIONS } from './config.js';
 import { updateFooterText } from './utils.js';
 
 /**
@@ -18,7 +18,7 @@ export function createCelebration(type) {
       el.style.left = Math.random() * window.innerWidth + 'px';
       el.style.top = '-50px';
       document.body.appendChild(el);
-      setTimeout(() => el.remove(), 3000);
+      setTimeout(() => el.remove(), CONFIG.CELEBRATION_ITEM_DURATION);
     }, i * delay);
   }
 }
@@ -32,6 +32,5 @@ export function createCelebration(type) {
 export function updateEasterEggCounter(state, footerEl, eggName) {
   state.foundEggs.add(eggName);
   const count = state.foundEggs.size;
-  const total = 5;
-  updateFooterText(footerEl, count, total);
+  updateFooterText(footerEl, count, CONFIG.TOTAL_EASTER_EGGS);
 }

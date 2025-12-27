@@ -17,6 +17,7 @@ import stats from './stats';
 document.body.appendChild(stats.domElement);
 
 const DEG_TO_RAD = Math.PI / 180;
+const GAME_TICK_INTERVAL = 1000; // milliseconds between piece drops
 
 setLights();
 const objectsCount = new ObjectsCount();
@@ -24,7 +25,7 @@ const objectsCount = new ObjectsCount();
 let currentElement = createNewElement();
 const collidableMeshList = [];
 
-const interval = setInterval(down, 1000);
+const interval = setInterval(down, GAME_TICK_INTERVAL);
 
 function down() {
 	if (currentElement.element.position.y > 0 && !collision(currentElement.element, collidableMeshList, scene)) {

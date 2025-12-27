@@ -1,27 +1,25 @@
+import { GAME_CONFIG, THEMES } from './config.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const body = document.body;
-  const themeSwitcher = document.querySelector('.theme-switcher'); // This now correctly finds the button
-
-  const themes = ['morning', 'afternoon', 'evening', 'midnight'];
-  const themeIcons = ['☀️', '🌇', '🌆', '🌙']; // Sun, Sunset, Cityscape, Moon
+  const themeSwitcher = document.querySelector('.theme-switcher');
   let currentThemeIndex = 0;
 
   function applyTheme(themeName) {
-    body.classList.remove(...themes);
+    body.classList.remove(...THEMES.NAMES);
     body.classList.add(themeName);
-    currentThemeIndex = themes.indexOf(themeName);
-    if (themeSwitcher) themeSwitcher.textContent = themeIcons[currentThemeIndex];
+    currentThemeIndex = THEMES.NAMES.indexOf(themeName);
+    if (themeSwitcher) themeSwitcher.textContent = THEMES.ICONS[currentThemeIndex];
   }
 
   if (themeSwitcher) {
     themeSwitcher.addEventListener('click', () => {
-      currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-      const nextTheme = themes[currentThemeIndex];
+      currentThemeIndex = (currentThemeIndex + 1) % THEMES.NAMES.length;
+      const nextTheme = THEMES.NAMES[currentThemeIndex];
       applyTheme(nextTheme);
 
-      // Add a class for animation and remove it after the animation completes
       themeSwitcher.classList.add('rotating');
-      setTimeout(() => themeSwitcher.classList.remove('rotating'), 300);
+      setTimeout(() => themeSwitcher.classList.remove('rotating'), GAME_CONFIG.THEME_TRANSITION_DURATION);
     });
   }
 
@@ -34,11 +32,11 @@ function getCurrentPeriod() {
   const time = new Date();
   const hour = time.getHours();
 
-  if (hour >= 17) {
+  if (hour >= THEMES.TIME_THRESHOLDS.EVENING) {
     return 'evening';
-  } else if (hour >= 12) {
+  } else if (hour >= THEMES.TIME_THRESHOLDS.AFTERNOON) {
     return 'afternoon';
-  } else if (hour >= 7) {
+  } else if (hour >= THEMES.TIME_THRESHOLDS.MORNING) {
     return 'morning';
   } else {
     return 'midnight';

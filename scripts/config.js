@@ -7,7 +7,17 @@ export const CONFIG = {
   SHAKE_TIMEOUT: 2000,
   SHAKE_THRESHOLD: 30,
   SHAKE_COOLDOWN: 200,
-  KONAMI_CODE: ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
+  KONAMI_CODE: ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'],
+
+  // Animation durations (milliseconds)
+  ROLE_COLOR_DURATION: 2000,
+  CONTROLLER_TRANSFORM_DURATION: 300,
+  FOOTER_SHAKE_DURATION: 500,
+  BERLIN_MESSAGE_DURATION: 3000,
+  CELEBRATION_ITEM_DURATION: 3000,
+
+  // Easter egg constants
+  TOTAL_EASTER_EGGS: 5
 };
 
 export const CELEBRATIONS = {

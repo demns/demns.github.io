@@ -18,7 +18,7 @@ export function initEasterEggs(els, state) {
       createCelebration('role');
       updateEasterEggCounter(state, els.footer, 'role');
       els.role.style.color = 'var(--accent)';
-      setTimeout(() => els.role.style.color = '', 2000);
+      setTimeout(() => els.role.style.color = '', CONFIG.ROLE_COLOR_DURATION);
       state.roleClicks = 0;
     }
   }
@@ -27,13 +27,13 @@ export function initEasterEggs(els, state) {
     createCelebration('controller');
     updateEasterEggCounter(state, els.footer, 'controller');
     els.controller.style.transform = 'scale(1.5) rotate(360deg)';
-    setTimeout(() => els.controller.style.transform = '', 300);
+    setTimeout(() => els.controller.style.transform = '', CONFIG.CONTROLLER_TRANSFORM_DURATION);
   }
 
   function handleFooterShake() {
     state.shakes++;
     els.footer.classList.add('shake');
-    setTimeout(() => els.footer.classList.remove('shake'), 500);
+    setTimeout(() => els.footer.classList.remove('shake'), CONFIG.FOOTER_SHAKE_DURATION);
 
     clearTimeout(state.shakeTimer);
     state.shakeTimer = setTimeout(() => state.shakes = 0, CONFIG.SHAKE_TIMEOUT);
@@ -42,11 +42,10 @@ export function initEasterEggs(els, state) {
       createCelebration('berlin');
       updateEasterEggCounter(state, els.footer, 'berlin');
       const currentCount = state.foundEggs.size;
-      const total = 5;
       els.footer.textContent = '🎉 Berlin loves you back! 🧡';
       setTimeout(() => {
-        updateFooterText(els.footer, currentCount, total);
-      }, 3000);
+        updateFooterText(els.footer, currentCount, CONFIG.TOTAL_EASTER_EGGS);
+      }, CONFIG.BERLIN_MESSAGE_DURATION);
       state.shakes = 0;
     }
   }
@@ -78,21 +77,29 @@ export function initEasterEggs(els, state) {
   document.addEventListener('keydown', handleKonami);
 
   if (window.DeviceMotionEvent) {
-    window.addEventListener('devicemotion', (e) => {
-      const acc = e.accelerationIncludingGravity;
-      if (!acc) return;
+    try {
+      window.addEventListener('devicemotion', (e) => {
+        try {
+          const acc = e.accelerationIncludingGravity;
+          if (!acc) return;
 
-      const now = Date.now();
-      if (now - state.lastShake < CONFIG.SHAKE_COOLDOWN) return;
+          const now = Date.now();
+          if (now - state.lastShake < CONFIG.SHAKE_COOLDOWN) return;
 
-      const delta = Math.abs(acc.x - state.motion.x) + Math.abs(acc.y - state.motion.y) + Math.abs(acc.z - state.motion.z);
+          const delta = Math.abs(acc.x - state.motion.x) + Math.abs(acc.y - state.motion.y) + Math.abs(acc.z - state.motion.z);
 
-      if (delta > CONFIG.SHAKE_THRESHOLD) {
-        state.lastShake = now;
-        handleFooterShake();
-      }
+          if (delta > CONFIG.SHAKE_THRESHOLD) {
+            state.lastShake = now;
+            handleFooterShake();
+          }
 
-      state.motion = { x: acc.x, y: acc.y, z: acc.z };
-    });
+          state.motion = { x: acc.x, y: acc.y, z: acc.z };
+        } catch (error) {
+          console.warn('Device motion processing error:', error);
+        }
+      });
+    } catch (error) {
+      console.warn('Device motion not supported or permission denied:', error);
+    }
   }
 }
