@@ -1,11 +1,21 @@
 import { CONFIG } from './config.js';
 
+/**
+ * Represents an animated particle that moves across the canvas background.
+ * Particles bounce off canvas edges and connect to nearby particles with lines.
+ */
 export class Particle {
+  /**
+   * @param {HTMLCanvasElement} canvas - The canvas element this particle exists within
+   */
   constructor(canvas) {
     this.canvas = canvas;
     this.reset();
   }
 
+  /**
+   * Resets the particle to a random position with random velocity and opacity.
+   */
   reset() {
     this.x = Math.random() * this.canvas.width;
     this.y = Math.random() * this.canvas.height;
@@ -15,6 +25,9 @@ export class Particle {
     this.opacity = Math.random() * 0.3 + 0.1;
   }
 
+  /**
+   * Updates particle position and bounces off canvas edges.
+   */
   update() {
     this.x += this.speedX;
     this.y += this.speedY;
@@ -22,6 +35,10 @@ export class Particle {
     if (this.y < 0 || this.y > this.canvas.height) this.speedY *= -1;
   }
 
+  /**
+   * Draws the particle as a filled circle on the canvas.
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context
+   */
   draw(ctx) {
     ctx.fillStyle = `rgba(255, 107, 53, ${this.opacity})`;
     ctx.beginPath();

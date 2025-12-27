@@ -11,7 +11,19 @@ const els = {
   closeModal: document.getElementById('closeModalBtn')
 };
 
+// Validate all required elements exist
+const requiredElements = ['canvas', 'name', 'role', 'footer', 'controller', 'modal', 'closeModal'];
+for (const key of requiredElements) {
+  if (!els[key]) {
+    console.error(`Required element missing: ${key}`);
+    throw new Error(`Portfolio initialization failed: ${key} element not found`);
+  }
+}
+
 const ctx = els.canvas.getContext('2d');
+if (!ctx) {
+  throw new Error('Canvas context not supported');
+}
 
 const state = {
   nameClicks: 0,

@@ -16,6 +16,8 @@ import stats from './stats';
 
 document.body.appendChild(stats.domElement);
 
+const DEG_TO_RAD = Math.PI / 180;
+
 setLights();
 const objectsCount = new ObjectsCount();
 
@@ -35,7 +37,7 @@ function down() {
 }
 
 const plane = getPlane();
-plane.rotation.x = 90 * (Math.PI / 180);
+plane.rotation.x = 90 * DEG_TO_RAD;
 plane.position.y = 0;
 scene.add(plane);
 
@@ -54,6 +56,11 @@ orbitControls.dampingFactor = 0.05;
 	stats.end();
 	requestAnimationFrame(render);
 })();
+
+// Cleanup interval on page unload to prevent memory leak
+window.addEventListener('beforeunload', () => {
+	clearInterval(interval);
+});
 
 function setLights() {
 	const light = getSpotLight();

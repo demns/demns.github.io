@@ -59,9 +59,7 @@ export const TTTApplication = {
       if (this.isGameOver()) return;
 
       const computerSymbol = this.getComputerSymbol();
-      console.log('[APP] Computer to move. Symbol:', computerSymbol, 'Board:', this.boardState);
       const cellIndex = AI.calculateComputerMove(this.boardState, computerSymbol);
-      console.log('[APP] AI chose move:', cellIndex);
       if (cellIndex !== -1) {
         this.makeMove(cellIndex);
       }
@@ -103,14 +101,12 @@ export const TTTApplication = {
 
       if (winningLine) {
         this.turnIndicator.textContent = 'Game Over!';
-        console.log('[APP] Game Over! Winning line:', winningLine);
         this.gameBoard.classList.add('game-over');
         this.drawWinningLine(winningLine);
         this.newGameButton.classList.add('show');
         this.newGameButton.focus(); // Set focus for accessibility
       } else if (moveCount === 9) {
         this.turnIndicator.textContent = 'It\'s a draw!';
-        console.log('[APP] Game is a draw.');
         this.gameBoard.classList.add('game-over');
         this.newGameButton.classList.add('show');
         this.newGameButton.focus(); // Set focus for accessibility

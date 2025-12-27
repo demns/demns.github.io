@@ -1,6 +1,11 @@
 import { GAME_CONFIG, HOUSE_CONFIG, TEXT_STYLES, SPRITE_CONFIG, ANIMATION_CONFIG } from './config.js';
 
-let maxDistance = localStorage.getItem('santaMaxDistance') || 0;
+let maxDistance = 0;
+try {
+  maxDistance = parseInt(localStorage.getItem('santaMaxDistance'), 10) || 0;
+} catch (error) {
+  console.warn('Could not access localStorage:', error);
+}
 
 class IntroScene extends Phaser.Scene {
     constructor() {
@@ -273,7 +278,11 @@ class GameScene extends Phaser.Scene {
 
         if (this.distance > maxDistance) {
             maxDistance = this.distance;
-            localStorage.setItem('santaMaxDistance', maxDistance);
+            try {
+                localStorage.setItem('santaMaxDistance', maxDistance.toString());
+            } catch (error) {
+                console.warn('Could not save to localStorage:', error);
+            }
         }
 
         this.scene.start('GameOverScene', { distance: this.distance });
