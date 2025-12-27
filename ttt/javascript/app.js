@@ -1,6 +1,7 @@
-(function () {
-  // --- Main Application Logic ---
-  const TTTApplication = {
+import { AI } from './AI.js';
+
+// --- Main Application Logic ---
+export const TTTApplication = {
     boardState: [],
     svgCircle: '<circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="2" fill-opacity="0"/>',
     svgCross: `<line x1="0" y1="0" x2="10" y2="10" style="stroke:currentColor;stroke-width:2"/><line x1="0" y1="10" x2="10" y2="0" style="stroke:currentColor;stroke-width:2"/>`,
@@ -14,6 +15,14 @@
     playAsOButton: document.getElementById('play-as-o'),
     X: 'X',
     O: 'O',
+
+    getComputerSymbol: function() {
+      return this.firstMoveComputer ? this.X : this.O;
+    },
+
+    getPlayerSymbol: function() {
+      return this.firstMoveComputer ? this.O : this.X;
+    },
 
     clearBoard: function () {
       this.gameBoard.innerHTML = '';
@@ -49,7 +58,7 @@
     computerMove: function () {
       if (this.isGameOver()) return;
 
-      const computerSymbol = this.firstMoveComputer ? this.X : this.O;
+      const computerSymbol = this.getComputerSymbol();
       console.log('[APP] Computer to move. Symbol:', computerSymbol, 'Board:', this.boardState);
       const cellIndex = AI.calculateComputerMove(this.boardState, computerSymbol);
       console.log('[APP] AI chose move:', cellIndex);
@@ -59,7 +68,7 @@
     },
 
     handleCellClick: function(index) {
-      const isComputerTurn = this.getCurrentTurn() === (this.firstMoveComputer ? this.X : this.O);
+      const isComputerTurn = this.getCurrentTurn() === this.getComputerSymbol();
       if (!isComputerTurn) {
         this.makeMove(index);
       }
@@ -107,7 +116,7 @@
         this.newGameButton.focus(); // Set focus for accessibility
       } else {
         const nextSymbol = this.getCurrentTurn();
-        const isNextTurnComputer = nextSymbol === (this.firstMoveComputer ? this.X : this.O);
+        const isNextTurnComputer = nextSymbol === this.getComputerSymbol();
         const nextPlayer = isNextTurnComputer ? 'Computer' : 'Your';
         this.turnIndicator.textContent = `${nextPlayer} turn`;
 
@@ -139,16 +148,12 @@
       svgLine.innerHTML = `<line x1="${startX}" y1="${startY}" x2="${endX}" y2="${endY}" />`;
       this.gameBoard.appendChild(svgLine);
     }
-  };
+};
 
-  // --- Initializer ---
-  // Player starts as X by default on first load.
-  TTTApplication.setup(false); 
+// --- Initializer ---
+// Player starts as X by default on first load.
+TTTApplication.setup(false);
 
-  TTTApplication.newGameButton.addEventListener('click', () => TTTApplication.setup(TTTApplication.firstMoveComputer));
-  TTTApplication.playAsXButton.addEventListener('click', () => TTTApplication.setup(false)); // Player is X, computer is O, player starts.
-  TTTApplication.playAsOButton.addEventListener('click', () => TTTApplication.setup(true)); // Player is O, computer is X, computer starts.
-
-  // Make TTTApplication globally available for view.js
-  window.TTTApplication = TTTApplication;
-}());
+TTTApplication.newGameButton.addEventListener('click', () => TTTApplication.setup(TTTApplication.firstMoveComputer));
+TTTApplication.playAsXButton.addEventListener('click', () => TTTApplication.setup(false)); // Player is X, computer is O, player starts.
+TTTApplication.playAsOButton.addEventListener('click', () => TTTApplication.setup(true)); // Player is O, computer is X, computer starts.

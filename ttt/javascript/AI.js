@@ -12,7 +12,7 @@
  * 7. Empty Corner: Play an empty corner.
  * 8. Empty Side: Play an empty side.
  */
-const AI = {
+export const AI = {
   X: 'X',
   O: 'O',
 

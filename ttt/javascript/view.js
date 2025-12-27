@@ -40,7 +40,7 @@ function getCurrentPeriod() {
     return 'afternoon';
   } else if (hour >= 7) {
     return 'morning';
-  } else if (hour >= 0) {
+  } else {
     return 'midnight';
   }
 }

@@ -25,6 +25,7 @@ function isIntersecting(box, objects) {
 			}
 		}
 	}
+	return false;
 }
 
 function getAllObjects(objects) {
