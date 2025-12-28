@@ -3,7 +3,7 @@ import { GAME_CONFIG } from './config';
 
 /**
  * Creates visible boundary markers for the Tetris play area
- * @returns {Array<Three.Mesh>} Array of boundary meshes
+ * @returns {Object} Object containing boundaries array and dangerLine mesh for animation
  */
 export function createBoundaries() {
 	const boundaries = [];
@@ -48,10 +48,11 @@ export function createBoundaries() {
 	backMesh.add(backLines);
 	boundaries.push(backMesh);
 
-	// Danger line at spawn height - bright colored indicator
+	// Danger line at spawn height - pulsing animated indicator
 	const dangerLineMaterial = new MeshBasicMaterial({
 		color: 0xFF3333, // Bright red
-		transparent: false,
+		transparent: true,
+		opacity: 0.8,
 	});
 	const dangerLine = new CylinderGeometry(0.08, 0.08, GAME_CONFIG.BOARD_WIDTH + 1, 8);
 	const dangerMesh = new Mesh(dangerLine, dangerLineMaterial);
@@ -61,5 +62,8 @@ export function createBoundaries() {
 	dangerMesh.position.z = 0.5; // Slightly in front
 	boundaries.push(dangerMesh);
 
-	return boundaries;
+	return {
+		boundaries,
+		dangerLine: dangerMesh
+	};
 }

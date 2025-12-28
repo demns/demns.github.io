@@ -24,6 +24,7 @@ import { ScoreManager } from './scoreManager';
 import { ScoreUI } from './scoreUI';
 import { GameOverUI } from './gameOverUI';
 import { createControlsUI, createMobileControls } from './controlsUI';
+import { createGhostPiece, updateGhostPiece } from './ghostPiece';
 
 document.body.appendChild(stats.domElement);
 
@@ -60,6 +61,9 @@ setLights();
 
 const collidableMeshList = [];
 let currentElement = createNewElement();
+let ghostPiece = createGhostPiece(currentElement.element, collidableMeshList, scene);
+scene.add(ghostPiece);
+updateGhostPiece(ghostPiece, currentElement.element, collidableMeshList, scene);
 
 let interval = setInterval(down, GAME_TICK_INTERVAL);
 
@@ -99,6 +103,12 @@ function down() {
 		// Create next piece
 		currentElement = createNewElement();
 
+		// Update ghost piece for new current piece
+		scene.remove(ghostPiece);
+		ghostPiece = createGhostPiece(currentElement.element, collidableMeshList, scene);
+		scene.add(ghostPiece);
+		updateGhostPiece(ghostPiece, currentElement.element, collidableMeshList, scene);
+
 		// Check for game over - only if new piece immediately collides at spawn
 		const spawnsInCollision = collision(currentElement.element, collidableMeshList, scene);
 
@@ -119,8 +129,9 @@ plane.position.y = -0.5; // Floor below lowest blocks (blocks at Y=0 have bottom
 scene.add(plane);
 
 // Add boundary walls
-const boundaries = createBoundaries();
-boundaries.forEach(boundary => scene.add(boundary));
+const boundaryData = createBoundaries();
+boundaryData.boundaries.forEach(boundary => scene.add(boundary));
+const dangerLine = boundaryData.dangerLine;
 
 camera.position.z = 15; // to avoid camera being into the cube at 0 0 0
 camera.position.y = 20;
@@ -131,6 +142,36 @@ orbitControls.dampingFactor = 0.05;
 
 (function render() {
 	orbitControls.update();
+
+	// Check if any blocks are near danger zone (Y >= 7)
+	const dangerZoneThreshold = 7;
+	let isInDanger = false;
+	collidableMeshList.forEach(group => {
+		if (group.children) {
+			group.children.forEach(block => {
+				const worldPos = block.getWorldPosition(block.position.clone());
+				if (Math.round(worldPos.y) >= dangerZoneThreshold) {
+					isInDanger = true;
+				}
+			});
+		}
+	});
+
+	// Animate danger line pulsing only when blocks are near
+	if (isInDanger) {
+		const time = Date.now() * 0.002;
+		dangerLine.material.opacity = 0.5 + Math.sin(time * 2) * 0.3; // Pulse between 0.2 and 0.8
+		dangerLine.scale.y = 1 + Math.sin(time * 3) * 0.15; // Slight scale pulse
+	} else {
+		// Static when safe
+		dangerLine.material.opacity = 0.5;
+		dangerLine.scale.y = 1.0;
+	}
+
+	// Update ghost piece position
+	if (ghostPiece && currentElement) {
+		updateGhostPiece(ghostPiece, currentElement.element, collidableMeshList, scene);
+	}
 
 	stats.begin();
 	renderer.render(scene, camera);
@@ -301,6 +342,12 @@ function restartGame() {
 
 	// Create new piece
 	currentElement = createNewElement();
+
+	// Recreate ghost piece
+	scene.remove(ghostPiece);
+	ghostPiece = createGhostPiece(currentElement.element, collidableMeshList, scene);
+	scene.add(ghostPiece);
+	updateGhostPiece(ghostPiece, currentElement.element, collidableMeshList, scene);
 
 	// Restart game interval
 	interval = setInterval(down, GAME_TICK_INTERVAL);
