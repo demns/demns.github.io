@@ -65,8 +65,43 @@ const particles = [];
 const landingFlashes = [];
 let frameCount = 0;
 let isInDanger = false; // Cached danger state
+let isPaused = false;
 
 let interval = setInterval(down, GAME_TICK_INTERVAL);
+
+// Pause functionality
+window.addEventListener('keydown', (e) => {
+	if (e.key.toLowerCase() === 'p') {
+		isPaused = !isPaused;
+		if (isPaused) {
+			clearInterval(interval);
+			// Show pause overlay
+			const pauseOverlay = document.createElement('div');
+			pauseOverlay.id = 'pause-overlay';
+			pauseOverlay.style.cssText = `
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background: rgba(0, 0, 0, 0.9);
+				color: #4df;
+				padding: 30px 50px;
+				border-radius: 15px;
+				font-size: 32px;
+				font-weight: bold;
+				z-index: 1000;
+				border: 2px solid rgba(77, 221, 255, 0.5);
+			`;
+			pauseOverlay.textContent = 'PAUSED';
+			document.body.appendChild(pauseOverlay);
+		} else {
+			interval = setInterval(down, GAME_TICK_INTERVAL);
+			// Remove pause overlay
+			const pauseOverlay = document.getElementById('pause-overlay');
+			if (pauseOverlay) pauseOverlay.remove();
+		}
+	}
+});
 
 // Setup mobile controls
 setupMobileControls();
@@ -298,29 +333,34 @@ function setupMobileControls() {
 		}
 	}
 
-	// Add touch event listeners
+	// Add touch event listeners with haptic feedback
 	mobileUI.buttons.left.addEventListener('touchstart', (e) => {
 		e.preventDefault();
+		if (navigator.vibrate) navigator.vibrate(10);
 		triggerMove('left');
 	});
 
 	mobileUI.buttons.right.addEventListener('touchstart', (e) => {
 		e.preventDefault();
+		if (navigator.vibrate) navigator.vibrate(10);
 		triggerMove('right');
 	});
 
 	mobileUI.buttons.down.addEventListener('touchstart', (e) => {
 		e.preventDefault();
+		if (navigator.vibrate) navigator.vibrate(10);
 		triggerMove('down');
 	});
 
 	mobileUI.buttons.rotate.addEventListener('touchstart', (e) => {
 		e.preventDefault();
+		if (navigator.vibrate) navigator.vibrate(15);
 		triggerMove('rotate');
 	});
 
 	mobileUI.buttons.drop.addEventListener('touchstart', (e) => {
 		e.preventDefault();
+		if (navigator.vibrate) navigator.vibrate(25);
 		triggerMove('drop');
 	});
 

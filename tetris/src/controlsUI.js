@@ -26,6 +26,10 @@ export function createControlsUI() {
 			<span class="key text-key">Space</span>
 			<span class="action">Hard Drop</span>
 		</div>
+		<div class="control-row">
+			<span class="key text-key">P</span>
+			<span class="action">Pause</span>
+		</div>
 	`;
 	document.body.appendChild(panel);
 	return panel;

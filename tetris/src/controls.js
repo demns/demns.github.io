@@ -28,7 +28,7 @@ export function controlMesh(mesh, collidableObjects, scene) {
 				// Check boundaries and collision using bounding boxes
 				const outOfBoundsLeft = isOutOfBounds(mesh);
 				const hasCollisionLeft = collision(mesh, collidableObjects, scene);
-					if (outOfBoundsLeft || hasCollisionLeft) {
+				if (outOfBoundsLeft || hasCollisionLeft) {
 					mesh.position.x = oldX; // Revert
 				}
 				break;
@@ -38,20 +38,20 @@ export function controlMesh(mesh, collidableObjects, scene) {
 				// Check boundaries and collision using bounding boxes
 				const outOfBoundsRight = isOutOfBounds(mesh);
 				const hasCollisionRight = collision(mesh, collidableObjects, scene);
-					if (outOfBoundsRight || hasCollisionRight) {
+				if (outOfBoundsRight || hasCollisionRight) {
 					mesh.position.x = oldX; // Revert
 				}
 				break;
 			case 'arrowdown':
 			case 's':
 				// Try moving down
-					mesh.position.y -= 1;
+				mesh.position.y -= 1;
 				// Check if below floor or collision
 				const belowFloor = isBelowFloor(mesh);
 				const hasCollision = collision(mesh, collidableObjects, scene);
-					if (belowFloor || hasCollision) {
+				if (belowFloor || hasCollision) {
 					mesh.position.y = oldY; // Revert
-					}
+				}
 				break;
 			case ' ':
 				// Hard drop - move piece down until it would collide or hit floor
@@ -66,6 +66,10 @@ export function controlMesh(mesh, collidableObjects, scene) {
 						mesh.position.y += 1;
 						break;
 					}
+				}
+				// Light haptic feedback for hard drop
+				if (navigator.vibrate) {
+					navigator.vibrate(20);
 				}
 				break;
 			case 'arrowup':
