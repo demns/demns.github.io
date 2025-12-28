@@ -16,8 +16,8 @@ export class ScoreUI {
 		this.container.id = 'score-container';
 		this.container.style.cssText = `
 			position: fixed;
-			top: 20px;
-			right: 20px;
+			top: 10px;
+			left: 100px;
 			color: white;
 			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 			font-size: 14px;

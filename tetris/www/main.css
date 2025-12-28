@@ -177,25 +177,26 @@ button.webvr-ui-button {
 	}
 
 	#score-container {
-		/* Simplified compact score display for mobile */
+		/* Simplified compact score display for mobile - center of top bar */
 		background: rgba(0, 0, 0, 0.5) !important;
 		backdrop-filter: blur(5px) !important;
 		padding: 8px 12px !important;
 		top: 10px !important;
-		right: 10px !important;
-		left: 10px !important;
+		left: 50% !important;
+		right: auto !important;
+		transform: translateX(-50%) !important;
 		width: auto !important;
 		text-align: center !important;
 	}
 
-	/* Move VR button to left side on mobile */
+	/* Position VR button in top row on mobile */
 	#VRButton {
 		position: fixed !important;
-		left: 10px !important;
-		right: auto !important;
-		bottom: 10px !important;
-		top: auto !important;
-		z-index: 99 !important;
+		right: 10px !important;
+		top: 10px !important;
+		bottom: auto !important;
+		left: auto !important;
+		z-index: 100 !important;
 	}
 }
 
