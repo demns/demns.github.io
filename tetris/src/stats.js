@@ -4,8 +4,8 @@ const stats = new Stats();
 stats.setMode(0); // 0: fps, 1: ms, 2: mb
 stats.domElement.style.position = 'fixed';
 stats.domElement.style.left = '10px';
-stats.domElement.style.top = '10px';
-stats.domElement.style.bottom = 'auto';
+stats.domElement.style.bottom = '10px';
+stats.domElement.style.top = 'auto';
 stats.domElement.style.right = 'auto';
 stats.domElement.style.zIndex = '100';
 
