@@ -23,8 +23,8 @@ const GAME_TICK_INTERVAL = 1000; // milliseconds between piece drops
 setLights();
 const objectsCount = new ObjectsCount();
 
-let currentElement = createNewElement();
 const collidableMeshList = [];
+let currentElement = createNewElement();
 
 const interval = setInterval(down, GAME_TICK_INTERVAL);
 
