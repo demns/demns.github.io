@@ -23,7 +23,7 @@ export function createControlsUI() {
 			<span class="action">Rotate</span>
 		</div>
 		<div class="control-row">
-			<span class="key">Space</span>
+			<span class="key text-key">Space</span>
 			<span class="action">Hard Drop</span>
 		</div>
 	`;
