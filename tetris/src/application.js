@@ -7,13 +7,14 @@ import { controlMesh, removeControl } from './controls';
 import getIModel from './meshes/I';
 import getLMesh from './meshes/L';
 import getTMesh from './meshes/T';
-import { getSpotLight } from './light';
+import { getSpotLight, getAmbientLight } from './light';
 import getPlane from './plane';
 import ObjectsCount from './objectsCount';
 import renderer from './renderer';
 import scene from './scene';
 import stats from './stats';
 import { checkAndClearLines } from './lineClearing';
+import { createBoundaries } from './boundaries';
 
 document.body.appendChild(stats.domElement);
 
@@ -59,6 +60,10 @@ plane.rotation.x = 90 * DEG_TO_RAD;
 plane.position.y = 0;
 scene.add(plane);
 
+// Add boundary walls
+const boundaries = createBoundaries();
+boundaries.forEach(boundary => scene.add(boundary));
+
 camera.position.z = 15; // to avoid camera being into the cube at 0 0 0
 camera.position.y = 20;
 
@@ -81,19 +86,27 @@ window.addEventListener('beforeunload', () => {
 });
 
 function setLights() {
+	// Add ambient light for overall illumination
+	const ambient = getAmbientLight();
+	scene.add(ambient);
+
+	// Add spotlights for dramatic effect
 	const light = getSpotLight();
 	light.position.x = 5;
 	light.position.y = 10;
+	light.position.z = 5;
 	scene.add(light);
 
 	const light2 = getSpotLight();
 	light2.position.x = -5;
 	light2.position.y = 10;
+	light2.position.z = -5;
 	scene.add(light2);
 
 	const light3 = getSpotLight();
-	light3.position.z = 5;
-	light3.position.y = 10;
+	light3.position.x = 0;
+	light3.position.y = 15;
+	light3.position.z = 0;
 	scene.add(light3);
 }
 
