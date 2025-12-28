@@ -33,7 +33,17 @@ function down() {
 	if (currentElement.element.position.y > 0 && !collision(currentElement.element, collidableMeshList, scene)) {
 		currentElement.element.position.y -= 1;
 	} else {
-		// Piece has landed - add to collidable list
+		// Piece has landed - check if it landed at valid position
+		const landedAtBottom = currentElement.element.position.y === 0;
+		const landedOnPiece = collision(currentElement.element, collidableMeshList, scene);
+
+		if (!landedAtBottom && !landedOnPiece) {
+			// Piece couldn't move down but isn't at bottom and no collision
+			// This shouldn't happen, but let it land anyway
+			console.warn('Unexpected landing condition');
+		}
+
+		// Add to collidable list
 		collidableMeshList.push(currentElement.element);
 		removeControl(currentElement.listener);
 
@@ -46,10 +56,16 @@ function down() {
 		// Create next piece
 		currentElement = createNewElement();
 
-		// Check for game over
-		if (collision(currentElement.element, collidableMeshList, scene)) {
+		// Check for game over - only if new piece immediately collides at spawn
+		// This means the stack has reached the spawn height
+		const spawnsInCollision = collision(currentElement.element, collidableMeshList, scene);
+		console.log(`New piece spawned at Y=${currentElement.element.position.y}, collision=${spawnsInCollision}, collidableCount=${collidableMeshList.length}`);
+
+		if (spawnsInCollision) {
 			// Game over! New piece spawned in collision
 			clearInterval(interval);
+			removeControl(currentElement.listener);
+			console.log('Game Over! Stack reached spawn height.');
 			alert('Game Over!');
 		}
 	}
