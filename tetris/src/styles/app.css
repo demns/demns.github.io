@@ -1,6 +1,7 @@
 body {
 	margin: 0;
 	overflow: hidden;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 .count {
@@ -16,4 +17,145 @@ button.webvr-ui-button {
     left: 0;
     position: absolute;
 	top: 45px;
+}
+
+/* Controls Display */
+.controls-panel {
+	position: absolute;
+	left: 20px;
+	top: 80px;
+	background: rgba(0, 0, 0, 0.7);
+	backdrop-filter: blur(10px);
+	padding: 15px 20px;
+	border-radius: 8px;
+	color: #fff;
+	font-size: 14px;
+	line-height: 1.6;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	user-select: none;
+	z-index: 100;
+}
+
+.controls-panel h3 {
+	margin: 0 0 12px 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: #4df;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.controls-panel .control-row {
+	display: flex;
+	justify-content: space-between;
+	margin: 6px 0;
+	gap: 15px;
+}
+
+.controls-panel .key {
+	background: rgba(255, 255, 255, 0.1);
+	padding: 3px 8px;
+	border-radius: 4px;
+	font-family: 'Courier New', monospace;
+	font-weight: bold;
+	color: #4df;
+	border: 1px solid rgba(77, 221, 255, 0.3);
+	min-width: 45px;
+	text-align: center;
+}
+
+.controls-panel .action {
+	color: #ccc;
+}
+
+/* Mobile Controls */
+.mobile-controls {
+	display: none;
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	gap: 10px;
+	z-index: 100;
+}
+
+.mobile-btn {
+	background: rgba(0, 0, 0, 0.6);
+	backdrop-filter: blur(10px);
+	border: 2px solid rgba(77, 221, 255, 0.5);
+	border-radius: 12px;
+	color: #4df;
+	font-size: 36px;
+	font-weight: bold;
+	padding: 15px;
+	min-width: 60px;
+	min-height: 60px;
+	cursor: pointer;
+	user-select: none;
+	touch-action: manipulation;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+	transition: all 0.1s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.mobile-btn:active {
+	transform: scale(0.95);
+	background: rgba(77, 221, 255, 0.2);
+}
+
+.mobile-controls-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(2, 1fr);
+	gap: 10px;
+}
+
+.mobile-btn-rotate {
+	grid-column: 3;
+	grid-row: 1 / 3;
+}
+
+.mobile-btn-down {
+	grid-column: 2;
+	grid-row: 2;
+}
+
+@media (max-width: 768px) {
+	.controls-panel {
+		font-size: 12px;
+		padding: 12px 15px;
+		left: 10px;
+		top: 10px;
+	}
+
+	.controls-panel h3 {
+		font-size: 14px;
+		margin-bottom: 8px;
+	}
+
+	.mobile-controls {
+		display: flex;
+	}
+
+	.count {
+		font-size: 1.2rem;
+		padding: 0.5rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.controls-panel {
+		font-size: 11px;
+		padding: 10px 12px;
+	}
+
+	.mobile-btn {
+		min-width: 50px;
+		min-height: 50px;
+		padding: 12px;
+		font-size: 28px;
+	}
 }

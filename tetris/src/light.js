@@ -1,7 +1,7 @@
-import { AmbientLight, SpotLight } from 'three';
+import { AmbientLight, SpotLight, PointLight, DirectionalLight, HemisphereLight } from 'three';
 
 export function getSpotLight() {
-	const spotLight = new SpotLight(0xFFFFFF, 10.0, 100, Math.PI / 3); // Very bright white spotlight
+	const spotLight = new SpotLight(0xFFFFFF, 15.0, 100, Math.PI / 4, 0.3, 1); // 25% less from 20.0
 	spotLight.castShadow = true;
 
 	// Shadow settings for better quality and visibility
@@ -15,6 +15,26 @@ export function getSpotLight() {
 };
 
 export function getAmbientLight() {
-	const ambientLight = new AmbientLight(0xFFFFFF, 0.8); // Reduced ambient light for darker, denser shadows
+	const ambientLight = new AmbientLight(0xFFFFFF, 0.45); // 25% less from 0.6
 	return ambientLight;
+};
+
+export function getPointLight() {
+	const pointLight = new PointLight(0xFFFFFF, 2.25, 50); // 25% less from 3.0
+	pointLight.castShadow = false; // Point lights for fill, no shadows
+	return pointLight;
+};
+
+export function getHemisphereLight() {
+	// Sky color (top) and ground color (bottom) for natural lighting
+	const hemiLight = new HemisphereLight(0xFFEEDD, 0x4455AA, 0.75); // 25% less from 1.0
+	return hemiLight;
+};
+
+export function getDirectionalLight() {
+	const dirLight = new DirectionalLight(0xFFFFFF, 0.6); // 25% less from 0.8
+	dirLight.castShadow = true;
+	dirLight.shadow.mapSize.width = 2048;
+	dirLight.shadow.mapSize.height = 2048;
+	return dirLight;
 };

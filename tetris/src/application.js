@@ -3,7 +3,7 @@ require("./styles/app.css");
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import camera from './camera';
-import collision, { isBelowFloor } from './collision';
+import collision, { isBelowFloor, isOutOfBounds } from './collision';
 import { GAME_CONFIG } from './config';
 import { controlMesh, removeControl } from './controls';
 import getIModel from './meshes/I';
@@ -13,7 +13,7 @@ import getTMesh from './meshes/T';
 import getOMesh from './meshes/O';
 import getSMesh from './meshes/S';
 import getZMesh from './meshes/Z';
-import { getSpotLight, getAmbientLight } from './light';
+import { getSpotLight, getAmbientLight, getPointLight, getHemisphereLight, getDirectionalLight } from './light';
 import getPlane from './plane';
 import renderer from './renderer';
 import scene from './scene';
@@ -23,6 +23,7 @@ import { createBoundaries } from './boundaries';
 import { ScoreManager } from './scoreManager';
 import { ScoreUI } from './scoreUI';
 import { GameOverUI } from './gameOverUI';
+import { createControlsUI, createMobileControls } from './controlsUI';
 
 document.body.appendChild(stats.domElement);
 
@@ -38,6 +39,9 @@ scoreUI.update(scoreManager.getStats());
 // Initialize game over UI with restart callback
 const gameOverUI = new GameOverUI(() => restartGame());
 
+// Create controls UI
+createControlsUI();
+
 const DEG_TO_RAD = Math.PI / 180;
 const GAME_TICK_INTERVAL = 1000; // milliseconds between piece drops
 
@@ -47,6 +51,9 @@ const collidableMeshList = [];
 let currentElement = createNewElement();
 
 let interval = setInterval(down, GAME_TICK_INTERVAL);
+
+// Setup mobile controls
+setupMobileControls();
 
 function down() {
 	// Try to move down
@@ -126,28 +133,53 @@ window.addEventListener('beforeunload', () => {
 });
 
 function setLights() {
-	// Add ambient light for overall illumination
+	// Hemisphere light for natural sky/ground lighting
+	const hemiLight = getHemisphereLight();
+	scene.add(hemiLight);
+
+	// Soft ambient for base illumination
 	const ambient = getAmbientLight();
 	scene.add(ambient);
 
-	// Add spotlights for dramatic effect - pointing at the play area center
-	const light = getSpotLight();
-	light.position.set(5, 10, 5);
-	light.target.position.set(0, 5, 0); // Point at middle of play area
-	scene.add(light);
-	scene.add(light.target);
+	// Main directional light (like sun)
+	const dirLight = getDirectionalLight();
+	dirLight.position.set(10, 25, 10);
+	dirLight.target.position.set(0, 5, 0);
+	scene.add(dirLight);
+	scene.add(dirLight.target);
 
-	const light2 = getSpotLight();
-	light2.position.set(-5, 10, -5);
-	light2.target.position.set(0, 5, 0);
-	scene.add(light2);
-	scene.add(light2.target);
+	// Dramatic spotlights for highlights and shadows
+	const spotlight1 = getSpotLight();
+	spotlight1.position.set(6, 18, 6);
+	spotlight1.target.position.set(0, 10, 0);
+	scene.add(spotlight1);
+	scene.add(spotlight1.target);
 
-	const light3 = getSpotLight();
-	light3.position.set(0, 15, 0);
-	light3.target.position.set(0, 5, 0);
-	scene.add(light3);
-	scene.add(light3.target);
+	const spotlight2 = getSpotLight();
+	spotlight2.position.set(-6, 18, -3);
+	spotlight2.target.position.set(0, 10, 0);
+	scene.add(spotlight2);
+	scene.add(spotlight2.target);
+
+	// Top key light
+	const topLight = getSpotLight();
+	topLight.position.set(0, 25, 2);
+	topLight.target.position.set(0, 10, 0);
+	scene.add(topLight);
+	scene.add(topLight.target);
+
+	// Point lights for vibrant fill and highlights
+	const fillLight1 = getPointLight();
+	fillLight1.position.set(10, 12, 4);
+	scene.add(fillLight1);
+
+	const fillLight2 = getPointLight();
+	fillLight2.position.set(-10, 12, 4);
+	scene.add(fillLight2);
+
+	const fillLight3 = getPointLight();
+	fillLight3.position.set(0, 15, 6);
+	scene.add(fillLight3);
 }
 
 function createNewElement() {
@@ -169,6 +201,74 @@ function onWindowResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function setupMobileControls() {
+	const mobileUI = createMobileControls();
+
+	// Helper function to trigger movement
+	function triggerMove(direction) {
+		if (!currentElement || !currentElement.element) return;
+
+		const mesh = currentElement.element;
+		const oldX = mesh.position.x;
+		const oldY = mesh.position.y;
+		const oldRotation = mesh.rotation.z;
+
+		switch(direction) {
+			case 'left':
+				mesh.position.x -= 1;
+				if (isOutOfBounds(mesh) || collision(mesh, collidableMeshList, scene)) {
+					mesh.position.x = oldX;
+				}
+				break;
+			case 'right':
+				mesh.position.x += 1;
+				if (isOutOfBounds(mesh) || collision(mesh, collidableMeshList, scene)) {
+					mesh.position.x = oldX;
+				}
+				break;
+			case 'down':
+				mesh.position.y -= 1;
+				if (isBelowFloor(mesh) || collision(mesh, collidableMeshList, scene)) {
+					mesh.position.y = oldY;
+				}
+				break;
+			case 'rotate':
+				mesh.rotation.z += 90 * DEG_TO_RAD;
+				if (isOutOfBounds(mesh) || collision(mesh, collidableMeshList, scene)) {
+					mesh.rotation.z = oldRotation;
+				}
+				break;
+		}
+	}
+
+	// Add touch event listeners
+	mobileUI.buttons.left.addEventListener('touchstart', (e) => {
+		e.preventDefault();
+		triggerMove('left');
+	});
+
+	mobileUI.buttons.right.addEventListener('touchstart', (e) => {
+		e.preventDefault();
+		triggerMove('right');
+	});
+
+	mobileUI.buttons.down.addEventListener('touchstart', (e) => {
+		e.preventDefault();
+		triggerMove('down');
+	});
+
+	mobileUI.buttons.rotate.addEventListener('touchstart', (e) => {
+		e.preventDefault();
+		triggerMove('rotate');
+	});
+
+	// Also support click for testing on desktop
+	mobileUI.buttons.left.addEventListener('click', () => triggerMove('left'));
+	mobileUI.buttons.right.addEventListener('click', () => triggerMove('right'));
+	mobileUI.buttons.down.addEventListener('click', () => triggerMove('down'));
+	mobileUI.buttons.rotate.addEventListener('click', () => triggerMove('rotate'));
 }
 
 function restartGame() {

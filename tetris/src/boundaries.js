@@ -1,4 +1,4 @@
-import { BoxGeometry, MeshBasicMaterial, Mesh, EdgesGeometry, LineSegments, LineBasicMaterial } from 'three';
+import { BoxGeometry, MeshBasicMaterial, Mesh, EdgesGeometry, LineSegments, LineBasicMaterial, CylinderGeometry } from 'three';
 import { GAME_CONFIG } from './config';
 
 /**
@@ -8,11 +8,14 @@ import { GAME_CONFIG } from './config';
 export function createBoundaries() {
 	const boundaries = [];
 	const wallMaterial = new MeshBasicMaterial({
-		color: 0xCCCCCC,
+		color: 0x999999,
 		transparent: true,
-		opacity: 0.3
+		opacity: 0.15 // More subtle
 	});
-	const edgeMaterial = new LineBasicMaterial({ color: 0xFFFFFF, linewidth: 2 });
+	const edgeMaterial = new LineBasicMaterial({
+		color: 0xCCCCFF, // Slight blue tint
+		linewidth: 2
+	});
 
 	// Left wall
 	const leftWall = new BoxGeometry(0.2, GAME_CONFIG.BOARD_HEIGHT, 0.2);
@@ -34,10 +37,10 @@ export function createBoundaries() {
 	rightMesh.add(rightLines);
 	boundaries.push(rightMesh);
 
-	// Back wall
-	const backWall = new BoxGeometry(GAME_CONFIG.BOARD_WIDTH, GAME_CONFIG.BOARD_HEIGHT, 0.2);
+	// Back wall - width needs to cover from MIN_X to MAX_X + 1 (11 units total)
+	const backWall = new BoxGeometry(GAME_CONFIG.BOARD_WIDTH + 1, GAME_CONFIG.BOARD_HEIGHT, 0.2);
 	const backMesh = new Mesh(backWall, wallMaterial);
-	backMesh.position.x = (GAME_CONFIG.MIN_X + GAME_CONFIG.MAX_X) / 2 + 0.5;
+	backMesh.position.x = (GAME_CONFIG.MIN_X + GAME_CONFIG.MAX_X) / 2;
 	backMesh.position.z = -1;
 	backMesh.position.y = GAME_CONFIG.MIN_Y + GAME_CONFIG.BOARD_HEIGHT / 2;
 	const backEdges = new EdgesGeometry(backWall);
@@ -45,16 +48,18 @@ export function createBoundaries() {
 	backMesh.add(backLines);
 	boundaries.push(backMesh);
 
-	// Top boundary indicator (horizontal frame at maximum height)
-	const topFrame = new BoxGeometry(GAME_CONFIG.BOARD_WIDTH, 0.1, 1);
-	const topMesh = new Mesh(topFrame, wallMaterial);
-	topMesh.position.x = (GAME_CONFIG.MIN_X + GAME_CONFIG.MAX_X) / 2 + 0.5;
-	topMesh.position.y = GAME_CONFIG.MAX_Y + 0.5; // Sit on top of highest block position
-	topMesh.position.z = 0;
-	const topEdges = new EdgesGeometry(topFrame);
-	const topLines = new LineSegments(topEdges, edgeMaterial);
-	topMesh.add(topLines);
-	boundaries.push(topMesh);
+	// Danger line at spawn height - bright colored indicator
+	const dangerLineMaterial = new MeshBasicMaterial({
+		color: 0xFF3333, // Bright red
+		transparent: false,
+	});
+	const dangerLine = new CylinderGeometry(0.08, 0.08, GAME_CONFIG.BOARD_WIDTH + 1, 8);
+	const dangerMesh = new Mesh(dangerLine, dangerLineMaterial);
+	dangerMesh.rotation.z = Math.PI / 2; // Rotate to horizontal
+	dangerMesh.position.x = (GAME_CONFIG.MIN_X + GAME_CONFIG.MAX_X) / 2;
+	dangerMesh.position.y = GAME_CONFIG.SPAWN_Y; // At spawn height
+	dangerMesh.position.z = 0.5; // Slightly in front
+	boundaries.push(dangerMesh);
 
 	return boundaries;
 }
