@@ -7,10 +7,12 @@ export const GAME_CONFIG = {
 	BOARD_WIDTH: 10,
 	BOARD_HEIGHT: 20,
 
-	// Boundaries for piece movement
-	MIN_X: -4.5,
-	MAX_X: 4.5,
-	MIN_Y: 0,
+	// Boundaries for piece movement (integer coordinates for block centers)
+	// 10-block wide board: X ranges from -5 to 4
+	// Floor plane is at Y=-0.5, blocks at Y=0 sit on the floor with bottoms at -0.5
+	MIN_X: -5,
+	MAX_X: 4,
+	MIN_Y: 0,  // Lowest block centers are at Y=0
 	MAX_Y: 19,
 
 	// Starting position for new pieces

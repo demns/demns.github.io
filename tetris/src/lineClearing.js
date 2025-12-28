@@ -1,3 +1,4 @@
+import { Vector3 } from 'three';
 import { GAME_CONFIG } from './config';
 
 /**
@@ -9,18 +10,11 @@ import { GAME_CONFIG } from './config';
  */
 export function checkAndClearLines(collidableMeshList, scene) {
 	const grid = buildGrid(collidableMeshList);
-
-	console.log('[LINE CLEAR] Grid built, checking for complete lines...');
-	console.log('[LINE CLEAR] Grid keys:', Object.keys(grid).length);
-
 	const completedLines = findCompletedLines(grid);
 
 	if (completedLines.length === 0) {
-		console.log('[LINE CLEAR] No completed lines found');
 		return 0;
 	}
-
-	console.log(`[LINE CLEAR] Found ${completedLines.length} completed line(s):`, completedLines);
 
 	// Remove blocks from completed lines
 	removeBlocks(completedLines, collidableMeshList, scene, grid);
@@ -38,19 +32,15 @@ export function checkAndClearLines(collidableMeshList, scene) {
 function buildGrid(collidableMeshList) {
 	const grid = {};
 
-	console.log(`[LINE CLEAR] Building grid from ${collidableMeshList.length} groups`);
-
 	// Flatten all meshes to individual blocks
-	collidableMeshList.forEach((group, groupIdx) => {
-		console.log(`[LINE CLEAR] Group ${groupIdx}: has ${group.children ? group.children.length : 0} children`);
+	collidableMeshList.forEach((group) => {
 		if (group.children) {
-			group.children.forEach((block, blockIdx) => {
+			group.children.forEach((block) => {
 				const worldPos = block.getWorldPosition(block.position.clone());
 				// All pieces now use integer coordinates, so simple rounding works
 				const x = Math.round(worldPos.x);
 				const y = Math.round(worldPos.y);
 				const key = `${x},${y}`;
-				console.log(`[LINE CLEAR]   Block ${blockIdx}: pos(${worldPos.x.toFixed(2)}, ${worldPos.y.toFixed(2)}) -> grid[${key}]`);
 				grid[key] = block;
 			});
 		}
@@ -75,12 +65,7 @@ function findCompletedLines(grid) {
 			}
 		}
 
-		if (blocksInLine > 0) {
-			console.log(`[LINE CLEAR] Y=${y}: ${blocksInLine}/${GAME_CONFIG.BOARD_WIDTH} blocks`);
-		}
-
 		if (blocksInLine === GAME_CONFIG.BOARD_WIDTH) {
-			console.log(`[LINE CLEAR] ✓ Line Y=${y} is complete!`);
 			completedLines.push(y);
 		}
 	}
@@ -92,23 +77,28 @@ function findCompletedLines(grid) {
  * Removes blocks from completed lines.
  */
 function removeBlocks(completedLines, collidableMeshList, scene, grid) {
+	const parentsToCheck = new Set(); // Track parent groups that had blocks removed
+
 	completedLines.forEach(y => {
 		for (let x = Math.ceil(GAME_CONFIG.MIN_X); x <= Math.floor(GAME_CONFIG.MAX_X); x++) {
 			const key = `${x},${y}`;
 			const block = grid[key];
 
 			if (block && block.parent) {
-				// Remove block from its parent group
-				block.parent.remove(block);
+				const parent = block.parent; // Store parent reference before removing
+				parentsToCheck.add(parent);
+				parent.remove(block);
+			}
+		}
+	});
 
-				// If parent group is now empty, remove it from scene and collidableMeshList
-				if (block.parent.children.length === 0) {
-					scene.remove(block.parent);
-					const index = collidableMeshList.indexOf(block.parent);
-					if (index > -1) {
-						collidableMeshList.splice(index, 1);
-					}
-				}
+	// Check all affected parent groups and remove empty ones
+	parentsToCheck.forEach(parent => {
+		if (parent.children.length === 0) {
+			scene.remove(parent);
+			const index = collidableMeshList.indexOf(parent);
+			if (index > -1) {
+				collidableMeshList.splice(index, 1);
 			}
 		}
 	});
@@ -123,26 +113,31 @@ function moveBlocksDown(completedLines, collidableMeshList, grid) {
 	// Sort lines from bottom to top
 	completedLines.sort((a, b) => a - b);
 
-	// For each Y level, calculate how many cleared lines are below it
-	// Then move all blocks at that Y level down by that amount
-	const blocksToMove = new Map(); // Map of block -> distance to move down
+	// Calculate how far down each parent group needs to move
+	// Key insight: We move entire parent groups, not individual blocks
+	const parentsToMove = new Map(); // Map of parent group -> distance to move down
 
-	Object.keys(grid).forEach(key => {
-		const [x, y] = key.split(',').map(Number);
-		const block = grid[key];
+	// Iterate through all remaining parent groups
+	collidableMeshList.forEach(parentGroup => {
+		// Get the lowest Y position of any block in this group (in world coordinates)
+		let minWorldY = Infinity;
 
-		if (!block) return;
+		parentGroup.children.forEach(block => {
+			const worldPos = block.getWorldPosition(new Vector3());
+			const worldY = Math.round(worldPos.y);
+			minWorldY = Math.min(minWorldY, worldY);
+		});
 
-		// Count how many completed lines are below this block
-		const linesBelow = completedLines.filter(clearedY => clearedY < y).length;
+		// Count how many completed lines are below this group's lowest block
+		const linesBelow = completedLines.filter(clearedY => clearedY < minWorldY).length;
 
 		if (linesBelow > 0) {
-			blocksToMove.set(block, linesBelow);
+			parentsToMove.set(parentGroup, linesBelow);
 		}
 	});
 
-	// Now move all blocks down by their calculated distance
-	blocksToMove.forEach((distance, block) => {
-		block.position.y -= distance;
+	// Move each parent group down by the calculated distance
+	parentsToMove.forEach((distance, parentGroup) => {
+		parentGroup.position.y -= distance;
 	});
 }

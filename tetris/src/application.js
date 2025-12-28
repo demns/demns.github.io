@@ -57,12 +57,9 @@ function down() {
 	const belowFloor = isBelowFloor(currentElement.element);
 	const hasCollision = collision(currentElement.element, collidableMeshList, scene);
 
-	console.log(`Down tick: currentY=${currentY}, newY=${currentElement.element.position.y}, belowFloor=${belowFloor}, collision=${hasCollision}`);
-
 	if (belowFloor || hasCollision) {
 		// Can't move down - revert and land the piece
 		currentElement.element.position.y = currentY;
-		console.log(`LANDED at Y=${currentElement.element.position.y}`);
 
 		// Add to collidable list
 		collidableMeshList.push(currentElement.element);
@@ -76,8 +73,7 @@ function down() {
 		// Check and clear completed lines
 		const linesCleared = checkAndClearLines(collidableMeshList, scene);
 		if (linesCleared > 0) {
-			const points = scoreManager.addRowScore(linesCleared);
-			console.log(`Cleared ${linesCleared} line(s) for ${points} points!`);
+			scoreManager.addRowScore(linesCleared);
 			scoreUI.update(scoreManager.getStats());
 			scoreUI.flash('currentScore');
 		}
@@ -86,24 +82,12 @@ function down() {
 		currentElement = createNewElement();
 
 		// Check for game over - only if new piece immediately collides at spawn
-		// This means the stack has reached the spawn height
 		const spawnsInCollision = collision(currentElement.element, collidableMeshList, scene);
-		console.log(`New piece spawned at Y=${currentElement.element.position.y}, collision=${spawnsInCollision}, collidableCount=${collidableMeshList.length}`);
-
-		// Detailed debug: check positions of all pieces
-		if (spawnsInCollision) {
-			console.log('COLLISION DETECTED AT SPAWN! Piece positions:');
-			console.log(`New piece Y: ${currentElement.element.position.y}`);
-			collidableMeshList.forEach((piece, idx) => {
-				console.log(`Piece ${idx}: Y=${piece.position.y}, X=${piece.position.x}`);
-			});
-		}
 
 		if (spawnsInCollision) {
 			// Game over! New piece spawned in collision
 			clearInterval(interval);
 			removeControl(currentElement.listener);
-			console.log('Game Over! Stack reached spawn height.');
 
 			// Show game over UI with final stats
 			gameOverUI.show(scoreManager.getStats());
@@ -113,7 +97,7 @@ function down() {
 
 const plane = getPlane();
 plane.rotation.x = 90 * DEG_TO_RAD;
-plane.position.y = 0;
+plane.position.y = -0.5; // Floor below lowest blocks (blocks at Y=0 have bottoms at -0.5)
 scene.add(plane);
 
 // Add boundary walls
@@ -188,8 +172,6 @@ function onWindowResize() {
 }
 
 function restartGame() {
-	console.log('Restarting game...');
-
 	// Clear all placed pieces from the scene
 	collidableMeshList.forEach(mesh => {
 		scene.remove(mesh);
@@ -211,6 +193,4 @@ function restartGame() {
 
 	// Restart game interval
 	interval = setInterval(down, GAME_TICK_INTERVAL);
-
-	console.log('Game restarted successfully!');
 }
