@@ -49,13 +49,15 @@ export function controlMesh(mesh, collidableObjects, scene) {
 				}
 				break;
 			case ' ':
-				// Hard drop - move piece down until it hits something
-				while (mesh.position.y > GAME_CONFIG.MIN_Y && !collision(mesh, collidableObjects, scene)) {
+				// Hard drop - move piece down until it would collide
+				while (mesh.position.y > GAME_CONFIG.MIN_Y) {
+					// Try moving down
 					mesh.position.y -= 1;
-				}
-				// If we hit something, back up one step
-				if (collision(mesh, collidableObjects, scene)) {
-					mesh.position.y += 1;
+					// If we hit something, move back up and stop
+					if (collision(mesh, collidableObjects, scene)) {
+						mesh.position.y += 1;
+						break;
+					}
 				}
 				break;
 			case 'arrowup':

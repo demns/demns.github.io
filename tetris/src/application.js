@@ -61,6 +61,15 @@ function down() {
 		const spawnsInCollision = collision(currentElement.element, collidableMeshList, scene);
 		console.log(`New piece spawned at Y=${currentElement.element.position.y}, collision=${spawnsInCollision}, collidableCount=${collidableMeshList.length}`);
 
+		// Detailed debug: check positions of all pieces
+		if (spawnsInCollision) {
+			console.log('COLLISION DETECTED AT SPAWN! Piece positions:');
+			console.log(`New piece Y: ${currentElement.element.position.y}`);
+			collidableMeshList.forEach((piece, idx) => {
+				console.log(`Piece ${idx}: Y=${piece.position.y}, X=${piece.position.x}`);
+			});
+		}
+
 		if (spawnsInCollision) {
 			// Game over! New piece spawned in collision
 			clearInterval(interval);
