@@ -47,11 +47,13 @@ function isIntersecting(box, objects) {
 function getAllObjects(objects) {
 	let newObjects = [];
 	objects.forEach(object => {
-		if (!object.children || !object.children.length) {
+		// If object has children (like a Group), use the children (actual meshes)
+		// Otherwise use the object itself
+		if (object.children && object.children.length > 0) {
+			newObjects = newObjects.concat(object.children);
+		} else {
 			newObjects.push(object);
 		}
-
-		newObjects = newObjects.concat(object.children);
 	});
 
 	return newObjects;
