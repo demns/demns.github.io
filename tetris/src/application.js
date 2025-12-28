@@ -17,7 +17,7 @@ import { getSpotLight, getAmbientLight, getPointLight, getHemisphereLight, getDi
 import getPlane from './plane';
 import renderer from './renderer';
 import scene from './scene';
-import stats from './stats';
+import perf from './stats';
 import { checkAndClearLines } from './lineClearing';
 import { createBoundaries } from './boundaries';
 import { ScoreManager } from './scoreManager';
@@ -27,7 +27,8 @@ import { createControlsUI, createMobileControls } from './controlsUI';
 import { createGhostPiece, updateGhostPiece } from './ghostPiece';
 import { createLineCleaningParticles, updateParticles, createLandingFlash, updateLandingFlashes } from './particleEffects';
 
-document.body.appendChild(stats.domElement);
+document.body.appendChild(perf.dom);
+perf.renderer = renderer;
 
 // Add VR button - VRButton.createButton() handles WebXR availability internally
 try {
@@ -228,9 +229,9 @@ renderer.setAnimationLoop(function render() {
 	// Update landing flash animations
 	updateLandingFlashes(landingFlashes);
 
-	stats.begin();
+	perf.begin();
 	renderer.render(scene, camera);
-	stats.end();
+	perf.end();
 });
 
 // Cleanup interval on page unload to prevent memory leak
