@@ -198,6 +198,12 @@ button.webvr-ui-button {
 		left: auto !important;
 		z-index: 100 !important;
 	}
+
+	/* Keep FPS stats at top-left on mobile */
+	canvas + div {
+		top: 10px !important;
+		bottom: auto !important;
+	}
 }
 
 @media (max-width: 480px) {
