@@ -8,11 +8,11 @@ import { GAME_CONFIG } from './config';
 export function createBoundaries() {
 	const boundaries = [];
 	const wallMaterial = new MeshBasicMaterial({
-		color: 0xff0000,
+		color: 0xCCCCCC,
 		transparent: true,
-		opacity: 0.1
+		opacity: 0.3
 	});
-	const edgeMaterial = new LineBasicMaterial({ color: 0xff3333 });
+	const edgeMaterial = new LineBasicMaterial({ color: 0xFFFFFF, linewidth: 2 });
 
 	// Left wall
 	const leftWall = new BoxGeometry(0.2, GAME_CONFIG.BOARD_HEIGHT, 0.2);

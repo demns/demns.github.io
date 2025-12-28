@@ -1,8 +1,9 @@
 require("./styles/app.css");
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import camera from './camera';
-import collision from './collision';
+import collision, { isBelowFloor } from './collision';
 import { GAME_CONFIG } from './config';
 import { controlMesh, removeControl } from './controls';
 import getIModel from './meshes/I';
@@ -16,8 +17,19 @@ import scene from './scene';
 import stats from './stats';
 import { checkAndClearLines } from './lineClearing';
 import { createBoundaries } from './boundaries';
+import { ScoreManager } from './scoreManager';
+import { ScoreUI } from './scoreUI';
 
 document.body.appendChild(stats.domElement);
+
+// Add VR button
+document.body.appendChild(VRButton.createButton(renderer));
+renderer.xr.enabled = true;
+
+// Initialize scoring system
+const scoreManager = new ScoreManager();
+const scoreUI = new ScoreUI();
+scoreUI.update(scoreManager.getStats());
 
 const DEG_TO_RAD = Math.PI / 180;
 const GAME_TICK_INTERVAL = 1000; // milliseconds between piece drops
@@ -36,21 +48,32 @@ function down() {
 	currentElement.element.position.y -= 1;
 
 	// Check if the new position is valid (not below floor and no collision)
-	const belowFloor = currentElement.element.position.y < GAME_CONFIG.MIN_Y;
+	const belowFloor = isBelowFloor(currentElement.element);
 	const hasCollision = collision(currentElement.element, collidableMeshList, scene);
+
+	console.log(`Down tick: currentY=${currentY}, newY=${currentElement.element.position.y}, belowFloor=${belowFloor}, collision=${hasCollision}`);
 
 	if (belowFloor || hasCollision) {
 		// Can't move down - revert and land the piece
 		currentElement.element.position.y = currentY;
+		console.log(`LANDED at Y=${currentElement.element.position.y}`);
 
 		// Add to collidable list
 		collidableMeshList.push(currentElement.element);
 		removeControl(currentElement.listener);
 
+		// Increment pieces counter and update UI
+		scoreManager.incrementPieces();
+		scoreUI.update(scoreManager.getStats());
+		scoreUI.flash('piecesPlaced');
+
 		// Check and clear completed lines
 		const linesCleared = checkAndClearLines(collidableMeshList, scene);
 		if (linesCleared > 0) {
-			console.log(`Cleared ${linesCleared} line(s)!`);
+			const points = scoreManager.addRowScore(linesCleared);
+			console.log(`Cleared ${linesCleared} line(s) for ${points} points!`);
+			scoreUI.update(scoreManager.getStats());
+			scoreUI.flash('currentScore');
 		}
 
 		// Create next piece
@@ -115,24 +138,24 @@ function setLights() {
 	const ambient = getAmbientLight();
 	scene.add(ambient);
 
-	// Add spotlights for dramatic effect
+	// Add spotlights for dramatic effect - pointing at the play area center
 	const light = getSpotLight();
-	light.position.x = 5;
-	light.position.y = 10;
-	light.position.z = 5;
+	light.position.set(5, 10, 5);
+	light.target.position.set(0, 5, 0); // Point at middle of play area
 	scene.add(light);
+	scene.add(light.target);
 
 	const light2 = getSpotLight();
-	light2.position.x = -5;
-	light2.position.y = 10;
-	light2.position.z = -5;
+	light2.position.set(-5, 10, -5);
+	light2.target.position.set(0, 5, 0);
 	scene.add(light2);
+	scene.add(light2.target);
 
 	const light3 = getSpotLight();
-	light3.position.x = 0;
-	light3.position.y = 15;
-	light3.position.z = 0;
+	light3.position.set(0, 15, 0);
+	light3.target.position.set(0, 5, 0);
 	scene.add(light3);
+	scene.add(light3.target);
 }
 
 function createNewElement() {
