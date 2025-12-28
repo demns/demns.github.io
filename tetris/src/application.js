@@ -25,22 +25,17 @@ import { ScoreUI } from './scoreUI';
 import { GameOverUI } from './gameOverUI';
 import { createControlsUI, createMobileControls } from './controlsUI';
 import { createGhostPiece, updateGhostPiece } from './ghostPiece';
+import { createLineCleaningParticles, updateParticles, createLandingFlash, updateLandingFlashes } from './particleEffects';
 
 document.body.appendChild(stats.domElement);
 
-// Add VR button only if WebXR is supported
-if ('xr' in navigator) {
-	navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
-		if (supported) {
-			document.body.appendChild(VRButton.createButton(renderer));
-			renderer.xr.enabled = true;
-		}
-	}).catch(() => {
-		// WebXR not available, silently skip
-	});
-} else {
-	// Navigator.xr not available (Safari, older browsers)
-	// Skip VR button entirely
+// Add VR button - VRButton.createButton() handles WebXR availability internally
+try {
+	document.body.appendChild(VRButton.createButton(renderer));
+	renderer.xr.enabled = true;
+} catch (error) {
+	// VR not supported, silently skip
+	console.log('WebXR not available');
 }
 
 // Initialize scoring system
@@ -65,6 +60,12 @@ let ghostPiece = createGhostPiece(currentElement.element, collidableMeshList, sc
 scene.add(ghostPiece);
 updateGhostPiece(ghostPiece, currentElement.element, collidableMeshList, scene);
 
+// Visual effects arrays
+const particles = [];
+const landingFlashes = [];
+let frameCount = 0;
+let isInDanger = false; // Cached danger state
+
 let interval = setInterval(down, GAME_TICK_INTERVAL);
 
 // Setup mobile controls
@@ -87,17 +88,24 @@ function down() {
 		collidableMeshList.push(currentElement.element);
 		removeControl(currentElement.listener);
 
+		// Create landing flash effect
+		landingFlashes.push(createLandingFlash(currentElement.element));
+
 		// Increment pieces counter and update UI
 		scoreManager.incrementPieces();
 		scoreUI.update(scoreManager.getStats());
 		scoreUI.flash('piecesPlaced');
 
 		// Check and clear completed lines
-		const linesCleared = checkAndClearLines(collidableMeshList, scene);
-		if (linesCleared > 0) {
-			scoreManager.addRowScore(linesCleared);
+		const clearResult = checkAndClearLines(collidableMeshList, scene);
+		if (clearResult.count > 0) {
+			scoreManager.addRowScore(clearResult.count);
 			scoreUI.update(scoreManager.getStats());
 			scoreUI.flash('currentScore');
+
+			// Create particle explosion for cleared lines
+			const newParticles = createLineCleaningParticles(clearResult.lines, scene, GAME_CONFIG);
+			particles.push(...newParticles);
 		}
 
 		// Create next piece
@@ -140,22 +148,28 @@ const orbitControls = new OrbitControls(camera, renderer.domElement);
 orbitControls.enableDamping = true;
 orbitControls.dampingFactor = 0.05;
 
-(function render() {
+// Use setAnimationLoop for VR compatibility instead of requestAnimationFrame
+renderer.setAnimationLoop(function render() {
+	frameCount++;
 	orbitControls.update();
 
-	// Check if any blocks are near danger zone (Y >= 7)
-	const dangerZoneThreshold = 7;
-	let isInDanger = false;
-	collidableMeshList.forEach(group => {
-		if (group.children) {
-			group.children.forEach(block => {
-				const worldPos = block.getWorldPosition(block.position.clone());
-				if (Math.round(worldPos.y) >= dangerZoneThreshold) {
-					isInDanger = true;
+	// Check if any blocks are near danger zone (Y >= 7) - throttled to every 10 frames
+	if (frameCount % 10 === 0) {
+		isInDanger = false;
+		const dangerZoneThreshold = 7;
+		for (const group of collidableMeshList) {
+			if (group.children) {
+				for (const block of group.children) {
+					const worldPos = block.getWorldPosition(block.position.clone());
+					if (Math.round(worldPos.y) >= dangerZoneThreshold) {
+						isInDanger = true;
+						break;
+					}
 				}
-			});
+				if (isInDanger) break;
+			}
 		}
-	});
+	}
 
 	// Animate danger line pulsing only when blocks are near
 	if (isInDanger) {
@@ -173,11 +187,16 @@ orbitControls.dampingFactor = 0.05;
 		updateGhostPiece(ghostPiece, currentElement.element, collidableMeshList, scene);
 	}
 
+	// Update particle effects
+	updateParticles(particles, scene);
+
+	// Update landing flash animations
+	updateLandingFlashes(landingFlashes);
+
 	stats.begin();
 	renderer.render(scene, camera);
 	stats.end();
-	requestAnimationFrame(render);
-})();
+});
 
 // Cleanup interval on page unload to prevent memory leak
 window.addEventListener('beforeunload', () => {
@@ -193,45 +212,20 @@ function setLights() {
 	const ambient = getAmbientLight();
 	scene.add(ambient);
 
-	// Main directional light (like sun)
+	// Main directional light (like sun) - ONLY shadow caster for performance
 	const dirLight = getDirectionalLight();
 	dirLight.position.set(10, 25, 10);
 	dirLight.target.position.set(0, 5, 0);
 	scene.add(dirLight);
 	scene.add(dirLight.target);
 
-	// Dramatic spotlights for highlights and shadows
-	const spotlight1 = getSpotLight();
-	spotlight1.position.set(6, 18, 6);
-	spotlight1.target.position.set(0, 10, 0);
-	scene.add(spotlight1);
-	scene.add(spotlight1.target);
-
-	const spotlight2 = getSpotLight();
-	spotlight2.position.set(-6, 18, -3);
-	spotlight2.target.position.set(0, 10, 0);
-	scene.add(spotlight2);
-	scene.add(spotlight2.target);
-
-	// Top key light
-	const topLight = getSpotLight();
-	topLight.position.set(0, 25, 2);
-	topLight.target.position.set(0, 10, 0);
-	scene.add(topLight);
-	scene.add(topLight.target);
-
-	// Point lights for vibrant fill and highlights
-	const fillLight1 = getPointLight();
-	fillLight1.position.set(10, 12, 4);
-	scene.add(fillLight1);
-
-	const fillLight2 = getPointLight();
-	fillLight2.position.set(-10, 12, 4);
-	scene.add(fillLight2);
-
-	const fillLight3 = getPointLight();
-	fillLight3.position.set(0, 15, 6);
-	scene.add(fillLight3);
+	// Single spotlight for dramatic effect (no shadows for performance)
+	const spotlight = getSpotLight();
+	spotlight.castShadow = false; // Disable shadows for performance
+	spotlight.position.set(0, 25, 2);
+	spotlight.target.position.set(0, 10, 0);
+	scene.add(spotlight);
+	scene.add(spotlight.target);
 }
 
 function createNewElement() {
@@ -292,6 +286,15 @@ function setupMobileControls() {
 					mesh.rotation.z = oldRotation;
 				}
 				break;
+			case 'drop':
+				// Hard drop - move piece down until it hits something
+				while (!isBelowFloor(mesh) && !collision(mesh, collidableMeshList, scene)) {
+					mesh.position.y -= 1;
+				}
+				mesh.position.y += 1; // Move back up one step
+				// Trigger immediate placement by calling down()
+				setTimeout(() => down(), 50);
+				break;
 		}
 	}
 
@@ -316,11 +319,17 @@ function setupMobileControls() {
 		triggerMove('rotate');
 	});
 
+	mobileUI.buttons.drop.addEventListener('touchstart', (e) => {
+		e.preventDefault();
+		triggerMove('drop');
+	});
+
 	// Also support click for testing on desktop
 	mobileUI.buttons.left.addEventListener('click', () => triggerMove('left'));
 	mobileUI.buttons.right.addEventListener('click', () => triggerMove('right'));
 	mobileUI.buttons.down.addEventListener('click', () => triggerMove('down'));
 	mobileUI.buttons.rotate.addEventListener('click', () => triggerMove('rotate'));
+	mobileUI.buttons.drop.addEventListener('click', () => triggerMove('drop'));
 }
 
 function restartGame() {

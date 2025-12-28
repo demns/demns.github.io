@@ -3,17 +3,17 @@ import { GAME_CONFIG } from './config';
 
 /**
  * Checks for complete lines and clears them from the game.
- * Returns the number of lines cleared.
+ * Returns object with count and Y positions of cleared lines.
  * @param {Array<Three.Mesh>} collidableMeshList - Array of all placed piece meshes
  * @param {Three.Scene} scene - The Three.js scene
- * @returns {number} Number of lines cleared
+ * @returns {Object} { count: number, lines: Array<number> }
  */
 export function checkAndClearLines(collidableMeshList, scene) {
 	const grid = buildGrid(collidableMeshList);
 	const completedLines = findCompletedLines(grid);
 
 	if (completedLines.length === 0) {
-		return 0;
+		return { count: 0, lines: [] };
 	}
 
 	// Remove blocks from completed lines
@@ -22,7 +22,7 @@ export function checkAndClearLines(collidableMeshList, scene) {
 	// Move blocks down
 	moveBlocksDown(completedLines, collidableMeshList, grid);
 
-	return completedLines.length;
+	return { count: completedLines.length, lines: completedLines };
 }
 
 /**

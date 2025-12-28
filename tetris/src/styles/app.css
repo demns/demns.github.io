@@ -84,25 +84,24 @@ button.webvr-ui-button {
 /* Mobile Controls */
 .mobile-controls {
 	display: none;
-	position: absolute;
+	position: fixed;
 	bottom: 20px;
 	left: 50%;
 	transform: translateX(-50%);
-	gap: 10px;
 	z-index: 100;
+	width: calc(100% - 40px);
+	max-width: 500px;
 }
 
 .mobile-btn {
-	background: rgba(0, 0, 0, 0.6);
+	background: rgba(0, 0, 0, 0.7);
 	backdrop-filter: blur(10px);
 	border: 2px solid rgba(77, 221, 255, 0.5);
 	border-radius: 12px;
 	color: #4df;
-	font-size: 36px;
+	font-size: 28px;
 	font-weight: bold;
 	padding: 15px;
-	min-width: 60px;
-	min-height: 60px;
 	cursor: pointer;
 	user-select: none;
 	touch-action: manipulation;
@@ -111,27 +110,55 @@ button.webvr-ui-button {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	white-space: nowrap;
 }
 
 .mobile-btn:active {
 	transform: scale(0.95);
-	background: rgba(77, 221, 255, 0.2);
+	background: rgba(77, 221, 255, 0.3);
+	border-color: rgba(77, 221, 255, 0.8);
 }
 
 .mobile-controls-grid {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	grid-template-rows: repeat(2, 1fr);
+	grid-template-rows: auto auto;
 	gap: 10px;
 }
 
+/* Row 1: Rotate (spans 2 cols) and Drop */
 .mobile-btn-rotate {
+	grid-column: 1 / 3;
+	grid-row: 1;
+	font-size: 18px;
+}
+
+.mobile-btn-drop {
 	grid-column: 3;
-	grid-row: 1 / 3;
+	grid-row: 1;
+	font-size: 18px;
+	background: rgba(255, 100, 100, 0.3);
+	border-color: rgba(255, 100, 100, 0.5);
+}
+
+.mobile-btn-drop:active {
+	background: rgba(255, 100, 100, 0.5);
+	border-color: rgba(255, 100, 100, 0.8);
+}
+
+/* Row 2: Left, Down, Right */
+.mobile-btn-left {
+	grid-column: 1;
+	grid-row: 2;
 }
 
 .mobile-btn-down {
 	grid-column: 2;
+	grid-row: 2;
+}
+
+.mobile-btn-right {
+	grid-column: 3;
 	grid-row: 2;
 }
 
@@ -141,7 +168,7 @@ button.webvr-ui-button {
 	}
 
 	.mobile-controls {
-		display: flex;
+		display: block;
 	}
 
 	.count {
@@ -159,6 +186,16 @@ button.webvr-ui-button {
 		left: 10px !important;
 		width: auto !important;
 		text-align: center !important;
+	}
+
+	/* Move VR button to left side on mobile */
+	#VRButton {
+		position: fixed !important;
+		left: 10px !important;
+		right: auto !important;
+		bottom: 10px !important;
+		top: auto !important;
+		z-index: 99 !important;
 	}
 }
 

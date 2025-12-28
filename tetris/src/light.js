@@ -20,7 +20,7 @@ export function getAmbientLight() {
 };
 
 export function getPointLight() {
-	const pointLight = new PointLight(0xFFFFFF, 2.25, 50); // 25% less from 3.0
+	const pointLight = new PointLight(0xFFFFFF, 4.0, 50); // Increased since we only use one now
 	pointLight.castShadow = false; // Point lights for fill, no shadows
 	return pointLight;
 };
@@ -34,7 +34,7 @@ export function getHemisphereLight() {
 export function getDirectionalLight() {
 	const dirLight = new DirectionalLight(0xFFFFFF, 0.6); // 25% less from 0.8
 	dirLight.castShadow = true;
-	dirLight.shadow.mapSize.width = 2048;
-	dirLight.shadow.mapSize.height = 2048;
+	dirLight.shadow.mapSize.width = 1024; // Reduced from 2048 for performance
+	dirLight.shadow.mapSize.height = 1024;
 	return dirLight;
 };

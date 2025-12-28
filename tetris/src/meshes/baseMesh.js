@@ -1,15 +1,20 @@
 import { MeshStandardMaterial, Color } from 'three';
-import { getRandomColor } from '../utils/colors';
 import createMeshFromMap from './utils';
 
-export function createTetrisMesh(meshMap) {
-	const baseColor = getRandomColor();
-	const color = new Color(baseColor);
+// Classic Tetris color scheme - each piece type has its own color
+const TETROMINO_COLORS = {
+	I: 0x00F0F0, // Cyan
+	O: 0xF0F000, // Yellow
+	T: 0xA000F0, // Purple
+	S: 0x00F000, // Green
+	Z: 0xF00000, // Red
+	J: 0x0000F0, // Blue
+	L: 0xF0A000, // Orange
+};
 
-	// Brighten the color for more vibrant appearance
-	const hsl = {};
-	color.getHSL(hsl);
-	color.setHSL(hsl.h, Math.min(hsl.s * 1.2, 1), Math.min(hsl.l * 1.1, 0.6));
+export function createTetrisMesh(meshMap, pieceType = 'I') {
+	const baseColor = TETROMINO_COLORS[pieceType] || 0x00F0F0;
+	const color = new Color(baseColor);
 
 	const material = new MeshStandardMaterial({
 		color: color,

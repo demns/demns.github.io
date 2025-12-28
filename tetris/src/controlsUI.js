@@ -41,34 +41,36 @@ export function createMobileControls(currentElement, collidableMeshList, scene) 
 	const grid = document.createElement('div');
 	grid.className = 'mobile-controls-grid';
 
-	// Left button
+	// Left button (row 2, col 1)
 	const leftBtn = document.createElement('button');
 	leftBtn.className = 'mobile-btn mobile-btn-left';
 	leftBtn.textContent = '←';
-	leftBtn.style.gridColumn = '1';
-	leftBtn.style.gridRow = '1';
 
-	// Right button
-	const rightBtn = document.createElement('button');
-	rightBtn.className = 'mobile-btn mobile-btn-right';
-	rightBtn.textContent = '→';
-	rightBtn.style.gridColumn = '1';
-	rightBtn.style.gridRow = '2';
-
-	// Down button
+	// Down button (row 2, col 2)
 	const downBtn = document.createElement('button');
 	downBtn.className = 'mobile-btn mobile-btn-down';
 	downBtn.textContent = '↓';
 
-	// Rotate button
+	// Right button (row 2, col 3)
+	const rightBtn = document.createElement('button');
+	rightBtn.className = 'mobile-btn mobile-btn-right';
+	rightBtn.textContent = '→';
+
+	// Rotate button (row 1, col 1-2)
 	const rotateBtn = document.createElement('button');
 	rotateBtn.className = 'mobile-btn mobile-btn-rotate';
-	rotateBtn.textContent = '↻';
+	rotateBtn.textContent = '↻ Rotate';
 
-	grid.appendChild(leftBtn);
-	grid.appendChild(rightBtn);
-	grid.appendChild(downBtn);
+	// Hard drop button (row 1, col 3)
+	const dropBtn = document.createElement('button');
+	dropBtn.className = 'mobile-btn mobile-btn-drop';
+	dropBtn.textContent = '⬇ Drop';
+
 	grid.appendChild(rotateBtn);
+	grid.appendChild(dropBtn);
+	grid.appendChild(leftBtn);
+	grid.appendChild(downBtn);
+	grid.appendChild(rightBtn);
 	container.appendChild(grid);
 	document.body.appendChild(container);
 
@@ -78,7 +80,8 @@ export function createMobileControls(currentElement, collidableMeshList, scene) 
 			left: leftBtn,
 			right: rightBtn,
 			down: downBtn,
-			rotate: rotateBtn
+			rotate: rotateBtn,
+			drop: dropBtn
 		}
 	};
 }

@@ -6,5 +6,5 @@ export default function getIMesh() {
 		[0, -1, 0],
 		[0, 0, 0],
 		[0, 1, 0]
-	]);
+	], 'I');
 }
