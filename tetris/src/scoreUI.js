@@ -32,30 +32,35 @@ export class ScoreUI {
 			pointer-events: none;
 		`;
 
-		// Create score elements
+		// Create desktop version (detailed)
 		this.container.innerHTML = `
-			<div style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #4df; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">
-				Tetris Score
+			<div class="desktop-score">
+				<div style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #4df; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">
+					Tetris Score
+				</div>
+				<div style="margin-bottom: 6px;">
+					<span style="color: #4ECDC4;">Score:</span>
+					<span id="current-score" style="float: right; font-weight: bold;">0</span>
+				</div>
+				<div style="margin-bottom: 6px;">
+					<span style="color: #FFE66D;">High Score:</span>
+					<span id="high-score" style="float: right; font-weight: bold;">0</span>
+				</div>
+				<div style="margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">
+					<span style="color: #95E1D3;">Rows:</span>
+					<span id="rows-cleared" style="float: right; font-weight: bold;">0</span>
+				</div>
+				<div style="margin-bottom: 6px;">
+					<span style="color: #F38181;">Pieces:</span>
+					<span id="pieces-placed" style="float: right; font-weight: bold;">0</span>
+				</div>
+				<div>
+					<span style="color: #AA96DA;">Max Pieces:</span>
+					<span id="max-pieces" style="float: right; font-weight: bold;">0</span>
+				</div>
 			</div>
-			<div style="margin-bottom: 6px;">
-				<span style="color: #4ECDC4;">Score:</span>
-				<span id="current-score" style="float: right; font-weight: bold;">0</span>
-			</div>
-			<div style="margin-bottom: 6px;">
-				<span style="color: #FFE66D;">High Score:</span>
-				<span id="high-score" style="float: right; font-weight: bold;">0</span>
-			</div>
-			<div style="margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">
-				<span style="color: #95E1D3;">Rows:</span>
-				<span id="rows-cleared" style="float: right; font-weight: bold;">0</span>
-			</div>
-			<div style="margin-bottom: 6px;">
-				<span style="color: #F38181;">Pieces:</span>
-				<span id="pieces-placed" style="float: right; font-weight: bold;">0</span>
-			</div>
-			<div>
-				<span style="color: #AA96DA;">Max Pieces:</span>
-				<span id="max-pieces" style="float: right; font-weight: bold;">0</span>
+			<div class="mobile-score" style="display: none; font-size: 16px; font-weight: bold; color: #4df;">
+				<span id="mobile-pieces">0</span> / <span id="mobile-rows">0</span> / <span id="mobile-score">0</span>
 			</div>
 		`;
 
@@ -67,8 +72,32 @@ export class ScoreUI {
 			highScore: document.getElementById('high-score'),
 			rowsCleared: document.getElementById('rows-cleared'),
 			piecesPlaced: document.getElementById('pieces-placed'),
-			maxPieces: document.getElementById('max-pieces')
+			maxPieces: document.getElementById('max-pieces'),
+			mobileScore: document.getElementById('mobile-score'),
+			mobileRows: document.getElementById('mobile-rows'),
+			mobilePieces: document.getElementById('mobile-pieces')
 		};
+
+		// Detect mobile and switch display
+		this.updateDisplayMode();
+		window.addEventListener('resize', () => this.updateDisplayMode());
+	}
+
+	/**
+	 * Switch between mobile and desktop display
+	 */
+	updateDisplayMode() {
+		const isMobile = window.innerWidth <= 768;
+		const desktopScore = this.container.querySelector('.desktop-score');
+		const mobileScore = this.container.querySelector('.mobile-score');
+
+		if (isMobile) {
+			desktopScore.style.display = 'none';
+			mobileScore.style.display = 'block';
+		} else {
+			desktopScore.style.display = 'block';
+			mobileScore.style.display = 'none';
+		}
 	}
 
 	/**
@@ -76,11 +105,17 @@ export class ScoreUI {
 	 * @param {Object} stats - Stats object from ScoreManager
 	 */
 	update(stats) {
+		// Update desktop display
 		this.elements.currentScore.textContent = stats.currentScore;
 		this.elements.highScore.textContent = stats.highScore;
 		this.elements.rowsCleared.textContent = stats.rowsCleared;
 		this.elements.piecesPlaced.textContent = stats.piecesPlaced;
 		this.elements.maxPieces.textContent = stats.maxPieces;
+
+		// Update mobile display (pieces / rows / score)
+		this.elements.mobilePieces.textContent = stats.piecesPlaced;
+		this.elements.mobileRows.textContent = stats.rowsCleared;
+		this.elements.mobileScore.textContent = stats.currentScore;
 
 		// Highlight when breaking records
 		if (stats.currentScore > 0 && stats.currentScore === stats.highScore) {

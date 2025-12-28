@@ -27,9 +27,20 @@ import { createControlsUI, createMobileControls } from './controlsUI';
 
 document.body.appendChild(stats.domElement);
 
-// Add VR button
-document.body.appendChild(VRButton.createButton(renderer));
-renderer.xr.enabled = true;
+// Add VR button only if WebXR is supported
+if ('xr' in navigator) {
+	navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+		if (supported) {
+			document.body.appendChild(VRButton.createButton(renderer));
+			renderer.xr.enabled = true;
+		}
+	}).catch(() => {
+		// WebXR not available, silently skip
+	});
+} else {
+	// Navigator.xr not available (Safari, older browsers)
+	// Skip VR button entirely
+}
 
 // Initialize scoring system
 const scoreManager = new ScoreManager();
