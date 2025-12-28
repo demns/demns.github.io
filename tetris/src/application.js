@@ -11,7 +11,6 @@ import getLMesh from './meshes/L';
 import getTMesh from './meshes/T';
 import { getSpotLight, getAmbientLight } from './light';
 import getPlane from './plane';
-import ObjectsCount from './objectsCount';
 import renderer from './renderer';
 import scene from './scene';
 import stats from './stats';
@@ -19,6 +18,7 @@ import { checkAndClearLines } from './lineClearing';
 import { createBoundaries } from './boundaries';
 import { ScoreManager } from './scoreManager';
 import { ScoreUI } from './scoreUI';
+import { GameOverUI } from './gameOverUI';
 
 document.body.appendChild(stats.domElement);
 
@@ -31,16 +31,18 @@ const scoreManager = new ScoreManager();
 const scoreUI = new ScoreUI();
 scoreUI.update(scoreManager.getStats());
 
+// Initialize game over UI with restart callback
+const gameOverUI = new GameOverUI(() => restartGame());
+
 const DEG_TO_RAD = Math.PI / 180;
 const GAME_TICK_INTERVAL = 1000; // milliseconds between piece drops
 
 setLights();
-const objectsCount = new ObjectsCount();
 
 const collidableMeshList = [];
 let currentElement = createNewElement();
 
-const interval = setInterval(down, GAME_TICK_INTERVAL);
+let interval = setInterval(down, GAME_TICK_INTERVAL);
 
 function down() {
 	// Try to move down
@@ -98,7 +100,9 @@ function down() {
 			clearInterval(interval);
 			removeControl(currentElement.listener);
 			console.log('Game Over! Stack reached spawn height.');
-			alert('Game Over!');
+
+			// Show game over UI with final stats
+			gameOverUI.show(scoreManager.getStats());
 		}
 	}
 }
@@ -166,8 +170,6 @@ function createNewElement() {
 	scene.add(newElement);
 	const listener = controlMesh(newElement, collidableMeshList, scene);
 
-	objectsCount.increment();
-
 	return {
 		listener: listener,
 		element: newElement
@@ -179,4 +181,32 @@ function onWindowResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function restartGame() {
+	console.log('Restarting game...');
+
+	// Clear all placed pieces from the scene
+	collidableMeshList.forEach(mesh => {
+		scene.remove(mesh);
+	});
+	collidableMeshList.length = 0; // Clear the array
+
+	// Remove current element if it exists
+	if (currentElement && currentElement.element) {
+		removeControl(currentElement.listener);
+		scene.remove(currentElement.element);
+	}
+
+	// Reset score manager
+	scoreManager.resetGame();
+	scoreUI.update(scoreManager.getStats());
+
+	// Create new piece
+	currentElement = createNewElement();
+
+	// Restart game interval
+	interval = setInterval(down, GAME_TICK_INTERVAL);
+
+	console.log('Game restarted successfully!');
 }

@@ -17,7 +17,7 @@ export class ScoreUI {
 		this.container.style.cssText = `
 			position: fixed;
 			top: 20px;
-			left: 20px;
+			right: 20px;
 			color: white;
 			font-family: 'Courier New', monospace;
 			font-size: 16px;

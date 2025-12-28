@@ -9,11 +9,18 @@ import { GAME_CONFIG } from './config';
  */
 export function checkAndClearLines(collidableMeshList, scene) {
 	const grid = buildGrid(collidableMeshList);
+
+	console.log('[LINE CLEAR] Grid built, checking for complete lines...');
+	console.log('[LINE CLEAR] Grid keys:', Object.keys(grid).length);
+
 	const completedLines = findCompletedLines(grid);
 
 	if (completedLines.length === 0) {
+		console.log('[LINE CLEAR] No completed lines found');
 		return 0;
 	}
+
+	console.log(`[LINE CLEAR] Found ${completedLines.length} completed line(s):`, completedLines);
 
 	// Remove blocks from completed lines
 	removeBlocks(completedLines, collidableMeshList, scene, grid);
@@ -61,7 +68,12 @@ function findCompletedLines(grid) {
 			}
 		}
 
+		if (blocksInLine > 0) {
+			console.log(`[LINE CLEAR] Y=${y}: ${blocksInLine}/${GAME_CONFIG.BOARD_WIDTH} blocks`);
+		}
+
 		if (blocksInLine === GAME_CONFIG.BOARD_WIDTH) {
+			console.log(`[LINE CLEAR] ✓ Line Y=${y} is complete!`);
 			completedLines.push(y);
 		}
 	}
@@ -99,18 +111,31 @@ function removeBlocks(completedLines, collidableMeshList, scene, grid) {
  * Moves all blocks above cleared lines down.
  */
 function moveBlocksDown(completedLines, collidableMeshList, grid) {
+	if (completedLines.length === 0) return;
+
 	// Sort lines from bottom to top
 	completedLines.sort((a, b) => a - b);
 
-	// For each cleared line, move everything above it down
-	completedLines.forEach(clearedY => {
-		// Move all blocks above this line down by 1
-		Object.keys(grid).forEach(key => {
-			const [x, y] = key.split(',').map(Number);
+	// For each Y level, calculate how many cleared lines are below it
+	// Then move all blocks at that Y level down by that amount
+	const blocksToMove = new Map(); // Map of block -> distance to move down
 
-			if (y > clearedY && grid[key]) {
-				grid[key].position.y -= 1;
-			}
-		});
+	Object.keys(grid).forEach(key => {
+		const [x, y] = key.split(',').map(Number);
+		const block = grid[key];
+
+		if (!block) return;
+
+		// Count how many completed lines are below this block
+		const linesBelow = completedLines.filter(clearedY => clearedY < y).length;
+
+		if (linesBelow > 0) {
+			blocksToMove.set(block, linesBelow);
+		}
+	});
+
+	// Now move all blocks down by their calculated distance
+	blocksToMove.forEach((distance, block) => {
+		block.position.y -= distance;
 	});
 }
