@@ -1,26 +1,12 @@
-import { ThreePerf } from 'three-perf';
+import * as Stats from 'stats-js';
 
-const perf = new ThreePerf({
-	position: 'top-left',
-	minimal: true,
-	renderer: null, // Will be set in application.js
-	logsPerSecond: 20,
-	customData: {
-		fps: {
-			show: true
-		}
-	}
-});
+const stats = new Stats();
+stats.setMode(0); // 0: fps, 1: ms, 2: mb
+stats.domElement.style.position = 'fixed';
+stats.domElement.style.left = '10px';
+stats.domElement.style.top = '10px';
+stats.domElement.style.bottom = 'auto';
+stats.domElement.style.right = 'auto';
+stats.domElement.style.zIndex = '100';
 
-// Style the container to be small
-perf.dom.style.cssText = `
-	position: fixed !important;
-	left: 10px !important;
-	top: 10px !important;
-	z-index: 100 !important;
-	width: 80px !important;
-	height: 48px !important;
-	opacity: 0.9 !important;
-`;
-
-export default perf;
+export default stats;
