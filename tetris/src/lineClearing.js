@@ -46,9 +46,9 @@ function buildGrid(collidableMeshList) {
 		if (group.children) {
 			group.children.forEach((block, blockIdx) => {
 				const worldPos = block.getWorldPosition(block.position.clone());
-				// Floor the coordinates instead of rounding to match Tetris grid alignment
-				const x = Math.floor(worldPos.x + 0.5);
-				const y = Math.floor(worldPos.y + 0.5);
+				// All pieces now use integer coordinates, so simple rounding works
+				const x = Math.round(worldPos.x);
+				const y = Math.round(worldPos.y);
 				const key = `${x},${y}`;
 				console.log(`[LINE CLEAR]   Block ${blockIdx}: pos(${worldPos.x.toFixed(2)}, ${worldPos.y.toFixed(2)}) -> grid[${key}]`);
 				grid[key] = block;
