@@ -3,6 +3,7 @@ require("./styles/app.css");
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import camera from './camera';
 import collision from './collision';
+import { GAME_CONFIG } from './config';
 import { controlMesh, removeControl } from './controls';
 import getIModel from './meshes/I';
 import getLMesh from './meshes/L';
@@ -30,18 +31,17 @@ let currentElement = createNewElement();
 const interval = setInterval(down, GAME_TICK_INTERVAL);
 
 function down() {
-	if (currentElement.element.position.y > 0 && !collision(currentElement.element, collidableMeshList, scene)) {
-		currentElement.element.position.y -= 1;
-	} else {
-		// Piece has landed - check if it landed at valid position
-		const landedAtBottom = currentElement.element.position.y === 0;
-		const landedOnPiece = collision(currentElement.element, collidableMeshList, scene);
+	// Try to move down
+	const currentY = currentElement.element.position.y;
+	currentElement.element.position.y -= 1;
 
-		if (!landedAtBottom && !landedOnPiece) {
-			// Piece couldn't move down but isn't at bottom and no collision
-			// This shouldn't happen, but let it land anyway
-			console.warn('Unexpected landing condition');
-		}
+	// Check if the new position is valid (not below floor and no collision)
+	const belowFloor = currentElement.element.position.y < GAME_CONFIG.MIN_Y;
+	const hasCollision = collision(currentElement.element, collidableMeshList, scene);
+
+	if (belowFloor || hasCollision) {
+		// Can't move down - revert and land the piece
+		currentElement.element.position.y = currentY;
 
 		// Add to collidable list
 		collidableMeshList.push(currentElement.element);
