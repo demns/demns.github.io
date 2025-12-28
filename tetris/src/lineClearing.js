@@ -111,6 +111,9 @@ function removeBlocks(completedLines, collidableMeshList, scene, grid) {
 function moveBlocksDown(completedLines, collidableMeshList, grid) {
 	if (completedLines.length === 0) return;
 
+	console.log('[MOVE] Cleared lines:', completedLines);
+	console.log('[MOVE] Remaining groups:', collidableMeshList.length);
+
 	// Sort lines from bottom to top
 	completedLines.sort((a, b) => a - b);
 
@@ -119,26 +122,35 @@ function moveBlocksDown(completedLines, collidableMeshList, grid) {
 	const parentsToMove = new Map(); // Map of parent group -> distance to move down
 
 	// Iterate through all remaining parent groups
-	collidableMeshList.forEach(parentGroup => {
+	collidableMeshList.forEach((parentGroup, idx) => {
 		// Get the lowest Y position of any block in this group (in world coordinates)
 		let minWorldY = Infinity;
+
+		console.log(`[MOVE] Group ${idx}: has ${parentGroup.children.length} blocks`);
 
 		parentGroup.children.forEach(block => {
 			const worldPos = block.getWorldPosition(new Vector3());
 			const worldY = Math.round(worldPos.y);
+			console.log(`[MOVE]   Block at world Y=${worldY}`);
 			minWorldY = Math.min(minWorldY, worldY);
 		});
 
 		// Count how many completed lines are below this group's lowest block
 		const linesBelow = completedLines.filter(clearedY => clearedY < minWorldY).length;
 
+		console.log(`[MOVE] Group ${idx}: minWorldY=${minWorldY}, linesBelow=${linesBelow}`);
+
 		if (linesBelow > 0) {
 			parentsToMove.set(parentGroup, linesBelow);
 		}
 	});
 
+	console.log(`[MOVE] Moving ${parentsToMove.size} groups`);
+
 	// Move each parent group down by the calculated distance
 	parentsToMove.forEach((distance, parentGroup) => {
+		const oldY = parentGroup.position.y;
 		parentGroup.position.y -= distance;
+		console.log(`[MOVE] Moved group from Y=${oldY} to Y=${parentGroup.position.y}`);
 	});
 }
