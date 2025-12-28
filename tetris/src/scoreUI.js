@@ -19,21 +19,23 @@ export class ScoreUI {
 			top: 20px;
 			right: 20px;
 			color: white;
-			font-family: 'Courier New', monospace;
-			font-size: 16px;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+			font-size: 14px;
 			background: rgba(0, 0, 0, 0.7);
+			backdrop-filter: blur(10px);
 			padding: 15px 20px;
 			border-radius: 8px;
-			border: 2px solid rgba(255, 255, 255, 0.3);
-			z-index: 1000;
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+			z-index: 100;
 			user-select: none;
 			pointer-events: none;
 		`;
 
 		// Create score elements
 		this.container.innerHTML = `
-			<div style="margin-bottom: 10px; font-size: 18px; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 8px;">
-				TETRIS SCORE
+			<div style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #4df; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">
+				Tetris Score
 			</div>
 			<div style="margin-bottom: 6px;">
 				<span style="color: #4ECDC4;">Score:</span>
