@@ -18,7 +18,7 @@ export function createBoundaries() {
 	const leftWall = new BoxGeometry(0.2, GAME_CONFIG.BOARD_HEIGHT, 0.2);
 	const leftMesh = new Mesh(leftWall, wallMaterial);
 	leftMesh.position.x = GAME_CONFIG.MIN_X - 0.6;
-	leftMesh.position.y = (GAME_CONFIG.MIN_Y + GAME_CONFIG.MAX_Y) / 2 + 0.5; // Center between min and max block positions
+	leftMesh.position.y = GAME_CONFIG.BOARD_HEIGHT / 2; // Center at half of board height
 	const leftEdges = new EdgesGeometry(leftWall);
 	const leftLines = new LineSegments(leftEdges, edgeMaterial);
 	leftMesh.add(leftLines);
@@ -28,7 +28,7 @@ export function createBoundaries() {
 	const rightWall = new BoxGeometry(0.2, GAME_CONFIG.BOARD_HEIGHT, 0.2);
 	const rightMesh = new Mesh(rightWall, wallMaterial);
 	rightMesh.position.x = GAME_CONFIG.MAX_X + 0.6;
-	rightMesh.position.y = (GAME_CONFIG.MIN_Y + GAME_CONFIG.MAX_Y) / 2 + 0.5;
+	rightMesh.position.y = GAME_CONFIG.BOARD_HEIGHT / 2;
 	const rightEdges = new EdgesGeometry(rightWall);
 	const rightLines = new LineSegments(rightEdges, edgeMaterial);
 	rightMesh.add(rightLines);
@@ -38,7 +38,7 @@ export function createBoundaries() {
 	const backWall = new BoxGeometry(GAME_CONFIG.BOARD_WIDTH + 1, GAME_CONFIG.BOARD_HEIGHT, 0.2);
 	const backMesh = new Mesh(backWall, wallMaterial);
 	backMesh.position.z = -1;
-	backMesh.position.y = (GAME_CONFIG.MIN_Y + GAME_CONFIG.MAX_Y) / 2 + 0.5;
+	backMesh.position.y = GAME_CONFIG.BOARD_HEIGHT / 2;
 	const backEdges = new EdgesGeometry(backWall);
 	const backLines = new LineSegments(backEdges, edgeMaterial);
 	backMesh.add(backLines);

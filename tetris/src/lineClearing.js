@@ -55,7 +55,8 @@ function buildGrid(collidableMeshList) {
 function findCompletedLines(grid) {
 	const completedLines = [];
 
-	for (let y = GAME_CONFIG.MIN_Y; y <= GAME_CONFIG.MAX_Y; y++) {
+	// Check integer Y values where blocks actually land (0, 1, 2, ...)
+	for (let y = 0; y <= GAME_CONFIG.MAX_Y; y++) {
 		let blocksInLine = 0;
 
 		for (let x = Math.ceil(GAME_CONFIG.MIN_X); x <= Math.floor(GAME_CONFIG.MAX_X); x++) {
