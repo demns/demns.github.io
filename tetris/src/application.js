@@ -13,6 +13,7 @@ import ObjectsCount from './objectsCount';
 import renderer from './renderer';
 import scene from './scene';
 import stats from './stats';
+import { checkAndClearLines } from './lineClearing';
 
 document.body.appendChild(stats.domElement);
 
@@ -31,9 +32,25 @@ function down() {
 	if (currentElement.element.position.y > 0 && !collision(currentElement.element, collidableMeshList, scene)) {
 		currentElement.element.position.y -= 1;
 	} else {
+		// Piece has landed - add to collidable list
 		collidableMeshList.push(currentElement.element);
 		removeControl(currentElement.listener);
+
+		// Check and clear completed lines
+		const linesCleared = checkAndClearLines(collidableMeshList, scene);
+		if (linesCleared > 0) {
+			console.log(`Cleared ${linesCleared} line(s)!`);
+		}
+
+		// Create next piece
 		currentElement = createNewElement();
+
+		// Check for game over
+		if (collision(currentElement.element, collidableMeshList, scene)) {
+			// Game over! New piece spawned in collision
+			clearInterval(interval);
+			alert('Game Over!');
+		}
 	}
 }
 
@@ -86,7 +103,7 @@ function createNewElement() {
 	const newElement = elementsCreationFunctions[elementNumber]();
 	newElement.position.y = 10;
 	scene.add(newElement);
-	const listener = controlMesh(newElement);
+	const listener = controlMesh(newElement, collidableMeshList, scene);
 
 	objectsCount.increment();
 

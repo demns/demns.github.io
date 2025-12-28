@@ -23,21 +23,17 @@ export default function collision(mesh, objects, scene) {
 }
 
 /**
- * Checks if a bounding box intersects with any objects and is resting on top of them.
- * Only returns true if the boxes intersect AND the first box's bottom equals the second's top.
+ * Checks if a bounding box intersects with any objects in ANY direction.
+ * Returns true if the boxes overlap at all (collision detected).
  * @param {Three.Box3} box - The bounding box to check
  * @param {Array<Three.Mesh>} objects - Array of objects to check intersection against
- * @returns {boolean} True if box is resting on top of an object
+ * @returns {boolean} True if box intersects any object
  */
 function isIntersecting(box, objects) {
 	for (let i = objects.length - 1; i >= 0; i--) {
 		const secondBox = new Box3().setFromObject(objects[i]);
 		if (box.intersectsBox(secondBox)) {
-			if (box.min.y === secondBox.max.y &&
-				box.min.x === secondBox.min.x &&
-				box.max.x === secondBox.max.x) {
-				return true;
-			}
+			return true;
 		}
 	}
 	return false;

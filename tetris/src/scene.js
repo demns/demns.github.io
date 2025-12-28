@@ -1,5 +1,8 @@
 // scene's main purpose is a container for camera/lights/objects
 
-import { Scene } from 'three';
+import { Scene, Color } from 'three';
 
-export default new Scene();
+const scene = new Scene();
+scene.background = new Color(0x220000); // Dark red background
+
+export default scene;
