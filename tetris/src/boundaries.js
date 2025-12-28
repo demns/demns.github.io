@@ -44,5 +44,16 @@ export function createBoundaries() {
 	backMesh.add(backLines);
 	boundaries.push(backMesh);
 
+	// Top boundary indicator (horizontal frame at maximum height)
+	const topFrame = new BoxGeometry(GAME_CONFIG.BOARD_WIDTH + 1, 0.1, 1);
+	const topMesh = new Mesh(topFrame, wallMaterial);
+	topMesh.position.x = (GAME_CONFIG.MIN_X + GAME_CONFIG.MAX_X) / 2 + 0.5;
+	topMesh.position.y = GAME_CONFIG.MAX_Y + 0.5; // Sit on top of highest block position
+	topMesh.position.z = 0;
+	const topEdges = new EdgesGeometry(topFrame);
+	const topLines = new LineSegments(topEdges, edgeMaterial);
+	topMesh.add(topLines);
+	boundaries.push(topMesh);
+
 	return boundaries;
 }
