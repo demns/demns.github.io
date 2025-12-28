@@ -9,6 +9,7 @@ import { controlMesh, removeControl } from './controls';
 import getIModel from './meshes/I';
 import getLMesh from './meshes/L';
 import getTMesh from './meshes/T';
+import getOMesh from './meshes/O';
 import { getSpotLight, getAmbientLight } from './light';
 import getPlane from './plane';
 import renderer from './renderer';
@@ -163,7 +164,7 @@ function setLights() {
 }
 
 function createNewElement() {
-	const elementsCreationFunctions = [getIModel, getLMesh, getTMesh];
+	const elementsCreationFunctions = [getIModel, getLMesh, getTMesh, getOMesh];
 	const elementNumber = Math.floor(Math.random() * elementsCreationFunctions.length);
 	const newElement = elementsCreationFunctions[elementNumber]();
 	newElement.position.y = 10;

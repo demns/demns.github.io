@@ -38,15 +38,22 @@ export function checkAndClearLines(collidableMeshList, scene) {
 function buildGrid(collidableMeshList) {
 	const grid = {};
 
+	console.log(`[LINE CLEAR] Building grid from ${collidableMeshList.length} groups`);
+
 	// Flatten all meshes to individual blocks
-	collidableMeshList.forEach(group => {
-		group.children.forEach(block => {
-			const worldPos = block.getWorldPosition(block.position.clone());
-			const x = Math.round(worldPos.x);
-			const y = Math.round(worldPos.y);
-			const key = `${x},${y}`;
-			grid[key] = block;
-		});
+	collidableMeshList.forEach((group, groupIdx) => {
+		console.log(`[LINE CLEAR] Group ${groupIdx}: has ${group.children ? group.children.length : 0} children`);
+		if (group.children) {
+			group.children.forEach((block, blockIdx) => {
+				const worldPos = block.getWorldPosition(block.position.clone());
+				// Floor the coordinates instead of rounding to match Tetris grid alignment
+				const x = Math.floor(worldPos.x + 0.5);
+				const y = Math.floor(worldPos.y + 0.5);
+				const key = `${x},${y}`;
+				console.log(`[LINE CLEAR]   Block ${blockIdx}: pos(${worldPos.x.toFixed(2)}, ${worldPos.y.toFixed(2)}) -> grid[${key}]`);
+				grid[key] = block;
+			});
+		}
 	});
 
 	return grid;

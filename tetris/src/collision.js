@@ -17,12 +17,8 @@ export default function collision(mesh, objects, scene) {
 	const fullObjects = getAllObjects(objects);
 	const fullMesh = getAllObjects([mesh]);
 
-	console.log(`[COLLISION] Checking mesh at Y=${mesh.position.y}, X=${mesh.position.x}`);
-	console.log(`[COLLISION] fullMesh count: ${fullMesh.length}, fullObjects count: ${fullObjects.length}`);
-
 	for (let i = fullMesh.length - 1; i >= 0; i--) {
 		const box = new Box3().setFromObject(fullMesh[i]);
-		console.log(`[COLLISION] Mesh child ${i} box: min(${box.min.x.toFixed(2)}, ${box.min.y.toFixed(2)}, ${box.min.z.toFixed(2)}) max(${box.max.x.toFixed(2)}, ${box.max.y.toFixed(2)}, ${box.max.z.toFixed(2)})`);
 		if (isIntersecting(box, fullObjects)) {
 			return true;
 		}
@@ -44,7 +40,6 @@ export function isBelowFloor(mesh) {
 	for (let child of children) {
 		const box = new Box3().setFromObject(child);
 		if (box.min.y < GAME_CONFIG.MIN_Y + EPSILON) {
-			console.log(`[FLOOR CHECK] Child below floor! box.min.y=${box.min.y.toFixed(2)} < MIN_Y=${GAME_CONFIG.MIN_Y}`);
 			return true;
 		}
 	}
@@ -66,7 +61,6 @@ export function isOutOfBounds(mesh) {
 		// Cubes are 1 unit wide, so min/max extend 0.5 units from center
 		// MIN_X/MAX_X represent center positions, so subtract/add 0.5 for the actual bounds
 		if (box.min.x < GAME_CONFIG.MIN_X - 0.5 || box.max.x > GAME_CONFIG.MAX_X + 0.5 || box.min.y < GAME_CONFIG.MIN_Y + EPSILON) {
-			console.log(`[BOUNDS CHECK] Out of bounds! X: ${box.min.x.toFixed(2)}-${box.max.x.toFixed(2)}, Y: ${box.min.y.toFixed(2)}-${box.max.y.toFixed(2)}`);
 			return true;
 		}
 	}
@@ -94,8 +88,6 @@ function isIntersecting(box, objects) {
 
 		// Real collision requires overlap in all 3 dimensions with margin
 		if (overlapX > EPSILON && overlapY > EPSILON && overlapZ > EPSILON) {
-			console.log(`[COLLISION] HIT! Object ${i} box: min(${secondBox.min.x.toFixed(2)}, ${secondBox.min.y.toFixed(2)}, ${secondBox.min.z.toFixed(2)}) max(${secondBox.max.x.toFixed(2)}, ${secondBox.max.y.toFixed(2)}, ${secondBox.max.z.toFixed(2)})`);
-			console.log(`[COLLISION] Overlap: X=${overlapX.toFixed(3)}, Y=${overlapY.toFixed(3)}, Z=${overlapZ.toFixed(3)}`);
 			return true;
 		}
 	}
