@@ -359,6 +359,12 @@ export class AchievementUI {
 	}
 
 	resetAchievements() {
+		// Stop all intervals to prevent re-saving
+		if (this.updateInterval) clearInterval(this.updateInterval);
+
+		// Disable saving in the system
+		this.system.saveData = () => {};
+
 		const keysToRemove = [
 			'portfolio_achievements',
 			'easterEggProgress',
@@ -382,7 +388,7 @@ export class AchievementUI {
 
 		document.body.appendChild(toast);
 		setTimeout(() => toast.classList.add('show'), 10);
-		setTimeout(() => window.location.reload(), 1000);
+		setTimeout(() => window.location.reload(), 500);
 	}
 
 	/**
