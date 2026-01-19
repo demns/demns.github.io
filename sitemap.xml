@@ -7,24 +7,23 @@
 
 <url>
   <loc>https://samsonau.net/</loc>
-  <lastmod>2023-04-23T13:39:22+00:00</lastmod>
+  <lastmod>2026-01-19</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>https://samsonau.net/ttt/</loc>
-  <lastmod>2023-04-23T13:39:22+00:00</lastmod>
+  <loc>https://samsonau.net/games/ttt/</loc>
+  <lastmod>2026-01-19</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samsonau.net/santa/</loc>
-  <lastmod>2023-04-23T13:39:22+00:00</lastmod>
+  <loc>https://samsonau.net/games/santa/</loc>
+  <lastmod>2026-01-19</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samsonau.net/tetris/www/</loc>
-  <lastmod>2023-04-23T13:39:22+00:00</lastmod>
+  <loc>https://samsonau.net/games/tetris/www/</loc>
+  <lastmod>2026-01-19</lastmod>
   <priority>0.80</priority>
 </url>
-
 
 </urlset>
