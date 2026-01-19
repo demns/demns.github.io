@@ -124,6 +124,7 @@ export class AchievementSystem {
 	checkSpecialAchievements() {
 		const unlockedCount = this.getUnlockedCount();
 		const totalCount = Object.keys(ACHIEVEMENTS).length;
+		const regularAchievements = totalCount - 2;
 
 		if (unlockedCount === totalCount - 1) {
 			const completionistState = this.data.achievements['completionist'];
@@ -135,7 +136,7 @@ export class AchievementSystem {
 		const firstVisit = this.data.stats.firstVisit;
 		const elapsed = (Date.now() - firstVisit) / 1000 / 60;
 
-		if (elapsed <= 5 && unlockedCount >= totalCount - 1) {
+		if (elapsed <= 5 && unlockedCount >= regularAchievements) {
 			const speedState = this.data.achievements['speed-runner'];
 			if (!speedState.unlocked) {
 				this.unlock('speed-runner');
