@@ -3,59 +3,114 @@ import { GAME_CONFIG } from './config';
 
 /**
  * Checks for complete lines and clears them from the game.
- * Returns object with count and Y positions of cleared lines.
- * @param {Array<Three.Mesh>} collidableMeshList - Array of all placed piece meshes
- * @param {Three.Scene} scene - The Three.js scene
- * @returns {Object} { count: number, lines: Array<number> }
+ *
+ * APPROACH: Flatten all blocks to scene level with absolute positions,
+ * then work with simple Y coordinates without parent/child complexity.
  */
 export function checkAndClearLines(collidableMeshList, scene) {
+	// Step 1: Flatten all blocks - detach from parent groups and set world position directly
+	flattenAllBlocks(collidableMeshList, scene);
+
+	// Step 2: Build grid from flattened blocks
 	const grid = buildGrid(collidableMeshList);
+
+	// Step 3: Find completed lines
 	const completedLines = findCompletedLines(grid);
 
 	if (completedLines.length === 0) {
 		return { count: 0, lines: [] };
 	}
 
-	// Remove blocks from completed lines
-	removeBlocks(completedLines, collidableMeshList, scene, grid);
+	// Step 4: Remove blocks in completed lines
+	removeCompletedLineBlocks(completedLines, collidableMeshList, scene);
 
-	// Move blocks down
-	moveBlocksDown(completedLines, collidableMeshList);
+	// Step 5: Drop blocks above cleared lines
+	dropBlocksAbove(completedLines, collidableMeshList);
 
 	return { count: completedLines.length, lines: completedLines };
 }
 
 /**
- * Builds a 2D grid representation of the play area.
- * Each cell contains a reference to the mesh occupying it, or null if empty.
+ * Flatten all blocks: detach each block from its parent Group and add directly to scene.
+ * After this, each block in collidableMeshList is a single Mesh with position = world position.
+ */
+function flattenAllBlocks(collidableMeshList, scene) {
+	const tempVec = new Vector3();
+	const blocksToAdd = [];
+	const groupsToRemove = [];
+
+	// Process each group
+	for (let i = collidableMeshList.length - 1; i >= 0; i--) {
+		const group = collidableMeshList[i];
+
+		// Skip if this is already a flattened block (no children, or is a Mesh not Group)
+		if (!group.children || group.children.length === 0) {
+			continue;
+		}
+
+		// This is a Group with children - flatten it
+		group.updateMatrixWorld(true);
+
+		// Collect all blocks with their world positions
+		const childrenCopy = [...group.children]; // Copy because we'll modify
+		childrenCopy.forEach(block => {
+			block.getWorldPosition(tempVec);
+
+			// Detach from parent
+			group.remove(block);
+
+			// Set block's position to world position
+			block.position.set(
+				Math.round(tempVec.x),
+				Math.round(tempVec.y),
+				Math.round(tempVec.z)
+			);
+
+			// Reset rotation (blocks are 1x1x1 cubes, rotation doesn't matter visually)
+			block.rotation.set(0, 0, 0);
+
+			blocksToAdd.push(block);
+		});
+
+		// Mark empty group for removal
+		groupsToRemove.push({ group, index: i });
+	}
+
+	// Remove empty groups from scene and list
+	groupsToRemove.forEach(({ group, index }) => {
+		scene.remove(group);
+		collidableMeshList.splice(index, 1);
+	});
+
+	// Add flattened blocks to scene and list
+	blocksToAdd.forEach(block => {
+		scene.add(block);
+		collidableMeshList.push(block);
+	});
+}
+
+/**
+ * Build grid from flattened blocks (each block is now directly in scene with world position)
  */
 function buildGrid(collidableMeshList) {
 	const grid = {};
 
-	// Flatten all meshes to individual blocks
-	collidableMeshList.forEach((group) => {
-		if (group.children) {
-			group.children.forEach((block) => {
-				const worldPos = block.getWorldPosition(block.position.clone());
-				// All pieces now use integer coordinates, so simple rounding works
-				const x = Math.round(worldPos.x);
-				const y = Math.round(worldPos.y);
-				const key = `${x},${y}`;
-				grid[key] = block;
-			});
-		}
+	collidableMeshList.forEach(block => {
+		const x = Math.round(block.position.x);
+		const y = Math.round(block.position.y);
+		const key = `${x},${y}`;
+		grid[key] = block;
 	});
 
 	return grid;
 }
 
 /**
- * Finds Y coordinates of all completed lines.
+ * Find completed lines
  */
 function findCompletedLines(grid) {
 	const completedLines = [];
 
-	// Check integer Y values where blocks actually land (0, 1, 2, ...)
 	for (let y = 0; y <= GAME_CONFIG.MAX_Y; y++) {
 		let blocksInLine = 0;
 
@@ -75,70 +130,36 @@ function findCompletedLines(grid) {
 }
 
 /**
- * Removes blocks from completed lines.
+ * Remove blocks in completed lines
  */
-function removeBlocks(completedLines, collidableMeshList, scene, grid) {
-	const parentsToCheck = new Set(); // Track parent groups that had blocks removed
+function removeCompletedLineBlocks(completedLines, collidableMeshList, scene) {
+	const clearedYSet = new Set(completedLines);
 
-	completedLines.forEach(y => {
-		for (let x = Math.ceil(GAME_CONFIG.MIN_X); x <= Math.floor(GAME_CONFIG.MAX_X); x++) {
-			const key = `${x},${y}`;
-			const block = grid[key];
+	for (let i = collidableMeshList.length - 1; i >= 0; i--) {
+		const block = collidableMeshList[i];
+		const y = Math.round(block.position.y);
 
-			if (block && block.parent) {
-				const parent = block.parent; // Store parent reference before removing
-				parentsToCheck.add(parent);
-				parent.remove(block);
-			}
+		if (clearedYSet.has(y)) {
+			scene.remove(block);
+			collidableMeshList.splice(i, 1);
 		}
-	});
-
-	// Check all affected parent groups and remove empty ones
-	parentsToCheck.forEach(parent => {
-		if (parent.children.length === 0) {
-			scene.remove(parent);
-			const index = collidableMeshList.indexOf(parent);
-			if (index > -1) {
-				collidableMeshList.splice(index, 1);
-			}
-		}
-	});
+	}
 }
 
 /**
- * Moves all blocks above cleared lines down.
- * Moves individual blocks, not parent groups, to handle partial row clears correctly.
+ * Drop blocks above cleared lines
  */
-function moveBlocksDown(completedLines, collidableMeshList) {
-	if (completedLines.length === 0) return;
+function dropBlocksAbove(completedLines, collidableMeshList) {
+	completedLines.sort((a, b) => a - b); // Sort bottom to top
 
-	// Sort lines from bottom to top
-	completedLines.sort((a, b) => a - b);
+	collidableMeshList.forEach(block => {
+		const blockY = Math.round(block.position.y);
 
-	// Collect all blocks and their current world Y positions BEFORE moving anything
-	const blocksToMove = [];
+		// Count how many cleared lines are below this block
+		const linesBelow = completedLines.filter(clearedY => clearedY < blockY).length;
 
-	collidableMeshList.forEach((parentGroup) => {
-		// Force matrix update for accurate world positions
-		parentGroup.updateMatrixWorld(true);
-
-		parentGroup.children.forEach(block => {
-			// Get world position - block.position is local to parent
-			const worldPos = new Vector3();
-			block.getWorldPosition(worldPos);
-			const blockY = Math.round(worldPos.y);
-
-			// Count how many completed lines are below this block
-			const linesBelow = completedLines.filter(clearedY => clearedY < blockY).length;
-
-			if (linesBelow > 0) {
-				blocksToMove.push({ block, linesBelow });
-			}
-		});
-	});
-
-	// Now move all blocks
-	blocksToMove.forEach(({ block, linesBelow }) => {
-		block.position.y -= linesBelow;
+		if (linesBelow > 0) {
+			block.position.y -= linesBelow;
+		}
 	});
 }
