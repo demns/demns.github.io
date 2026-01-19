@@ -107,6 +107,7 @@ function removeBlocks(completedLines, collidableMeshList, scene, grid) {
 
 /**
  * Moves all blocks above cleared lines down.
+ * Moves individual blocks, not parent groups, to handle partial row clears correctly.
  */
 function moveBlocksDown(completedLines, collidableMeshList, grid) {
 	if (completedLines.length === 0) return;
@@ -114,31 +115,22 @@ function moveBlocksDown(completedLines, collidableMeshList, grid) {
 	// Sort lines from bottom to top
 	completedLines.sort((a, b) => a - b);
 
-	// Calculate how far down each parent group needs to move
-	// Key insight: We move entire parent groups, not individual blocks
-	const parentsToMove = new Map(); // Map of parent group -> distance to move down
-
-	// Iterate through all remaining parent groups
+	// Move each individual block based on how many cleared lines are below it
 	collidableMeshList.forEach((parentGroup) => {
-		// Get the lowest Y position of any block in this group (in world coordinates)
-		let minWorldY = Infinity;
+		// Update matrix to ensure world positions are accurate after block removal
+		parentGroup.updateMatrixWorld(true);
 
 		parentGroup.children.forEach(block => {
 			const worldPos = block.getWorldPosition(new Vector3());
-			const worldY = Math.round(worldPos.y);
-			minWorldY = Math.min(minWorldY, worldY);
+			const blockY = Math.round(worldPos.y);
+
+			// Count how many completed lines are below this block
+			const linesBelow = completedLines.filter(clearedY => clearedY < blockY).length;
+
+			if (linesBelow > 0) {
+				// Move block down in local space (relative to parent)
+				block.position.y -= linesBelow;
+			}
 		});
-
-		// Count how many completed lines are below this group's lowest block
-		const linesBelow = completedLines.filter(clearedY => clearedY < minWorldY).length;
-
-		if (linesBelow > 0) {
-			parentsToMove.set(parentGroup, linesBelow);
-		}
-	});
-
-	// Move each parent group down by the calculated distance
-	parentsToMove.forEach((distance, parentGroup) => {
-		parentGroup.position.y -= distance;
 	});
 }
