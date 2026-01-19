@@ -1,8 +1,19 @@
-/**
- * Achievement UI components - tracker, toasts, panel
- */
-
 import { ConfettiSystem } from './confetti.js';
+
+function el(tag, attrs = {}, children = []) {
+	const element = document.createElement(tag);
+	Object.entries(attrs).forEach(([key, value]) => {
+		if (key === 'className') element.className = value;
+		else if (key === 'textContent') element.textContent = value;
+		else if (key.startsWith('on')) element.addEventListener(key.slice(2).toLowerCase(), value);
+		else element.setAttribute(key, value);
+	});
+	children.forEach(child => {
+		if (typeof child === 'string') element.appendChild(document.createTextNode(child));
+		else if (child) element.appendChild(child);
+	});
+	return element;
+}
 
 export class AchievementUI {
 	constructor(achievementSystem) {
@@ -321,49 +332,56 @@ export class AchievementUI {
 		});
 	}
 
-	/**
-	 * Confirm reset with user
-	 */
 	confirmReset() {
-		const confirmed = confirm('Are you sure you want to reset all achievement progress? This cannot be undone.');
-		if (confirmed) {
-			this.resetAchievements();
-		}
+		const closeModal = () => {
+			modal.classList.remove('show');
+			setTimeout(() => modal.remove(), 300);
+		};
+
+		const modal = el('div', {
+			className: 'achievement-reset-modal',
+			onClick: (e) => { if (e.target === modal) closeModal(); }
+		}, [
+			el('div', { className: 'reset-modal-content' }, [
+				el('div', { className: 'reset-modal-icon', textContent: '⚠️' }),
+				el('h3', { className: 'reset-modal-title', textContent: 'Reset Progress?' }),
+				el('p', { className: 'reset-modal-text', textContent: 'This will clear all achievements and start fresh. This cannot be undone.' }),
+				el('div', { className: 'reset-modal-buttons' }, [
+					el('button', { className: 'reset-modal-btn reset-modal-cancel', textContent: 'Cancel', onClick: closeModal }),
+					el('button', { className: 'reset-modal-btn reset-modal-confirm', textContent: 'Reset', onClick: () => { closeModal(); this.resetAchievements(); } })
+				])
+			])
+		]);
+
+		document.body.appendChild(modal);
+		setTimeout(() => modal.classList.add('show'), 10);
 	}
 
-	/**
-	 * Reset all achievements
-	 */
 	resetAchievements() {
-		// Clear localStorage
-		localStorage.removeItem('portfolio_achievements');
-		localStorage.removeItem('easterEggProgress');
-		localStorage.removeItem('games_visited');
-		localStorage.removeItem('tetris_highscore');
-		localStorage.removeItem('tetris_4line_cleared');
-		localStorage.removeItem('ttt_wins');
-		localStorage.removeItem('santa_complete');
+		const keysToRemove = [
+			'portfolio_achievements',
+			'easterEggProgress',
+			'games_visited',
+			'tetris_highscore',
+			'tetris_4line_cleared',
+			'ttt_wins',
+			'santa_complete'
+		];
+		keysToRemove.forEach(key => localStorage.removeItem(key));
 
-		// Show confirmation toast
-		const toast = document.createElement('div');
-		toast.className = 'achievement-toast';
-		toast.innerHTML = `
-			<div class="toast-icon">🔄</div>
-			<div class="toast-content">
-				<div class="toast-title">Progress Reset</div>
-				<div class="toast-description">All achievements have been cleared. Refresh the page to start fresh!</div>
-			</div>
-		`;
-		document.body.appendChild(toast);
-		setTimeout(() => toast.classList.add('show'), 10);
-
-		// Close panel
 		this.closePanel();
 
-		// Reload page after delay
-		setTimeout(() => {
-			window.location.reload();
-		}, 2000);
+		const toast = el('div', { className: 'achievement-toast' }, [
+			el('div', { className: 'toast-icon', textContent: '🔄' }),
+			el('div', { className: 'toast-content' }, [
+				el('div', { className: 'toast-title', textContent: 'Progress Reset' }),
+				el('div', { className: 'toast-description', textContent: 'Starting fresh...' })
+			])
+		]);
+
+		document.body.appendChild(toast);
+		setTimeout(() => toast.classList.add('show'), 10);
+		setTimeout(() => window.location.reload(), 1000);
 	}
 
 	/**

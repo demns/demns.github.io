@@ -554,8 +554,95 @@
 	#achievement-backdrop,
 	.achievement-card,
 	.completionist-modal,
-	.completionist-content {
+	.completionist-content,
+	.achievement-reset-modal,
+	.reset-modal-content {
 		transition-duration: 0.01ms;
 		animation: none;
 	}
+}
+
+/* Reset Modal */
+.achievement-reset-modal {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.8);
+	backdrop-filter: blur(4px);
+	z-index: 10001;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.achievement-reset-modal.show {
+	opacity: 1;
+}
+
+.reset-modal-content {
+	background: #1a1a1a;
+	border-radius: 16px;
+	padding: 32px;
+	max-width: 360px;
+	text-align: center;
+	transform: scale(0.9);
+	transition: transform 0.3s ease;
+	border: 1px solid rgba(255, 107, 53, 0.3);
+}
+
+.achievement-reset-modal.show .reset-modal-content {
+	transform: scale(1);
+}
+
+.reset-modal-icon {
+	font-size: 48px;
+	margin-bottom: 16px;
+}
+
+.reset-modal-title {
+	color: #fff;
+	font-size: 20px;
+	margin: 0 0 12px 0;
+}
+
+.reset-modal-text {
+	color: #aaa;
+	font-size: 14px;
+	margin: 0 0 24px 0;
+	line-height: 1.5;
+}
+
+.reset-modal-buttons {
+	display: flex;
+	gap: 12px;
+	justify-content: center;
+}
+
+.reset-modal-btn {
+	padding: 10px 24px;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	border: none;
+}
+
+.reset-modal-cancel {
+	background: #333;
+	color: #fff;
+}
+
+.reset-modal-cancel:hover {
+	background: #444;
+}
+
+.reset-modal-confirm {
+	background: #ff4444;
+	color: #fff;
+}
+
+.reset-modal-confirm:hover {
+	background: #ff5555;
 }
