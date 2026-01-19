@@ -7,15 +7,11 @@
 </picture>
 </a>
 
-<br><br>
-
-Interactive portfolio with achievements, mini-games, and hidden easter eggs
-
-<sub>Zero frameworks · Pure vanilla JS · No build tools for main site</sub>
-
 <br>
 
-[<kbd> <br> &nbsp;&nbsp;Visit Site&nbsp;&nbsp; <br> </kbd>](https://samsonau.net)
+Interactive portfolio with achievements, mini-games, and easter eggs
+
+<sub>Zero frameworks · Pure vanilla JS</sub>
 
 </div>
 
@@ -27,8 +23,8 @@ Interactive portfolio with achievements, mini-games, and hidden easter eggs
 
 ### Games
 
-| Game | Tech | Link |
-|:-----|:-----|:----:|
+| | | |
+|:--|:--|:-:|
 | 🎮 Tic Tac Toe | Minimax AI | [play →](https://samsonau.net/games/ttt) |
 | 🎅 Deer Santa | Phaser.js | [play →](https://samsonau.net/games/santa) |
 | 🧊 WebGL Tetris | Three.js | [play →](https://samsonau.net/games/tetris/www) |
@@ -50,25 +46,14 @@ Interactive portfolio with achievements, mini-games, and hidden easter eggs
 </tr>
 </table>
 
-<br>
-
 <details>
 <summary><samp>▸ easter egg hints</samp></summary>
 <br>
 <table>
-<tr><td align="center"><code>01</code></td><td>Some codes never get old</td></tr>
-<tr><td align="center"><code>02</code></td><td>Logos like attention</td></tr>
-<tr><td align="center"><code>03</code></td><td>Persistence pays off</td></tr>
-<tr><td align="center"><code>04</code></td><td>Names have power</td></tr>
-<tr><td align="center"><code>05</code></td><td>Patience is a virtue</td></tr>
+<tr><td><code>01</code></td><td>Some codes never get old</td></tr>
+<tr><td><code>02</code></td><td>Logos like attention</td></tr>
+<tr><td><code>03</code></td><td>Persistence pays off</td></tr>
+<tr><td><code>04</code></td><td>Names have power</td></tr>
+<tr><td><code>05</code></td><td>Patience is a virtue</td></tr>
 </table>
 </details>
-
-<br>
-
-<div align="center">
-<sub>
-<a href="https://samsonau.net">website</a> ·
-<a href="https://github.com/demns/demns.github.io">source</a>
-</sub>
-</div>
