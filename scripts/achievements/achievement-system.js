@@ -6,6 +6,11 @@ export class AchievementSystem {
 	constructor() {
 		this.data = this.loadData();
 		this.listeners = [];
+		this.silentMode = true;
+		setTimeout(() => {
+			this.silentMode = false;
+			this.emit('ready', { unlockedCount: this.getUnlockedCount(), totalCount: Object.keys(ACHIEVEMENTS).length });
+		}, 500);
 	}
 
 	loadData() {
@@ -106,16 +111,18 @@ export class AchievementSystem {
 
 		this.saveData();
 
-		this.emit('unlock', {
-			achievement,
-			totalXP: this.data.stats.xpTotal,
-			unlockedCount: this.getUnlockedCount(),
-			totalCount: Object.keys(ACHIEVEMENTS).length
-		});
+		if (!this.silentMode) {
+			this.emit('unlock', {
+				achievement,
+				totalXP: this.data.stats.xpTotal,
+				unlockedCount: this.getUnlockedCount(),
+				totalCount: Object.keys(ACHIEVEMENTS).length
+			});
 
-		if (newLevel > oldLevel) {
-			const levelData = LEVELS.find(l => l.level === newLevel);
-			this.emit('levelup', { level: newLevel, name: levelData?.name || 'Master' });
+			if (newLevel > oldLevel) {
+				const levelData = LEVELS.find(l => l.level === newLevel);
+				this.emit('levelup', { level: newLevel, name: levelData?.name || 'Master' });
+			}
 		}
 
 		this.checkSpecialAchievements();

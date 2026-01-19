@@ -29,6 +29,7 @@ export class AchievementUI {
 
 		this.system.on('unlock', (data) => this.onUnlock(data));
 		this.system.on('levelup', (data) => this.onLevelUp(data));
+		this.system.on('ready', () => this.updateTracker());
 
 		this.startPeriodicUpdate();
 	}
