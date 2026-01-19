@@ -160,10 +160,24 @@ export class AchievementUI {
 		if (!list) return;
 
 		const achievements = this.system.getAllAchievements();
+		const stats = this.system.getStats();
 
 		list.innerHTML = achievements.map(ach => {
 			const percentage = Math.round((ach.progress / ach.maxProgress) * 100);
 			const isUnlocked = ach.unlocked;
+
+			let description = ach.description;
+			if (ach.id === 'speed-runner' && !isUnlocked) {
+				const elapsed = (Date.now() - stats.firstVisit) / 1000;
+				const remaining = Math.max(0, 300 - elapsed);
+				if (remaining > 0) {
+					const mins = Math.floor(remaining / 60);
+					const secs = Math.floor(remaining % 60);
+					description += ` (${mins}:${secs.toString().padStart(2, '0')} left)`;
+				} else {
+					description += ' (expired)';
+				}
+			}
 
 			return `
 				<div class="achievement-card ${isUnlocked ? 'unlocked' : 'locked'}">
@@ -173,7 +187,7 @@ export class AchievementUI {
 							<span class="achievement-title">${ach.title}</span>
 							<span class="achievement-xp">${ach.xp} XP</span>
 						</div>
-						<div class="achievement-description">${ach.description}</div>
+						<div class="achievement-description">${description}</div>
 						<div class="achievement-progress-bar">
 							<div class="achievement-progress-fill" style="width: ${percentage}%"></div>
 						</div>

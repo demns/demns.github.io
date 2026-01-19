@@ -34,13 +34,42 @@ export class AchievementTracker {
 		this.system.unlock('first-contact');
 
 		this.checkTheme();
+		this.checkNightOwl();
+		this.checkReturnVisitor();
 		this.trackScroll();
 		this.trackSocialLinks();
 		this.trackProjectLinks();
 		this.trackGameLinks();
+		this.trackDevTools();
 		this.startTimeTracking();
 		this.checkEasterEggProgress();
 		this.listenForGameEvents();
+	}
+
+	checkNightOwl() {
+		const hour = new Date().getHours();
+		if (hour >= 0 && hour < 5) {
+			this.system.unlock('night-owl');
+		}
+	}
+
+	checkReturnVisitor() {
+		const stats = this.system.getStats();
+		if (stats.totalVisits > 1) {
+			this.system.unlock('return-visitor');
+		}
+	}
+
+	trackDevTools() {
+		const threshold = 160;
+		const check = () => {
+			if (window.outerWidth - window.innerWidth > threshold ||
+			    window.outerHeight - window.innerHeight > threshold) {
+				this.system.unlock('code-hunter');
+			}
+		};
+		window.addEventListener('resize', check);
+		check();
 	}
 
 	checkTheme() {

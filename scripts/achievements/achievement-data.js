@@ -98,6 +98,33 @@ export const ACHIEVEMENTS = {
 		tier: 'hard',
 		maxProgress: 1
 	},
+	'night-owl': {
+		id: 'night-owl',
+		title: 'Night Owl',
+		description: 'Visited between midnight and 5am',
+		icon: '🦉',
+		xp: 20,
+		tier: 'medium',
+		maxProgress: 1
+	},
+	'return-visitor': {
+		id: 'return-visitor',
+		title: 'Return Visitor',
+		description: 'Came back for more',
+		icon: '👋',
+		xp: 20,
+		tier: 'easy',
+		maxProgress: 1
+	},
+	'code-hunter': {
+		id: 'code-hunter',
+		title: 'Code Hunter',
+		description: 'Inspect the code (F12 or right-click → Inspect)',
+		icon: '🔧',
+		xp: 25,
+		tier: 'medium',
+		maxProgress: 1
+	},
 	'speed-runner': {
 		id: 'speed-runner',
 		title: 'Speed Runner',
@@ -114,7 +141,7 @@ export const ACHIEVEMENTS = {
 		icon: '💯',
 		xp: 150,
 		tier: 'elite',
-		maxProgress: 12
+		maxProgress: 15
 	}
 };
 
