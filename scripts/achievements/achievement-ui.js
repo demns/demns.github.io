@@ -21,7 +21,6 @@ export class AchievementUI {
 		this.confetti = new ConfettiSystem();
 		this.toasts = [];
 		this.panelOpen = false;
-		this.updateInterval = null;
 
 		this.createTracker();
 		this.createPanel();
@@ -30,16 +29,6 @@ export class AchievementUI {
 		this.system.on('unlock', (data) => this.onUnlock(data));
 		this.system.on('levelup', (data) => this.onLevelUp(data));
 		this.system.on('ready', () => this.updateTracker());
-
-		this.startPeriodicUpdate();
-	}
-
-	startPeriodicUpdate() {
-		this.updateInterval = setInterval(() => {
-			if (this.panelOpen) {
-				this.updatePanelHeader();
-			}
-		}, 1000);
 	}
 
 	/**
@@ -359,10 +348,7 @@ export class AchievementUI {
 	}
 
 	resetAchievements() {
-		// Stop all intervals to prevent re-saving
-		if (this.updateInterval) clearInterval(this.updateInterval);
-
-		// Disable saving in the system
+		// Disable saving in the system to prevent re-saving before reload
 		this.system.saveData = () => {};
 
 		const keysToRemove = [
