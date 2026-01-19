@@ -33,4 +33,14 @@ export function updateEasterEggCounter(state, footerEl, eggName) {
   state.foundEggs.add(eggName);
   const count = state.foundEggs.size;
   updateFooterText(footerEl, count, CONFIG.TOTAL_EASTER_EGGS);
+
+  // Sync with achievement system via localStorage
+  try {
+    localStorage.setItem('easterEggProgress', JSON.stringify({
+      foundCount: count,
+      eggs: Array.from(state.foundEggs)
+    }));
+  } catch (e) {
+    console.warn('Failed to sync easter egg progress:', e);
+  }
 }

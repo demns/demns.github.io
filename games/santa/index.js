@@ -13,14 +13,14 @@ class IntroScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('sky', 'assets/starry-night.jpg');
-        this.load.image('ground', 'assets/platform.png');
-        this.load.image('house1', 'assets/house1.png');
-        this.load.image('house2', 'assets/house2.png');
-        this.load.image('house3', 'assets/house3.png');
-        this.load.image('house4', 'assets/house4.png');
-        this.load.spritesheet('santa', 'assets/santa3.png', SPRITE_CONFIG.santa);
-        this.load.spritesheet('deer', 'assets/deer2.png', SPRITE_CONFIG.deer);
+        this.load.image('sky', '/games/santa/assets/starry-night.jpg');
+        this.load.image('ground', '/games/santa/assets/platform.png');
+        this.load.image('house1', '/games/santa/assets/house1.png');
+        this.load.image('house2', '/games/santa/assets/house2.png');
+        this.load.image('house3', '/games/santa/assets/house3.png');
+        this.load.image('house4', '/games/santa/assets/house4.png');
+        this.load.spritesheet('santa', '/games/santa/assets/santa3.png', SPRITE_CONFIG.santa);
+        this.load.spritesheet('deer', '/games/santa/assets/deer2.png', SPRITE_CONFIG.deer);
     }
 
     create() {
@@ -280,6 +280,16 @@ class GameScene extends Phaser.Scene {
             maxDistance = this.distance;
             try {
                 localStorage.setItem('santaMaxDistance', maxDistance.toString());
+
+                if (this.distance >= 1000) {
+                    if (window.parent && window.parent !== window && window.parent.portfolioAchievements) {
+                        window.parent.postMessage({
+                            type: 'santa-complete',
+                            data: { distance: this.distance }
+                        }, window.location.origin);
+                    }
+                    localStorage.setItem('santa_complete', 'true');
+                }
             } catch (error) {
                 console.warn('Could not save to localStorage:', error);
             }

@@ -110,7 +110,8 @@ export const TTTApplication = {
         this.turnIndicator.textContent = 'It\'s a draw!';
         this.gameBoard.classList.add('game-over');
         this.newGameButton.classList.add('show');
-        this.newGameButton.focus(); // Set focus for accessibility
+        this.newGameButton.focus();
+        this.recordDraw();
       } else {
         const nextSymbol = this.getCurrentTurn();
         const isNextTurnComputer = nextSymbol === this.getComputerSymbol();
@@ -128,7 +129,6 @@ export const TTTApplication = {
       const startCell = cells[line[0]];
       const endCell = cells[line[2]];
 
-      // Highlight the winning cells
       line.forEach(index => cells[index].classList.add('winning-cell'));
 
       const startRect = startCell.getBoundingClientRect();
@@ -144,6 +144,22 @@ export const TTTApplication = {
       svgLine.id = 'winning-line';
       svgLine.innerHTML = `<line x1="${startX}" y1="${startY}" x2="${endX}" y2="${endY}" />`;
       this.gameBoard.appendChild(svgLine);
+    },
+
+    recordDraw: function() {
+      try {
+        if (window.parent && window.parent !== window && window.parent.portfolioAchievements) {
+          window.parent.postMessage({
+            type: 'ttt-result',
+            data: { result: 'draw' }
+          }, window.location.origin);
+        }
+
+        const draws = parseInt(localStorage.getItem('ttt_wins'), 10) || 0;
+        localStorage.setItem('ttt_wins', (draws + 1).toString());
+      } catch (e) {
+        console.error('Failed to record draw:', e);
+      }
     }
 };
 

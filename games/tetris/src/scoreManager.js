@@ -74,7 +74,40 @@ export class ScoreManager {
 			this.saveHighScores();
 		}
 
+		// Notify achievement system (if on main portfolio page)
+		this.notifyAchievements(rowCount);
+
 		return points;
+	}
+
+	/**
+	 * Notify achievement system about game progress
+	 */
+	notifyAchievements(linesCleared) {
+		try {
+			// Check if running in parent window (portfolio page)
+			if (window.parent && window.parent !== window && window.parent.portfolioAchievements) {
+				window.parent.postMessage({
+					type: 'tetris-score',
+					data: {
+						score: this.currentScore,
+						linesCleared: linesCleared
+					}
+				}, window.location.origin);
+			}
+
+			// Also store high score flag for achievement system
+			if (this.currentScore >= 1000) {
+				localStorage.setItem('tetris_highscore', this.currentScore.toString());
+			}
+
+			// Store 4-line clear flag (Tetris achievement)
+			if (linesCleared === 4) {
+				localStorage.setItem('tetris_4line_cleared', 'true');
+			}
+		} catch (e) {
+			// Silently fail if postMessage not available
+		}
 	}
 
 	/**

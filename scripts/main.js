@@ -1,5 +1,8 @@
 import { initParticles, animateParticles, resizeCanvas } from './particle-system.js';
 import { initEasterEggs } from './easter-eggs.js';
+import { AchievementSystem } from './achievements/achievement-system.js';
+import { AchievementUI } from './achievements/achievement-ui.js';
+import { AchievementTracker } from './achievements/achievement-tracker.js';
 
 const els = {
   canvas: document.getElementById('particleCanvas'),
@@ -43,3 +46,11 @@ const particles = initParticles(els.canvas);
 animateParticles(els.canvas, ctx, particles);
 
 initEasterEggs(els, state);
+
+// Initialize achievement system
+const achievementSystem = new AchievementSystem();
+const achievementUI = new AchievementUI(achievementSystem);
+const achievementTracker = new AchievementTracker(achievementSystem);
+
+// Make achievement system globally available for game integrations
+window.portfolioAchievements = achievementSystem;
