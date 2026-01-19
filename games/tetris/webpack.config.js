@@ -14,7 +14,7 @@ module.exports = (env, argv) => {
 		output: {
 			path: path.resolve(__dirname, 'www'),
 			filename: isProduction ? 'bundle.min.js' : 'bundle.js',
-			publicPath: '',
+			publicPath: '/games/tetris/www/',
 			clean: true
 		},
 		plugins: [
