@@ -216,6 +216,12 @@ export class AchievementUI {
 		this.panel.classList.add('show');
 		this.panelOpen = true;
 
+		// Start real-time updates while panel is open
+		this.panelUpdateInterval = setInterval(() => {
+			this.updatePanelHeader();
+			this.updatePanelAchievements();
+		}, 1000);
+
 		// Focus close button for accessibility
 		setTimeout(() => {
 			const closeBtn = this.panel.querySelector('.panel-close');
@@ -230,6 +236,12 @@ export class AchievementUI {
 		this.backdrop.classList.remove('show');
 		this.panel.classList.remove('show');
 		this.panelOpen = false;
+
+		// Stop real-time updates
+		if (this.panelUpdateInterval) {
+			clearInterval(this.panelUpdateInterval);
+			this.panelUpdateInterval = null;
+		}
 	}
 
 	/**
