@@ -31,10 +31,10 @@ export class AchievementTracker {
 	}
 
 	init() {
+		this.system.updateVisit();
 		this.system.unlock('first-contact');
 
 		this.checkTheme();
-		this.checkNightOwl();
 		this.checkReturnVisitor();
 		this.trackScroll();
 		this.trackSocialLinks();
@@ -44,13 +44,6 @@ export class AchievementTracker {
 		this.startTimeTracking();
 		this.checkEasterEggProgress();
 		this.listenForGameEvents();
-	}
-
-	checkNightOwl() {
-		const hour = new Date().getHours();
-		if (hour >= 0 && hour < 5) {
-			this.system.unlock('night-owl');
-		}
 	}
 
 	checkReturnVisitor() {

@@ -98,15 +98,6 @@ export const ACHIEVEMENTS = {
 		tier: 'hard',
 		maxProgress: 1
 	},
-	'night-owl': {
-		id: 'night-owl',
-		title: 'Night Owl',
-		description: 'Visited between midnight and 5am',
-		icon: '🦉',
-		xp: 20,
-		tier: 'medium',
-		maxProgress: 1
-	},
 	'return-visitor': {
 		id: 'return-visitor',
 		title: 'Return Visitor',
@@ -141,7 +132,7 @@ export const ACHIEVEMENTS = {
 		icon: '💯',
 		xp: 150,
 		tier: 'elite',
-		maxProgress: 15
+		maxProgress: 14
 	}
 };
 
