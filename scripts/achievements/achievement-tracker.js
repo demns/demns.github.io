@@ -50,13 +50,9 @@ export class AchievementTracker {
 	}
 
 	trackScroll() {
-		let scrolled = false;
 		const handleScroll = () => {
-			if (!scrolled && window.scrollY > window.innerHeight * THRESHOLDS.SCROLL_DEPTH) {
-				scrolled = true;
-				this.system.unlock('curious-observer');
-				window.removeEventListener('scroll', handleScroll);
-			}
+			this.system.unlock('curious-observer');
+			window.removeEventListener('scroll', handleScroll);
 		};
 		window.addEventListener('scroll', handleScroll, { passive: true });
 	}
