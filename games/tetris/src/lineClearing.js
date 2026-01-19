@@ -20,7 +20,7 @@ export function checkAndClearLines(collidableMeshList, scene) {
 	removeBlocks(completedLines, collidableMeshList, scene, grid);
 
 	// Move blocks down
-	moveBlocksDown(completedLines, collidableMeshList, grid);
+	moveBlocksDown(completedLines, collidableMeshList);
 
 	return { count: completedLines.length, lines: completedLines };
 }
@@ -109,28 +109,36 @@ function removeBlocks(completedLines, collidableMeshList, scene, grid) {
  * Moves all blocks above cleared lines down.
  * Moves individual blocks, not parent groups, to handle partial row clears correctly.
  */
-function moveBlocksDown(completedLines, collidableMeshList, grid) {
+function moveBlocksDown(completedLines, collidableMeshList) {
 	if (completedLines.length === 0) return;
 
 	// Sort lines from bottom to top
 	completedLines.sort((a, b) => a - b);
 
-	// Move each individual block based on how many cleared lines are below it
+	// Collect all blocks and their current world Y positions BEFORE moving anything
+	const blocksToMove = [];
+
 	collidableMeshList.forEach((parentGroup) => {
-		// Update matrix to ensure world positions are accurate after block removal
+		// Force matrix update for accurate world positions
 		parentGroup.updateMatrixWorld(true);
 
 		parentGroup.children.forEach(block => {
-			const worldPos = block.getWorldPosition(new Vector3());
+			// Get world position - block.position is local to parent
+			const worldPos = new Vector3();
+			block.getWorldPosition(worldPos);
 			const blockY = Math.round(worldPos.y);
 
 			// Count how many completed lines are below this block
 			const linesBelow = completedLines.filter(clearedY => clearedY < blockY).length;
 
 			if (linesBelow > 0) {
-				// Move block down in local space (relative to parent)
-				block.position.y -= linesBelow;
+				blocksToMove.push({ block, linesBelow });
 			}
 		});
+	});
+
+	// Now move all blocks
+	blocksToMove.forEach(({ block, linesBelow }) => {
+		block.position.y -= linesBelow;
 	});
 }
