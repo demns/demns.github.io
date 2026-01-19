@@ -276,23 +276,25 @@ class GameScene extends Phaser.Scene {
         this.player.setTint(0xff0000);
         this.player.anims.stop();
 
-        if (this.distance > maxDistance) {
-            maxDistance = this.distance;
-            try {
+        try {
+            // Update high score if beaten
+            if (this.distance > maxDistance) {
+                maxDistance = this.distance;
                 localStorage.setItem('santaMaxDistance', maxDistance.toString());
-
-                if (this.distance >= 1000) {
-                    if (window.parent && window.parent !== window && window.parent.portfolioAchievements) {
-                        window.parent.postMessage({
-                            type: 'santa-complete',
-                            data: { distance: this.distance }
-                        }, window.location.origin);
-                    }
-                    localStorage.setItem('santa_complete', 'true');
-                }
-            } catch (error) {
-                console.warn('Could not save to localStorage:', error);
             }
+
+            // Achievement: reach 1000+ distance (regardless of high score)
+            if (this.distance >= 1000) {
+                localStorage.setItem('santa_complete', 'true');
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'santa-complete',
+                        data: { distance: this.distance }
+                    }, window.location.origin);
+                }
+            }
+        } catch (error) {
+            console.warn('Could not save to localStorage:', error);
         }
 
         this.scene.start('GameOverScene', { distance: this.distance });
