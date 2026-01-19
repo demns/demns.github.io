@@ -124,15 +124,23 @@ export class AchievementSystem {
 	checkSpecialAchievements() {
 		const unlockedCount = this.getUnlockedCount();
 		const totalCount = Object.keys(ACHIEVEMENTS).length;
-		const regularAchievements = totalCount - 2;
+		const regularAchievements = totalCount - 2; // Exclude completionist and speed-runner
 
-		if (unlockedCount === totalCount - 1) {
-			const completionistState = this.data.achievements['completionist'];
-			if (!completionistState.unlocked) {
+		// Update completionist progress (all achievements except completionist itself)
+		const completionistState = this.data.achievements['completionist'];
+		if (!completionistState.unlocked) {
+			// Progress = all unlocked except completionist
+			const progressCount = completionistState.unlocked ? unlockedCount - 1 : unlockedCount;
+			completionistState.progress = progressCount;
+			this.saveData();
+
+			// Unlock when all other achievements are done (totalCount - 1)
+			if (unlockedCount === totalCount - 1) {
 				this.unlock('completionist');
 			}
 		}
 
+		// Speed-runner: unlock all regular achievements within 5 minutes
 		const firstVisit = this.data.stats.firstVisit;
 		const elapsed = (Date.now() - firstVisit) / 1000 / 60;
 
