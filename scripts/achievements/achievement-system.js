@@ -9,14 +9,7 @@ export class AchievementSystem {
 	}
 
 	loadData() {
-		try {
-			const saved = localStorage.getItem(STORAGE_KEY);
-			if (saved) return JSON.parse(saved);
-		} catch (e) {
-			console.error('Failed to load achievement data:', e);
-		}
-
-		return {
+		const defaultData = {
 			achievements: Object.keys(ACHIEVEMENTS).reduce((acc, id) => {
 				acc[id] = { unlocked: false, timestamp: null, progress: 0 };
 				return acc;
@@ -30,6 +23,24 @@ export class AchievementSystem {
 				level: 1
 			}
 		};
+
+		try {
+			const saved = localStorage.getItem(STORAGE_KEY);
+			if (saved) {
+				const data = JSON.parse(saved);
+				// Merge in any new achievements that were added after user's first visit
+				Object.keys(ACHIEVEMENTS).forEach(id => {
+					if (!data.achievements[id]) {
+						data.achievements[id] = { unlocked: false, timestamp: null, progress: 0 };
+					}
+				});
+				return data;
+			}
+		} catch (e) {
+			console.error('Failed to load achievement data:', e);
+		}
+
+		return defaultData;
 	}
 
 	saveData() {

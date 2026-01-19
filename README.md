@@ -34,13 +34,11 @@ Interactive portfolio with achievements, mini-games, and easter eggs
 
 ### Features
 
-```diff
-+ 14 achievements with XP & levels
-+ Animated particle network
-+ Dark/light theme detection
-+ Mobile touch & shake support
-! 5 hidden easter eggs
-```
+- 🏆 15 achievements with XP & levels
+- ✨ Animated particle network
+- 🌗 Dark/light theme detection
+- 📱 Mobile touch & shake support
+- 🥚 5 hidden easter eggs
 
 </td>
 </tr>
