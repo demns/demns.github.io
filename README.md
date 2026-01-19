@@ -17,32 +17,43 @@ Interactive portfolio with achievements, mini-games, and easter eggs
 
 <br>
 
+<div align="center">
 <table>
 <tr>
-<td width="50%" valign="top">
+<td align="center" width="33%">
 
-### Games
+**🎮 Tic Tac Toe**
 
-| | | |
-|:--|:--|:-:|
-| 🎮 Tic Tac Toe | Minimax AI | [play →](https://samsonau.net/games/ttt) |
-| 🎅 Deer Santa | Phaser.js | [play →](https://samsonau.net/games/santa) |
-| 🧊 WebGL Tetris | Three.js | [play →](https://samsonau.net/games/tetris/www) |
+[![Play](https://img.shields.io/badge/▶_PLAY-0066CC?style=for-the-badge)](https://samsonau.net/games/ttt)
+
+`Minimax AI`
 
 </td>
-<td width="50%" valign="top">
+<td align="center" width="33%">
 
-### Features
+**🎅 Deer Santa**
 
-- 🏆 15 achievements with XP & levels
-- ✨ Animated particle network
-- 🌗 Dark/light theme detection
-- 📱 Mobile touch & shake support
-- 🥚 5 hidden easter eggs
+[![Play](https://img.shields.io/badge/▶_PLAY-CC0000?style=for-the-badge)](https://samsonau.net/games/santa)
+
+`Phaser.js`
+
+</td>
+<td align="center" width="33%">
+
+**🧊 WebGL Tetris**
+
+[![Play](https://img.shields.io/badge/▶_PLAY-9933FF?style=for-the-badge)](https://samsonau.net/games/tetris/www)
+
+`Three.js`
 
 </td>
 </tr>
 </table>
+</div>
+
+<br>
+
+🏆 15 achievements &nbsp;·&nbsp; ✨ Particle background &nbsp;·&nbsp; 🌗 Dark/light mode &nbsp;·&nbsp; 📱 Mobile ready &nbsp;·&nbsp; 🥚 5 easter eggs
 
 <details>
 <summary><samp>▸ easter egg hints</samp></summary>
