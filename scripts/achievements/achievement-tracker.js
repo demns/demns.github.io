@@ -1,7 +1,8 @@
 const GAME_PATHS = {
 	'./games/ttt': 'ttt',
 	'./games/santa': 'santa',
-	'./games/tetris/www': 'tetris'
+	'./games/tetris/www': 'tetris',
+	'./games/zombieFootball': 'zombie'
 };
 
 const STORAGE_KEYS = {

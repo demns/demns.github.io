@@ -20,7 +20,7 @@ Interactive portfolio with achievements, mini-games, and easter eggs
 <div align="center">
 <table>
 <tr>
-<td align="center" width="33%">
+<td align="center" width="25%">
 
 **🎮 Tic Tac Toe**
 
@@ -29,7 +29,7 @@ Interactive portfolio with achievements, mini-games, and easter eggs
 `Minimax AI`
 
 </td>
-<td align="center" width="33%">
+<td align="center" width="25%">
 
 **🎅 Deer Santa**
 
@@ -38,13 +38,22 @@ Interactive portfolio with achievements, mini-games, and easter eggs
 `Phaser.js`
 
 </td>
-<td align="center" width="33%">
+<td align="center" width="25%">
 
 **🧊 WebGL Tetris**
 
 [![Play](https://img.shields.io/badge/▶_PLAY-9933FF?style=for-the-badge)](https://samsonau.net/games/tetris/www)
 
 `Three.js`
+
+</td>
+<td align="center" width="25%">
+
+**🧟 Zombie Free Kick**
+
+[![Play](https://img.shields.io/badge/▶_PLAY-FF6B35?style=for-the-badge)](https://samsonau.net/games/zombieFootball)
+
+`Canvas · PWA`
 
 </td>
 </tr>
