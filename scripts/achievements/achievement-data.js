@@ -42,7 +42,7 @@ export const ACHIEVEMENTS = {
 		icon: '🎮',
 		xp: 30,
 		tier: 'medium',
-		maxProgress: 4
+		maxProgress: 5
 	},
 	'deep-dive': {
 		id: 'deep-dive',
