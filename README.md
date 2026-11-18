@@ -11,8 +11,6 @@
 
 Interactive portfolio with achievements, mini-games, and easter eggs
 
-<sub>Zero frameworks · Pure vanilla JS</sub>
-
 </div>
 
 <br>
